@@ -24,8 +24,7 @@ class World {
         Object.keys(saveData).forEach(type => {
             this.entities[type] = saveData[type].map(data => global[data.className].loadFromJson(data));
         });
-        Entity.updateReferences();
-        // TODO: trigger update to references
+        Entity.updateReferences(this.entities);
     }
 
     save (file) {

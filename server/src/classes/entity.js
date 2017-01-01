@@ -46,17 +46,19 @@ Entity.loadFromJson = data => {
     return entity;
 };
 
-Entity.updateReferences = () => {
-    Object.keys(world.entities).forEach(key => {
-        let entities = world.entities[key];
-        entities.forEach(entity => {
-            Object.keys(entity).forEach(entityKey => {
-                if (typeof entity[entityKey] === 'object' && entity[entityKey].className) {
-                    entity[entityKey] = world.entities[entity[entityKey].className].find(item => item.id === entity[entityKey].id);
-                }
-            });
+function recursiveUpdateReferences (param) {
+}
+
+Entity.updateReferences = function (param) {
+    if (typeof param === 'object') {
+        Object.keys(param).forEach(key => {
+            if (param[key].className && !param instanceof Entity) {
+                param[key] = world.entities[param[key].className].find(item => item.id === param[key].id);
+            } else {
+                recursiveUpdateReferences(param[key]);
+            }
         });
-    });
+    }
 };
 
 module.exports = Entity;
