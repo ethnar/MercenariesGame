@@ -41,12 +41,22 @@ class Entity {
 Entity.loadFromJson = data => {
     let entity = new global[data.className]();
     Object.keys(data).forEach(key => {
-        entity[key] = data[key]
-        if (typeof data[key] === 'object' && data[key].className) {
-            // TODO: tag as requiring update
-        }
+        entity[key] = data[key];
     });
     return entity;
+};
+
+Entity.updateReferences = () => {
+    Object.keys(world.entities).forEach(key => {
+        let entities = world.entities[key];
+        entities.forEach(entity => {
+            Object.keys(entity).forEach(entityKey => {
+                if (typeof entity[entityKey] === 'object' && entity[entityKey].className) {
+                    entity[entityKey] = world.entities[entity[entityKey].className].find(item => item.id === entity[entityKey].id);
+                }
+            });
+        });
+    });
 };
 
 module.exports = Entity;
