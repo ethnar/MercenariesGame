@@ -1,0 +1,108 @@
+body, html {
+  margin: 0; }
+
+.city-status {
+  position: fixed;
+  top: 0;
+  z-index: 100; }
+
+.tile-panel {
+  position: fixed;
+  z-index: 100;
+  bottom: 0; }
+  .tile-panel .contents {
+    background: white;
+    font-size: 36px; }
+    .tile-panel .contents.hidden {
+      display: none; }
+
+.map {
+  overflow: scroll;
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 1; }
+  .map .city {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url("../img/map/city.jpg") center center no-repeat;
+    background-size: 100%; }
+  .map .armies {
+    position: absolute;
+    z-index: 23;
+    top: 0;
+    white-space: normal;
+    width: 100%;
+    word-break: break-word; }
+    .map .armies .army {
+      width: 50px;
+      height: 50px;
+      position: absolute;
+      top: 20px;
+      left: 30px;
+      z-index: 2; }
+      .map .armies .army img {
+        position: relative;
+        z-index: 1; }
+      .map .armies .army .movement {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 9000; }
+        .map .armies .army .movement::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 50%;
+          margin-left: -5px;
+          width: 10px;
+          height: 30px;
+          background: red; }
+        .map .armies .army .movement.north {
+          transform: rotate(0deg); }
+        .map .armies .army .movement.neast {
+          transform: rotate(60deg); }
+        .map .armies .army .movement.seast {
+          transform: rotate(120deg); }
+        .map .armies .army .movement.south {
+          transform: rotate(180deg); }
+        .map .armies .army .movement.swest {
+          transform: rotate(240deg); }
+        .map .armies .army .movement.nwest {
+          transform: rotate(300deg); }
+        .map .armies .army .movement.none {
+          display: none; }
+      .map .armies .army::before {
+        position: absolute;
+        bottom: 5px;
+        left: 10px;
+        content: '';
+        width: 30px;
+        height: 10px;
+        border-radius: 50%;
+        background: #000;
+        z-index: 1; }
+      .map .armies .army.self::before {
+        background-color: #66bb66; }
+      .map .armies .army.hostile::before {
+        background-color: #ff3333; }
+      .map .armies .army.battling::before {
+        box-shadow: 0 0 10px 6px red; }
+  .map .row {
+    white-space: nowrap;
+    position: relative; }
+  .map .tile {
+    position: absolute;
+    display: inline-block;
+    width: 80px;
+    height: 80px;
+    overflow: hidden; }
+    .map .tile img {
+      width: 100%;
+      height: 100%; }

@@ -1,0 +1,16 @@
+{
+  "name": "mercenaries-server",
+  "version": "0.0.1",
+  "description": "Mercenaries server app",
+  "main": "src/index.js",
+  "dependencies": {
+    "nodejs-websocket": "^1.6.0"
+  },
+  "devDependencies": {},
+  "keywords": [
+    "mercenaries",
+    "game"
+  ],
+  "author": "Ethnar",
+  "license": "UNLICENSED"
+}

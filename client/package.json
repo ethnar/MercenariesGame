@@ -1,0 +1,19 @@
+{
+  "name": "mercenaries-client",
+  "version": "0.0.1",
+  "description": "Mercenaries client",
+  "dependencies": {
+    "nodejs-websocket": "^1.6.0"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.0",
+    "gulp-sass": "^2.3.2"
+  },
+  "keywords": [
+    "mercenaries",
+    "game"
+  ],
+  "author": "Ethnar",
+  "license": "UNLICENSED"
+}
