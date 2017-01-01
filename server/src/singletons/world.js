@@ -22,7 +22,7 @@ class World {
         let Entity = require('../classes/entity');
         var saveData = JSON.parse(fs.readFileSync(file, 'utf8'));
         Object.keys(saveData).forEach(type => {
-            this.entities[type] = saveData[type].map(data => global[data.className].loadFromJson(data));
+            this.entities[type] = saveData[type].map(data => Entity.loadFromJson(data));
         });
         Entity.updateReferences(this.entities);
     }

@@ -38,24 +38,26 @@ class Entity {
     }
 }
 
+let classRegistry = {};
+Entity.registerClass = classConstructor => {
+    classRegistry[classConstructor.name] = classConstructor;
+};
+
 Entity.loadFromJson = data => {
-    let entity = new global[data.className]();
+    let entity = new classRegistry[data.className]();
     Object.keys(data).forEach(key => {
         entity[key] = data[key];
     });
     return entity;
 };
 
-function recursiveUpdateReferences (param) {
-}
-
-Entity.updateReferences = function (param) {
+Entity.updateReferences = param => {
     if (typeof param === 'object') {
         Object.keys(param).forEach(key => {
             if (param[key].className && !param instanceof Entity) {
                 param[key] = world.entities[param[key].className].find(item => item.id === param[key].id);
             } else {
-                recursiveUpdateReferences(param[key]);
+                Entity.updateReferences(param[key]);
             }
         });
     }
