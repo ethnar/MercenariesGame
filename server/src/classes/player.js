@@ -1,4 +1,6 @@
 let Entity = require('./entity');
+let world = require('../singletons/world');
+let service = require('../singletons/service');
 
 // global.service.registerHandler('orderMove', (params, player) => {
 //     try {
@@ -17,13 +19,24 @@ let Entity = require('./entity');
 //     }
 // });
 
+service.registerHandler('authenticate', (params, previousPlayer, conn) => {
+    let player = world.entities.Player.find(player => {
+        return player.verifyUsernameAndPassword(params.user, params.password);
+    });
+    if (player) {
+        service.setPlayer(conn, player);
+    }
+    return !!player;
+});
+
 class Player extends Entity {
     constructor (name, password, npc) {
-        super('players');
+        super('Player');
 
         this.name = name;
         this.password = password;
         this.npc = !!npc;
+        this.self = this;
     }
 
     getName () {
@@ -35,4 +48,5 @@ class Player extends Entity {
     }
 }
 
+global.Player = Player;
 module.exports = Player;
