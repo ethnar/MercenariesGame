@@ -15,7 +15,7 @@ service.registerHandler('authenticate', (params, previousPlayer, conn) => {
 
 class Player extends Entity {
     constructor (name, password, npc) {
-        super('Player');
+        super();
 
         this.name = name;
         this.password = Player.passwordHash(password);

@@ -1,11 +1,18 @@
 let world = require('./singletons/world');
-//world.load('./save');
 let Player = require('./classes/player');
+let Country = require('./classes/country');
+let Region = require('./classes/region');
+let Mercenary = require('./classes/mercenary');
+let Fact = require('./classes/fact');
+let Worldview = require('./classes/worldview');
 
-let player = new Player('ethnar', 'abc');
+world.load('./templateSave');
+
+new Country('Poland');
 
 world.save('./save');
-world.load('./save');
+
+world.run();
 
 process.on('uncaughtException', function (exception) {
     console.log(exception.stack);
