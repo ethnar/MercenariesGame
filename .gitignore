@@ -1,5 +1,6 @@
 .idea
 */node_modules/*
+rollingSave.json
 
 # Windows image file caches
 Thumbs.db
