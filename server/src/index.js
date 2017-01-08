@@ -6,11 +6,15 @@ let Mercenary = require('./classes/mercenary');
 let Fact = require('./classes/fact');
 let Worldview = require('./classes/worldview');
 
-world.load('./templateSave');
+world.load('./templateSave.json');
 
+new Country('Canada');
+new Country('India');
 new Country('Poland');
+new Country('Russia');
+new Country('United Kingdom');
 
-world.save('./save');
+world.save('./save.json');
 
 world.run();
 
