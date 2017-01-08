@@ -16,18 +16,7 @@ class Entity {
     }
 
     getSaveData () {
-        let result = {};
-        Object.keys(this).forEach(key => {
-            if (this[key] instanceof Entity) {
-                result[key] = {
-                    className: this[key].className,
-                    id: this[key].id
-                }
-            } else {
-                result[key] = this[key];
-            }
-        });
-        return result;
+        return Entity.recursiveEncodeReferences(this);
     }
 
     destroy () {
@@ -49,10 +38,27 @@ Entity.loadFromJson = data => {
     return entity;
 };
 
+Entity.recursiveEncodeReferences = object => {
+    let result = Array.isArray(object) ? [] : {};
+    Object.keys(object).forEach(key => {
+        if (object[key] instanceof Entity) {
+            result[key] = {
+                className: object[key].className,
+                id: object[key].id
+            }
+        } else if (typeof object[key] === 'object' && object[key]) {
+            result[key] = Entity.recursiveEncodeReferences(object[key]);
+        } else {
+            result[key] = object[key];
+        }
+    });
+    return result;
+};
+
 Entity.updateReferences = param => {
-    if (typeof param === 'object') {
+    if (typeof param === 'object' && param) {
         Object.keys(param).forEach(key => {
-            if (param[key].className && !param instanceof Entity) {
+            if (param[key] && param[key].className && !param instanceof Entity) {
                 param[key] = world.entities[param[key].className].find(item => item.id === param[key].id);
             } else {
                 Entity.updateReferences(param[key]);
