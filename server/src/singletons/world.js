@@ -2,7 +2,7 @@ let service = require('./service');
 let fs = require('fs');
 
 class World {
-	constructor () {
+    constructor () {
         this.entities = {};
     }
 
@@ -12,15 +12,18 @@ class World {
 
     loop () {
         this.cycle();
-        setTimeout(this.loop.bind(this), 1000);
+        setTimeout(this.loop.bind(this), 10000);
     }
 
     cycle () {
+        this.entities.Country.forEach(country => {
+            country.cycle();
+        });
     }
 
     load (file) {
         let Entity = require('../classes/entity');
-        var saveData = JSON.parse(fs.readFileSync(file, 'utf8'));
+        let saveData = JSON.parse(fs.readFileSync(file, 'utf8'));
         Object.keys(saveData).forEach(type => {
             this.entities[type] = saveData[type].map(data => Entity.loadFromJson(data));
         });

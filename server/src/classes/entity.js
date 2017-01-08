@@ -3,10 +3,8 @@ let world = require('../singletons/world');
 let ids = {};
 
 class Entity {
-    constructor (className) {
-        if (!className) {
-            throw new Error('Unmapped entity ' + this.constructor.name);
-        }
+    constructor () {
+        const className = this.constructor.name;
         this.className = className;
         if (!world.entities[className]) {
             world.entities[className] = [];
