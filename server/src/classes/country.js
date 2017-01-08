@@ -9,6 +9,7 @@ class Country extends Entity {
         this.ruler = null;
         this.armyLeader = null;
         this.missions = [];
+        this.recentFacts = [];
     }
 
     cycle () {
