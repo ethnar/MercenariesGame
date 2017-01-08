@@ -12,10 +12,13 @@ class World {
 
     loop () {
         this.cycle();
-        setTimeout(this.loop.bind(this), 10000);
+        setTimeout(this.loop.bind(this), 2000);
     }
 
     cycle () {
+        console.log('- new cycle -');
+        this.save('./rollingSave.json');
+        this.load('./rollingSave.json'); // TODO: debug only
         this.entities.Country.forEach(country => {
             country.cycle();
         });

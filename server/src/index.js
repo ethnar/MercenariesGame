@@ -8,14 +8,6 @@ let Worldview = require('./classes/worldview');
 
 world.load('./templateSave.json');
 
-new Country('Canada');
-new Country('India');
-new Country('Poland');
-new Country('Russia');
-new Country('United Kingdom');
-
-world.save('./save.json');
-
 world.run();
 
 process.on('uncaughtException', function (exception) {
