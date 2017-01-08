@@ -3,13 +3,17 @@
         <link rel="stylesheet" href="css/all.css" />
 
         <script src="../libs/vue.js"></script>
+        <script src="../libs/vue-router.js"></script>
+        <script src="../libs/vue-rx.js"></script>
+        <script src="../libs/rx.all.js"></script>
+        <script src="../libs/require.js"></script>
 
         <script src="services/server.js"></script>
     </head>
 
     <body>
         <div id="app">
-            {{ message }}
+            <router-view></router-view>
         </div>
         <script src="index.js"></script>
     </body>

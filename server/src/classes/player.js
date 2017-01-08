@@ -13,6 +13,14 @@ service.registerHandler('authenticate', (params, previousPlayer, conn) => {
     return !!player;
 });
 
+service.registerHandler('news', (params, player) => {
+    if (player)
+    {
+        return player.getFacts().map(fact => fact.getFormatted());
+    }
+    return [];
+});
+
 class Player extends Entity {
     constructor (name, password, npc) {
         super();
@@ -20,6 +28,8 @@ class Player extends Entity {
         this.name = name;
         this.password = Player.passwordHash(password);
         this.npc = !!npc;
+
+        this.knownFacts = [];
     }
 
     static passwordHash (password) {
@@ -30,6 +40,10 @@ class Player extends Entity {
 
     getName () {
         return this.name;
+    }
+
+    getFacts () {
+        return this.knownFacts;
     }
 
     verifyUsernameAndPassword (name, password) {
