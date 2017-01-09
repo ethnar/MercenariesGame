@@ -4,9 +4,10 @@ let Country = require('./classes/country');
 let Region = require('./classes/region');
 let Mercenary = require('./classes/mercenary');
 let Fact = require('./classes/fact');
+let Site = require('./classes/site');
 let Worldview = require('./classes/worldview');
 
-world.load('./templateSave.json');
+world.load('./template-save.json');
 
 world.run();
 

@@ -8,9 +8,16 @@ class Fact extends Entity {
         this.discoverability = discoverability;
         this.message = message;
         this.references = args;
+
+        if (message) {
+            console.log(this.getFormatted());
+        }
     }
 
     getFormatted () {
+        this.references.forEach(object => {
+            object.relatedFacts.push(this);
+        });
         const args = this.references.map(object => {
             return '{' + object.className + ':' + object.id + '}';
         });

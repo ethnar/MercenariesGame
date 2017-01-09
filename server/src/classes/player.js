@@ -16,7 +16,8 @@ service.registerHandler('authenticate', (params, previousPlayer, conn) => {
 service.registerHandler('news', (params, player) => {
     if (player)
     {
-        return player.getFacts().map(fact => fact.getFormatted());
+        let facts = player.getFacts();
+        return Object.keys(facts).map(key => facts[key].getFormatted());
     }
     return [];
 });
@@ -29,13 +30,36 @@ class Player extends Entity {
         this.password = Player.passwordHash(password);
         this.npc = !!npc;
 
-        this.knownFacts = [];
+        this.knownFacts = {};
+        this.sites = [];
     }
 
     static passwordHash (password) {
         const shasum = crypto.createHash('sha1');
         shasum.update(password + '-mercenaries-game');
         return shasum.digest('hex');
+    }
+
+    addSite (site) {
+        this.sites.push(site);
+    }
+
+    cycle () {
+        this.gatherIntelligence();
+    }
+
+    gatherIntelligence () {
+        this.sites.forEach(site => {
+            let region = site.getRegion();
+            let country = region.getCountry();
+            let facts = country.getRelatedFacts();
+            facts.forEach(fact => {
+                if (!this.knownFacts[fact.id]) { // TODO: add a chance here
+                    this.knownFacts[fact.id] = fact;
+                    service.sendUpdate('news', this, fact.getFormatted());
+                }
+            });
+        });
     }
 
     getName () {

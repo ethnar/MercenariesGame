@@ -17,10 +17,14 @@ class World {
 
     cycle () {
         console.log('- new cycle -');
-        this.save('./rollingSave.json');
-        this.load('./rollingSave.json'); // TODO: debug only
-        this.entities.Country.forEach(country => {
-            country.cycle();
+        this.save('./rolling-save.json');
+        this.cycleEntities('Country');
+        this.cycleEntities('Player');
+    }
+
+    cycleEntities (type) {
+        this.entities[type].forEach(entity => {
+            entity.cycle();
         });
     }
 
@@ -30,7 +34,8 @@ class World {
         Object.keys(saveData).forEach(type => {
             this.entities[type] = saveData[type].map(data => Entity.loadFromJson(data));
         });
-        Entity.updateReferences(this.entities);
+        Entity.recursiveDecodeEntities(this.entities);
+        // TODO: reconnect all the players?
     }
 
     save (file) {
