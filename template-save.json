@@ -1,0 +1,457 @@
+{
+  "Player": [
+    {
+      "className": "Player",
+      "id": 1,
+      "relatedFacts": [],
+      "name": "ethnar",
+      "password": "c86427731f64324f1355c693522535361f845fbd",
+      "npc": false,
+      "knownFacts": {},
+      "sites": [
+        {
+          "className": "Site",
+          "id": 6
+        }
+      ]
+    }
+  ],
+  "Country": [
+    {
+      "className": "Country",
+      "id": 1,
+      "relatedFacts": [],
+      "name": "Canada",
+      "worldview": {
+        "slavery": 0,
+        "environmentalism": 0,
+        "supremacy": {
+          "black": 0,
+          "white": 0,
+          "yellow": 0
+        },
+        "fanaticism": {
+          "buddhism": 0,
+          "christianity": 0,
+          "islam": 0,
+          "judaism": 0,
+          "hinduism": 0,
+          "sikhism": 0
+        }
+      },
+      "ruler": null,
+      "seatOfPower": null,
+      "armyLeader": null,
+      "missions": [],
+      "eventsQueue": [],
+      "politicians": [],
+      "regions": [
+        {
+          "className": "Region",
+          "id": 1
+        },
+        {
+          "className": "Region",
+          "id": 2
+        }
+      ],
+      "recentFacts": []
+    },
+    {
+      "className": "Country",
+      "id": 2,
+      "relatedFacts": [],
+      "name": "India",
+      "worldview": {
+        "slavery": 0,
+        "environmentalism": 0,
+        "supremacy": {
+          "black": 0,
+          "white": 0,
+          "yellow": 0
+        },
+        "fanaticism": {
+          "buddhism": 0,
+          "christianity": 0,
+          "islam": 0,
+          "judaism": 0,
+          "hinduism": 0,
+          "sikhism": 0
+        }
+      },
+      "ruler": null,
+      "seatOfPower": null,
+      "armyLeader": null,
+      "missions": [],
+      "eventsQueue": [],
+      "politicians": [],
+      "regions": [
+        {
+          "className": "Region",
+          "id": 3
+        },
+        {
+          "className": "Region",
+          "id": 4
+        }
+      ],
+      "recentFacts": []
+    },
+    {
+      "className": "Country",
+      "id": 3,
+      "relatedFacts": [],
+      "name": "Poland",
+      "worldview": {
+        "slavery": 0,
+        "environmentalism": 0,
+        "supremacy": {
+          "black": 0,
+          "white": 0,
+          "yellow": 0
+        },
+        "fanaticism": {
+          "buddhism": 0,
+          "christianity": 0,
+          "islam": 0,
+          "judaism": 0,
+          "hinduism": 0,
+          "sikhism": 0
+        }
+      },
+      "ruler": null,
+      "seatOfPower": null,
+      "armyLeader": null,
+      "missions": [],
+      "eventsQueue": [],
+      "politicians": [],
+      "regions": [
+        {
+          "className": "Region",
+          "id": 5
+        },
+        {
+          "className": "Region",
+          "id": 6
+        }
+      ],
+      "recentFacts": []
+    },
+    {
+      "className": "Country",
+      "id": 4,
+      "relatedFacts": [],
+      "name": "Russia",
+      "worldview": {
+        "slavery": 0,
+        "environmentalism": 0,
+        "supremacy": {
+          "black": 0,
+          "white": 0,
+          "yellow": 0
+        },
+        "fanaticism": {
+          "buddhism": 0,
+          "christianity": 0,
+          "islam": 0,
+          "judaism": 0,
+          "hinduism": 0,
+          "sikhism": 0
+        }
+      },
+      "ruler": null,
+      "seatOfPower": null,
+      "armyLeader": null,
+      "missions": [],
+      "eventsQueue": [],
+      "politicians": [],
+      "regions": [
+        {
+          "className": "Region",
+          "id": 7
+        },
+        {
+          "className": "Region",
+          "id": 8
+        }
+      ],
+      "recentFacts": []
+    },
+    {
+      "className": "Country",
+      "id": 5,
+      "relatedFacts": [],
+      "name": "United Kingdom",
+      "worldview": {
+        "slavery": 0,
+        "environmentalism": 0,
+        "supremacy": {
+          "black": 0,
+          "white": 0,
+          "yellow": 0
+        },
+        "fanaticism": {
+          "buddhism": 0,
+          "christianity": 0,
+          "islam": 0,
+          "judaism": 0,
+          "hinduism": 0,
+          "sikhism": 0
+        }
+      },
+      "ruler": null,
+      "seatOfPower": null,
+      "armyLeader": null,
+      "missions": [],
+      "eventsQueue": [],
+      "politicians": [],
+      "regions": [
+        {
+          "className": "Region",
+          "id": 9
+        },
+        {
+          "className": "Region",
+          "id": 10
+        }
+      ],
+      "recentFacts": []
+    }
+  ],
+  "Region": [
+    {
+      "className": "Region",
+      "id": 1,
+      "relatedFacts": [],
+      "name": "Toronto",
+      "country": {
+        "className": "Country",
+        "id": 1
+      },
+      "sites": []
+    },
+    {
+      "className": "Region",
+      "id": 2,
+      "relatedFacts": [],
+      "name": "Quebec City",
+      "country": {
+        "className": "Country",
+        "id": 1
+      },
+      "sites": [
+        {
+          "className": "Site",
+          "id": 1
+        }
+      ]
+    },
+    {
+      "className": "Region",
+      "id": 3,
+      "relatedFacts": [],
+      "name": "Dheli",
+      "country": {
+        "className": "Country",
+        "id": 2
+      },
+      "sites": [
+        {
+          "className": "Site",
+          "id": 2
+        }
+      ]
+    },
+    {
+      "className": "Region",
+      "id": 4,
+      "relatedFacts": [],
+      "name": "Kolkata",
+      "country": {
+        "className": "Country",
+        "id": 2
+      },
+      "sites": []
+    },
+    {
+      "className": "Region",
+      "id": 5,
+      "relatedFacts": [],
+      "name": "Warsaw",
+      "country": {
+        "className": "Country",
+        "id": 3
+      },
+      "sites": [
+        {
+          "className": "Site",
+          "id": 3
+        }
+      ]
+    },
+    {
+      "className": "Region",
+      "id": 6,
+      "relatedFacts": [],
+      "name": "Krakow",
+      "country": {
+        "className": "Country",
+        "id": 3
+      },
+      "sites": []
+    },
+    {
+      "className": "Region",
+      "id": 7,
+      "relatedFacts": [],
+      "name": "Moscow",
+      "country": {
+        "className": "Country",
+        "id": 4
+      },
+      "sites": [
+        {
+          "className": "Site",
+          "id": 4
+        }
+      ]
+    },
+    {
+      "className": "Region",
+      "id": 8,
+      "relatedFacts": [],
+      "name": "Saint Petersburg",
+      "country": {
+        "className": "Country",
+        "id": 4
+      },
+      "sites": []
+    },
+    {
+      "className": "Region",
+      "id": 9,
+      "relatedFacts": [],
+      "name": "London",
+      "country": {
+        "className": "Country",
+        "id": 5
+      },
+      "sites": [
+        {
+          "className": "Site",
+          "id": 5
+        },
+        {
+          "className": "Site",
+          "id": 6
+        }
+      ]
+    },
+    {
+      "className": "Region",
+      "id": 10,
+      "relatedFacts": [],
+      "name": "Cardiff",
+      "country": {
+        "className": "Country",
+        "id": 5
+      },
+      "sites": []
+    }
+  ],
+  "Site": [
+    {
+      "className": "Site",
+      "id": 1,
+      "relatedFacts": [],
+      "name": "Senate",
+      "region": {
+        "className": "Region",
+        "id": 2
+      },
+      "owner": null,
+      "countryProperty": null,
+      "standard": 100,
+      "size": 50,
+      "destroyed": false
+    },
+    {
+      "className": "Site",
+      "id": 2,
+      "relatedFacts": [],
+      "name": "Senate",
+      "region": {
+        "className": "Region",
+        "id": 3
+      },
+      "owner": null,
+      "countryProperty": null,
+      "standard": 100,
+      "size": 50,
+      "destroyed": false
+    },
+    {
+      "className": "Site",
+      "id": 3,
+      "relatedFacts": [],
+      "name": "Senate",
+      "region": {
+        "className": "Region",
+        "id": 5
+      },
+      "owner": null,
+      "countryProperty": null,
+      "standard": 100,
+      "size": 50,
+      "destroyed": false
+    },
+    {
+      "className": "Site",
+      "id": 4,
+      "relatedFacts": [],
+      "name": "Senate",
+      "region": {
+        "className": "Region",
+        "id": 7
+      },
+      "owner": null,
+      "countryProperty": null,
+      "standard": 100,
+      "size": 50,
+      "destroyed": false
+    },
+    {
+      "className": "Site",
+      "id": 5,
+      "relatedFacts": [],
+      "name": "Senate",
+      "region": {
+        "className": "Region",
+        "id": 9
+      },
+      "owner": null,
+      "countryProperty": null,
+      "standard": 100,
+      "size": 50,
+      "destroyed": false
+    },
+    {
+      "className": "Site",
+      "id": 6,
+      "relatedFacts": [],
+      "name": "HQ",
+      "region": {
+        "className": "Region",
+        "id": 9
+      },
+      "owner": {
+        "className": "Player",
+        "id": 1
+      },
+      "countryProperty": null,
+      "standard": 50,
+      "size": 1,
+      "destroyed": false
+    }
+  ]
+}

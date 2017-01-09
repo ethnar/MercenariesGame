@@ -10,10 +10,12 @@ class Country extends Entity {
         this.name = name;
         this.worldview = new Worldview();
         this.ruler = null;
+        this.seatOfPower = null;
         this.armyLeader = null;
         this.missions = [];
         this.eventsQueue = [];
         this.politicians = [];
+        this.regions = [];
     }
 
     cycle () {
@@ -21,6 +23,10 @@ class Country extends Entity {
         {
             this.generateEvents();
         }
+    }
+
+    addRegion (region) {
+        this.regions.push(region);
     }
 
     processQueue () {
@@ -37,6 +43,20 @@ class Country extends Entity {
             case !this.ruler && this.politicians.length && this.chances(50 + this.politicians.length * 10):
                 new Fact(95, '%s is preparing elections', this);
                 this.queueEvent(this.elections);
+                break;
+            case this.ruler && !this.seatOfPower && this.chances(80):
+                let selected = null;
+                this.regions.forEach(region => {
+                    region.sites.forEach(site => {
+                        if (!selected || (site.size > 15 && size.standard > selected.standard)) {
+                            selected = site;
+                        }
+                    });
+                });
+                if (selected) {
+                    this.seatOfPower = selected;
+                    new Fact(95, '%s has chosen %s as their seat of power.', this, selected);
+                }
                 break;
             case this.chances(100 - this.politicians.length * 5):
                 this.newPolitician();

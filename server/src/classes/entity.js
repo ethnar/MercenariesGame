@@ -12,11 +12,17 @@ class Entity {
         ids[className] = (ids[className] || 0) + 1;
         this.id = ids[className];
 
+        this.relatedFacts = [];
+
         world.entities[className].push(this);
     }
 
+    getRelatedFacts () {
+        return this.relatedFacts;
+    }
+
     getSaveData () {
-        return Entity.recursiveEncodeReferences(this);
+        return Entity.recursiveEncodeEntities(this);
     }
 
     destroy () {
@@ -38,7 +44,7 @@ Entity.loadFromJson = data => {
     return entity;
 };
 
-Entity.recursiveEncodeReferences = object => {
+Entity.recursiveEncodeEntities = object => {
     let result = Array.isArray(object) ? [] : {};
     Object.keys(object).forEach(key => {
         if (object[key] instanceof Entity) {
@@ -47,7 +53,7 @@ Entity.recursiveEncodeReferences = object => {
                 id: object[key].id
             }
         } else if (typeof object[key] === 'object' && object[key]) {
-            result[key] = Entity.recursiveEncodeReferences(object[key]);
+            result[key] = Entity.recursiveEncodeEntities(object[key]);
         } else {
             result[key] = object[key];
         }
@@ -55,13 +61,13 @@ Entity.recursiveEncodeReferences = object => {
     return result;
 };
 
-Entity.updateReferences = param => {
+Entity.recursiveDecodeEntities = param => {
     if (typeof param === 'object' && param) {
         Object.keys(param).forEach(key => {
-            if (param[key] && param[key].className && !param instanceof Entity) {
+            if (param[key] && param[key].className && !(param[key] instanceof Entity)) {
                 param[key] = world.entities[param[key].className].find(item => item.id === param[key].id);
             } else {
-                Entity.updateReferences(param[key]);
+                Entity.recursiveDecodeEntities(param[key]);
             }
         });
     }
