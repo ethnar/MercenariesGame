@@ -14,15 +14,6 @@ service.registerHandler('authenticate', (params, previousPlayer, conn) => {
     return !!player;
 });
 
-service.registerHandler('news', (params, player) => {
-    if (player)
-    {
-        let facts = player.getFacts();
-        return Object.keys(facts).map(key => facts[key].getFormatted());
-    }
-    return [];
-});
-
 class Player extends Entity {
     constructor (name, password, npc) {
         super();
@@ -32,6 +23,9 @@ class Player extends Entity {
         this.npc = !!npc;
         this.worldview = new Worldview();
 
+        this.availableMissions = {};
+        this.currentMissions = {};
+        this.money = 0;
         this.knownFacts = {};
         this.sites = [];
     }
@@ -70,6 +64,14 @@ class Player extends Entity {
 
     getFacts () {
         return this.knownFacts;
+    }
+
+    getAvailableMissions () {
+        return this.availableMissions;
+    }
+
+    getCurrentMissions () {
+        return this.currentMissions;
     }
 
     verifyUsernameAndPassword (name, password) {
