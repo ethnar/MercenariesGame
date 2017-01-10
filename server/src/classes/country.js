@@ -1,4 +1,3 @@
-const Worldview = require('./worldview');
 const Entity = require('./entity');
 const Fact = require('./fact');
 const Mercenary = require('./mercenary');
@@ -8,7 +7,6 @@ class Country extends Entity {
     constructor (name) {
         super();
         this.name = name;
-        this.worldview = new Worldview();
         this.ruler = null;
         this.seatOfPower = null;
         this.armyLeader = null;

@@ -1,4 +1,4 @@
-define('views/news', ['services/news', 'components/navbar'], function (NewsService, navbar) {
+define('views/sites', ['components/navbar'], function (navbar) {
     return {
         components: {
             navbar
@@ -7,15 +7,13 @@ define('views/news', ['services/news', 'components/navbar'], function (NewsServi
         template: `
 <div>
     <navbar></navbar>
-    <header>Recent news:</header>
-    <div v-for="item in news">{{item}}</div>
+    <header>Sites:</header>
 </div>
 `,
         data: () => ({
         }),
 
         subscriptions: () => ({
-            news: NewsService.getNewsStream()
         }),
 
         created () {

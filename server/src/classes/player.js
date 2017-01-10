@@ -1,4 +1,5 @@
 let Entity = require('./entity');
+const Worldview = require('./worldview');
 let world = require('../singletons/world');
 let service = require('../singletons/service');
 let crypto = require('crypto');
@@ -29,6 +30,7 @@ class Player extends Entity {
         this.name = name;
         this.password = Player.passwordHash(password);
         this.npc = !!npc;
+        this.worldview = new Worldview();
 
         this.knownFacts = {};
         this.sites = [];

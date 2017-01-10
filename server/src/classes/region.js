@@ -1,4 +1,5 @@
 const Entity = require('./entity');
+const Worldview = require('./worldview');
 
 class Region extends Entity {
     constructor (name, country) {
@@ -9,6 +10,11 @@ class Region extends Entity {
             this.country.addRegion(this);
         }
         this.sites = [];
+        this.worldviews = {
+            lowest: new Worldview(),
+            median: new Worldview(),
+            highest: new Worldview()
+        };
     }
 
     addSite (site) {
