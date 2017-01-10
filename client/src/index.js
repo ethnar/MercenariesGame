@@ -1,4 +1,4 @@
-require(['views/news', 'services/server'], function (NewsView, ServerService) {
+require(['views/news', 'views/missions', 'views/sites', 'services/server'], function (NewsView, MissionsView, SitesView, ServerService) {
     Vue.use(VueRx, Rx);
 
     ServerService.request('authenticate', {
@@ -9,6 +9,12 @@ require(['views/news', 'services/server'], function (NewsView, ServerService) {
             routes: [{
                 path: '/news',
                 component: NewsView
+            }, {
+                path: '/missions',
+                component: MissionsView
+            }, {
+                path: '/sites',
+                component: SitesView
             }]
         });
 

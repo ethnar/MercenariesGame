@@ -30,7 +30,9 @@ define('services/server', function () {
         window.location.reload();
     };
 
-    return {
+    const streams = {};
+
+    return self = {
         request (name, params) {
             return openPromise.then(() => {
                 return new Promise(resolve => {
@@ -43,6 +45,21 @@ define('services/server', function () {
                     }
                 });
             });
+        },
+
+        getListStream (message) {
+            if (!streams[message]) {
+                streams[message] = {
+                    raw: new Rx.ReplaySubject()
+                };
+                self.request(message).then(items =>
+                {
+                    items.forEach(item => streams[message].raw.onNext(item));
+                });
+                self.onUpdate(message, item => streams[message].raw.onNext(item));
+                streams[message].output = streams[message].raw.scan((acc, item) => [item].concat(acc), []);
+            }
+            return streams[message].output;
         },
 
         onUpdate (name, handler) {
