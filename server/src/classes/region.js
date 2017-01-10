@@ -10,6 +10,8 @@ class Region extends Entity {
             this.country.addRegion(this);
         }
         this.sites = [];
+        this.missions = [];
+        this.population = 10000;
         this.worldviews = {
             lowest: new Worldview(),
             median: new Worldview(),
@@ -19,6 +21,10 @@ class Region extends Entity {
 
     addSite (site) {
         this.sites.push(site);
+    }
+
+    addMission (mission) {
+        this.missions.push(mission);
     }
 
     getSites () {

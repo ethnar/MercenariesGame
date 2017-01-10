@@ -25,6 +25,10 @@ class Fact extends Entity {
         args.unshift(this.message);
         return util.format.apply(util, args);
     }
+
+    getDiscoverability () {
+        return this.discoverability;
+    }
 }
 
 service.registerHandler('news', (params, player) => {

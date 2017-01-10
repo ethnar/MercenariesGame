@@ -1,4 +1,6 @@
 const Entity = require('./entity');
+const service = require('../singletons/service');
+const misc = require('../misc');
 
 class Site extends Entity {
     constructor (name, region) {
@@ -31,6 +33,21 @@ class Site extends Entity {
 
     getRegion () {
         return this.region;
+    }
+
+    gatherIntelligence () {
+        if (this.isDestroyed() || this.countryProperty) {
+            return;
+        }
+        let region = this.getRegion();
+        let country = region.getCountry();
+        let facts = country.getRelatedFacts();
+        facts.forEach(fact => {
+            if (!this.owner.getFacts()[fact.id] && misc.chances(fact.getDiscoverability())) {
+                this.owner.getFacts()[fact.id] = fact;
+                service.sendUpdate('news', this.owner, fact.getFormatted());
+            }
+        });
     }
 
     isDestroyed () {

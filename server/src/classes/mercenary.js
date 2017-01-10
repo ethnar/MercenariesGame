@@ -1,10 +1,9 @@
 const Entity = require('./entity');
-const Worldview = require('./worldview');
+const Human = require('./human');
 
-class Mercenary extends Entity {
+class Mercenary extends Human {
     constructor () {
         super();
-        this.worldview = new Worldview();
     }
 }
 

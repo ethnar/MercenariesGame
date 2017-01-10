@@ -1,7 +1,8 @@
 const Entity = require('./entity');
 const Fact = require('./fact');
-const Mercenary = require('./mercenary');
+const Politician = require('./politician');
 const world = require('../singletons/world');
+const misc = require('../misc');
 
 class Country extends Entity {
     constructor (name) {
@@ -38,11 +39,11 @@ class Country extends Entity {
 
     generateEvents () {
         switch (true) {
-            case !this.ruler && this.politicians.length && this.chances(50 + this.politicians.length * 10):
+            case !this.ruler && this.politicians.length && misc.chances(50 + this.politicians.length * 10):
                 new Fact(95, '%s is preparing elections', this);
                 this.queueEvent(this.elections);
                 break;
-            case this.ruler && !this.seatOfPower && this.chances(80):
+            case this.ruler && !this.seatOfPower && misc.chances(80):
                 let selected = null;
                 this.regions.forEach(region => {
                     region.sites.forEach(site => {
@@ -56,7 +57,7 @@ class Country extends Entity {
                     new Fact(95, '%s has chosen %s as their seat of power.', this, selected);
                 }
                 break;
-            case this.chances(100 - this.politicians.length * 5):
+            case misc.chances(100 - this.politicians.length * 5):
                 this.newPolitician();
                 break;
         }
@@ -64,10 +65,6 @@ class Country extends Entity {
 
     queueEvent (callback) {
         this.eventsQueue.push(callback.name);
-    }
-
-    chances (percentage) {
-        return Math.random() * 100 < percentage;
     }
 
     /** events **/
@@ -81,7 +78,7 @@ class Country extends Entity {
     }
 
     newPolitician () {
-        const newGuy = new Mercenary();
+        const newGuy = new Politician();
         this.politicians.push(newGuy);
         new Fact(30, '%s joins the political scene of %s', newGuy, this);
     }
