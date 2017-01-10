@@ -1,4 +1,5 @@
 const util = require('util');
+let service = require('../singletons/service');
 
 const Entity = require('./entity');
 
@@ -25,6 +26,15 @@ class Fact extends Entity {
         return util.format.apply(util, args);
     }
 }
+
+service.registerHandler('news', (params, player) => {
+    if (player)
+    {
+        let facts = player.getFacts();
+        return Object.keys(facts).map(key => facts[key].getFormatted());
+    }
+    return [];
+});
 
 Entity.registerClass(Fact);
 module.exports = Fact;
