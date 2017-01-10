@@ -11,6 +11,12 @@ class Mission extends Entity {
         this.deadline = args.deadline;
         this.payment = args.payment;
         this.description = args.description;
+        this.startingRegion = args.startingRegion;
+        this.targetRegion = args.targetRegion;
+
+        if (this.startingRegion) {
+            this.startingRegion.addMission(this);
+        }
     }
 
     isInvalid () {

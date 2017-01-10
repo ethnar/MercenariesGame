@@ -1,8 +1,8 @@
-let Entity = require('./entity');
+const Entity = require('./entity');
 const Worldview = require('./worldview');
-let world = require('../singletons/world');
-let service = require('../singletons/service');
-let crypto = require('crypto');
+const world = require('../singletons/world');
+const service = require('../singletons/service');
+const crypto = require('crypto');
 
 service.registerHandler('authenticate', (params, previousPlayer, conn) => {
     let player = world.entities.Player.find(player => {
@@ -46,15 +46,7 @@ class Player extends Entity {
 
     gatherIntelligence () {
         this.sites.forEach(site => {
-            let region = site.getRegion();
-            let country = region.getCountry();
-            let facts = country.getRelatedFacts();
-            facts.forEach(fact => {
-                if (!this.knownFacts[fact.id]) { // TODO: add a chance here
-                    this.knownFacts[fact.id] = fact;
-                    service.sendUpdate('news', this, fact.getFormatted());
-                }
-            });
+            site.gatherIntelligence();
         });
     }
 
