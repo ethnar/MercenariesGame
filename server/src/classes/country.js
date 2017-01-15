@@ -78,7 +78,7 @@ class Country extends Entity {
     }
 
     newPolitician () {
-        const newGuy = new Politician();
+        const newGuy = new Politician({country: this});
         this.politicians.push(newGuy);
         new Fact(30, '%s joins the political scene of %s', newGuy, this);
     }
