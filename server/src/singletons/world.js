@@ -17,10 +17,10 @@ class World {
 
     cycle () {
         console.log('- new cycle -');
-        this.save('./rolling-save.json');
         this.cycleEntities('Country');
         this.cycleEntities('Player');
         this.cycleEntities('Politician');
+        this.save('./rolling-save.json');
     }
 
     cycleEntities (type) {

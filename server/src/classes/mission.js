@@ -25,8 +25,7 @@ class Mission extends Entity {
 }
 
 service.registerHandler('available-missions', (params, player) => {
-    if (player)
-    {
+    if (player) {
         let missions = player.getAvailableMissions();
         return Object.keys(missions).map(key => missions[key].id);
     }
@@ -34,8 +33,7 @@ service.registerHandler('available-missions', (params, player) => {
 });
 
 service.registerHandler('current-missions', (params, player) => {
-    if (player)
-    {
+    if (player) {
         let missions = player.getCurrentMissions();
         return Object.keys(missions).map(key => missions[key].id);
     }
