@@ -33,7 +33,7 @@ class Politician extends Human {
             deadline: Date.now() + Math.floor(Math.random() * 1000 * 60 * 60 * 24) //within 24h
         });
         this.missions.push(newMission);
-        new Fact(10,'%s has a new mission starting in %s: '+message,this,startingRegion);
+        new Fact(10,'%s has a new mission starting in %s: ' + message, this, startingRegion);
     }
 }
 
