@@ -22,18 +22,18 @@ class Politician extends Human {
     }
 
     generateMission () {
-        let startingRegion = misc.randomEntity(this.country.regions);
-        let targetRegion = misc.randomEntity(world.entities.Region);
-        let message = 'Save the world!';
+        let region = misc.randomEntity(this.country.regions);
+        let description = misc.chances(50) ? 'Save the world!' : 'Destroy everything!';
         let newMission = new Mission({
             owner: this,
-            message: message,
-            startingRegion: startingRegion,
-            targetRegion: targetRegion,
-            deadline: Date.now() + Math.floor(Math.random() * 1000 * 60 * 60 * 24) //within 24h
+            description: description,
+            region: region,
+            deadline: Date.now() + Math.floor(Math.random() * 1000 * 60 * 60 * 24), //within 24h
+            discoverability: Math.floor(Math.random() * 100)
         });
         this.missions.push(newMission);
-        new Fact(10,'%s has a new mission starting in %s: ' + message, this, startingRegion);
+        //console.log('New mission - ' + newMission.id + ': '+newMission.description + '. Chances of discovery: ' + newMission.discoverability + '%');
+        //new Fact(10,'%s has a new mission starting in %s: ' + message, this, startingRegion);
     }
 }
 
