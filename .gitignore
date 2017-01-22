@@ -1,4 +1,5 @@
 .idea
+*.css
 */node_modules/*
 rolling-save.json
 

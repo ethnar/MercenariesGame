@@ -1,4 +1,4 @@
-define('services/sites', ['services/server', 'services/regions'], function (ServerService, RegionsService) {
+define('services/sites', ['services/server'], function (ServerService) {
 
     return {
         getSitesStream () {

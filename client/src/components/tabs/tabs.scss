@@ -1,0 +1,11 @@
+.tabs {
+    .tab-headers {
+        display: flex;
+        flex-wrap: wrap;
+
+        > * {
+            padding: 5px;
+            border: 1px solid #aaddff;
+        }
+    }
+}
