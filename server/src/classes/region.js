@@ -34,6 +34,10 @@ class Region extends Entity {
     getCountry () {
         return this.country;
     }
+
+    getMissions(){
+        return this.missions;
+    }
 }
 
 Entity.registerClass(Region);

@@ -11,16 +11,19 @@ class Mission extends Entity {
         this.deadline = args.deadline;
         this.payment = args.payment;
         this.description = args.description;
-        this.startingRegion = args.startingRegion;
-        this.targetRegion = args.targetRegion;
+        this.region = args.region;
+        this.discoverability = args.discoverability;
 
-        if (this.startingRegion) {
-            this.startingRegion.addMission(this);
+        if (this.region) {
+            this.region.addMission(this);
         }
     }
 
     isInvalid () {
+    }
 
+    getDiscoverability(){
+        return this.discoverability;
     }
 }
 

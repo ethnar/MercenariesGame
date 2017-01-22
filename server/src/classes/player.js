@@ -23,10 +23,10 @@ class Player extends Entity {
         this.npc = !!npc;
         this.worldview = new Worldview();
 
-        this.availableMissions = {};
+        this.knownMissions = {};
         this.currentMissions = {};
-        this.money = 0;
         this.knownFacts = {};
+        this.money = 0;
         this.sites = [];
     }
 
@@ -58,8 +58,8 @@ class Player extends Entity {
         return this.knownFacts;
     }
 
-    getAvailableMissions () {
-        return this.availableMissions;
+    getKnownMissions () {
+        return this.knownMissions;
     }
 
     getCurrentMissions () {
@@ -68,6 +68,16 @@ class Player extends Entity {
 
     verifyUsernameAndPassword (name, password) {
         return !this.npc && this.password === Player.passwordHash(password) && this.name === name;
+    }
+
+    isMissionKnown(mission){
+        return !!this.getKnownMissions()[mission.id];
+    }
+
+    addKnownMission(mission){
+        //console.log('Player' + this.name + ' learned about mission: ' + mission.id + ': ' + mission.description);
+        this.knownMissions[mission.id] = mission;
+        //service.sendUpdate('missions', this, mission.getFormatted());
     }
 }
 

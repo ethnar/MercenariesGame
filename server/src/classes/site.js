@@ -35,17 +35,28 @@ class Site extends Entity {
         return this.region;
     }
 
+    getOwner(){
+        return this.owner;
+    }
+
     gatherIntelligence () {
         if (this.isDestroyed() || this.countryProperty) {
             return;
         }
         let region = this.getRegion();
+        let owner = this.getOwner();
         let country = region.getCountry();
         let facts = country.getRelatedFacts();
         facts.forEach(fact => {
-            if (!this.owner.getFacts()[fact.id] && misc.chances(fact.getDiscoverability())) {
-                this.owner.getFacts()[fact.id] = fact;
-                service.sendUpdate('news', this.owner, fact.getFormatted());
+            if (!owner.getFacts()[fact.id] && misc.chances(fact.getDiscoverability())) {
+                owner.getFacts()[fact.id] = fact;
+                service.sendUpdate('news', owner, fact.getFormatted());
+            }
+        });
+        let missions = region.getMissions();
+        missions.forEach(mission => {
+            if(!owner.isMissionKnown(mission) && misc.chances(mission.getDiscoverability())){
+                owner.addKnownMission(mission);
             }
         });
     }

@@ -13,12 +13,12 @@ class Fact extends Entity {
         if (message) {
             console.log(this.getFormatted());
         }
-    }
-
-    getFormatted () {
         this.references.forEach(object => {
             object.relatedFacts.push(this);
         });
+    }
+
+    getFormatted () {
         const args = this.references.map(object => {
             return '{' + object.className + ':' + object.id + '}';
         });
