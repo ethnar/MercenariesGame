@@ -5,7 +5,7 @@ const service = require('../singletons/service');
 const crypto = require('crypto');
 
 service.registerHandler('authenticate', (params, previousPlayer, conn) => {
-    let player = world.entities.Player.find(player => {
+    let player = world.getEntitiesArray('Player').find(player => {
         return player.verifyUsernameAndPassword(params.user, params.password);
     });
     if (player) {
@@ -38,6 +38,10 @@ class Player extends Entity {
 
     addSite (site) {
         this.sites.push(site);
+    }
+
+    getSites () {
+        return this.sites;
     }
 
     cycle () {

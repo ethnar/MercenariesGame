@@ -1,5 +1,9 @@
-require(['views/news', 'views/missions', 'views/sites', 'services/server'], function (NewsView, MissionsView, SitesView, ServerService) {
+require(['views/news', 'views/missions', 'views/sites', 'views/site', 'services/server'], function (NewsView, MissionsView, SitesView, SiteView, ServerService) {
     Vue.use(VueRx, Rx);
+
+    Vue.prototype.stream = function (prop) {
+        return this.$watchAsObservable(prop).startWith(this[prop]);
+    };
 
     ServerService.request('authenticate', {
         user: 'ethnar',
@@ -15,6 +19,12 @@ require(['views/news', 'views/missions', 'views/sites', 'services/server'], func
             }, {
                 path: '/sites',
                 component: SitesView
+            }, {
+                path: '/site/:siteId',
+                component: SiteView
+            }, {
+                path: '*',
+                redirect: '/news'
             }]
         });
 

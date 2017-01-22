@@ -1,5 +1,7 @@
 const Entity = require('./entity');
 const Worldview = require('./worldview');
+const service = require('../singletons/service');
+const world = require('../singletons/world');
 
 class Region extends Entity {
     constructor (name, country) {
@@ -12,11 +14,7 @@ class Region extends Entity {
         this.sites = [];
         this.missions = [];
         this.population = 10000;
-        this.worldviews = {
-            lowest: new Worldview(),
-            median: new Worldview(),
-            highest: new Worldview()
-        };
+        this.worldview = new Worldview(); // median worldview
     }
 
     addSite (site) {
@@ -38,7 +36,28 @@ class Region extends Entity {
     getMissions(){
         return this.missions;
     }
+
+    getPopulation () {
+        return this.population;
+    }
+
+    getPayload () {
+        return {
+            id: this.getId(),
+            name: this.name,
+            country: this.getCountry().getId(),
+            population: this.getPopulation()
+        }
+    }
 }
+
+service.registerHandler('regions', (params, player) => {
+    if (player)
+    {
+        return world.entities.Region.map(region => region.getPayload());
+    }
+    return [];
+});
 
 Entity.registerClass(Region);
 module.exports = Region;

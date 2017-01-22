@@ -1,4 +1,4 @@
-let world = require('../singletons/world');
+const world = require('../singletons/world');
 
 let ids = {};
 
@@ -15,6 +15,10 @@ class Entity {
         this.relatedFacts = [];
 
         world.entities[className].push(this);
+    }
+
+    getId () {
+        return this.id;
     }
 
     getRelatedFacts () {

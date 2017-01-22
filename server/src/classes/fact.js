@@ -1,5 +1,5 @@
 const util = require('util');
-let service = require('../singletons/service');
+const service = require('../singletons/service');
 
 const Entity = require('./entity');
 
