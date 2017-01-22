@@ -29,6 +29,8 @@ class Service {
                 delete this.playerMap[conn];
                 console.log('Connection closed');
             });
+
+            conn.on('error', () => {});
         }).listen(8001);
     }
 
