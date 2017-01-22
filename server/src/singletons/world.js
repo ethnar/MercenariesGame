@@ -6,6 +6,10 @@ class World {
         this.entities = {};
     }
 
+    getEntitiesArray (type) {
+        return this.entities[type];
+    }
+
     run () {
         this.loop();
     }
@@ -24,7 +28,7 @@ class World {
     }
 
     cycleEntities (type) {
-        this.entities[type].forEach(entity => {
+        this.getEntitiesArray(type).forEach(entity => {
             entity.cycle();
         });
     }
@@ -42,7 +46,7 @@ class World {
     save (file) {
         let saveData = {};
         Object.keys(this.entities).forEach(type => {
-            saveData[type] = this.entities[type].map(entity => entity.getSaveData());
+            saveData[type] = this.getEntitiesArray(type).map(entity => entity.getSaveData());
         });
         fs.writeFileSync(file, JSON.stringify(saveData), 'utf8');
     }

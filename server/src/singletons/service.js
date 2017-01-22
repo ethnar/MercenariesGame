@@ -5,7 +5,9 @@ class Service {
         this.connections = [];
         this.handlers = {};
         this.playerMap = new Map();
+    }
 
+    init () {
         ws.createServer((conn) => {
             console.log('New connection');
             this.connections.push(conn);

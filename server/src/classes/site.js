@@ -15,6 +15,7 @@ class Site extends Entity {
         this.standard = 50;
         this.size = 1;
         this.destroyed = false;
+        this.staff = [];
     }
 
     setStandard (value) {
@@ -31,12 +32,21 @@ class Site extends Entity {
         this.countryProperty = null;
     }
 
+    addStaff (staff) {
+        this.staff.push(staff);
+        staff.setSite(this);
+    }
+
     getRegion () {
         return this.region;
     }
 
     getOwner(){
         return this.owner;
+    }
+
+    getStaff () {
+        return this.staff;
     }
 
     gatherIntelligence () {
@@ -64,7 +74,25 @@ class Site extends Entity {
     isDestroyed () {
         return this.destroyed;
     }
+
+    getPayload () {
+        return {
+            id: this.getId(),
+            name: this.name,
+            region: this.getRegion().getId(),
+            staffCount: this.getStaff().length
+        }
+    }
 }
+
+service.registerHandler('sites', (params, player) => {
+    if (player)
+    {
+        let sites = player.getSites();
+        return sites.map(site => site.getPayload());
+    }
+    return [];
+});
 
 Entity.registerClass(Site);
 module.exports = Site;

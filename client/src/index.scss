@@ -1,3 +1,7 @@
 body, html {
   margin: 0;
 }
+
+a[href] a {
+  pointer-events: none;
+}

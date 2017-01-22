@@ -52,12 +52,25 @@ define('services/server', function () {
                 streams[message] = {
                     raw: new Rx.ReplaySubject()
                 };
-                self.request(message).then(items =>
-                {
+                self.request(message).then(items => {
                     items.forEach(item => streams[message].raw.onNext(item));
                 });
                 self.onUpdate(message, item => streams[message].raw.onNext(item));
-                streams[message].output = streams[message].raw.scan((acc, item) => [item].concat(acc), []);
+                streams[message].output = streams[message].raw.scan((acc, item) => {
+                    const result = acc.slice();
+                    if (item.id)
+                    {
+                        const existing = acc.findIndex(i => i.id === item.id);
+                        if (~existing) {
+                            result[existing] = item;
+                        } else {
+                            result.push(item);
+                        }
+                    } else {
+                        result.push(item);
+                    }
+                    return result;
+                }, []);
             }
             return streams[message].output;
         },

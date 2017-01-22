@@ -1,38 +1,57 @@
+let world = require('./singletons/world');
+let service = require('./singletons/service');
+let Player = require('./classes/player');
+let Country = require('./classes/country');
+let Region = require('./classes/region');
+let Staff = require('./classes/staff');
+let Fact = require('./classes/fact');
+let Site = require('./classes/site');
+let Mission = require('./classes/mission');
+let Worldview = require('./classes/worldview');
 
-let toronto = new Region('Toronto', world.entities.Country[0]);
-let quebec = new Region('Quebec City', world.entities.Country[0]);
+
+let canada = new Country('Canada');
+let india = new Country('India');
+let poland = new Country('Poland');
+let russia = new Country('Russia');
+let uk = new Country('United Kingdom');
+
+let test = new Player('test', 'test');
+
+let toronto = new Region('Toronto', canada);
+let quebec = new Region('Quebec City', canada);
 
 let canadianSenate = new Site('Senate', quebec);
 canadianSenate.setStandard(100);
 canadianSenate.setSize(50);
 
 
-let dheli = new Region('Dheli', world.entities.Country[1]);
-let kolkata = new Region('Kolkata', world.entities.Country[1]);
+let dheli = new Region('Dheli', india);
+let kolkata = new Region('Kolkata', india);
 
 let indianSenate = new Site('Senate', dheli);
 indianSenate.setStandard(100);
 indianSenate.setSize(50);
 
 
-let warsaw = new Region('Warsaw', world.entities.Country[2]);
-let krakow = new Region('Krakow', world.entities.Country[2]);
+let warsaw = new Region('Warsaw', poland);
+let krakow = new Region('Krakow', poland);
 
 let polishSenate = new Site('Senate', warsaw);
 polishSenate.setStandard(100);
 polishSenate.setSize(50);
 
 
-let moscow = new Region('Moscow', world.entities.Country[3]);
-let stpetersburg = new Region('Saint Petersburg', world.entities.Country[3]);
+let moscow = new Region('Moscow', russia);
+let stpetersburg = new Region('Saint Petersburg', russia);
 
 let russianSenate = new Site('Senate', moscow);
 russianSenate.setStandard(100);
 russianSenate.setSize(50);
 
 
-let london = new Region('London', world.entities.Country[4]);
-let cardiff = new Region('Cardiff', world.entities.Country[4]);
+let london = new Region('London', uk);
+let cardiff = new Region('Cardiff', uk);
 
 let ukSenate = new Site('Senate', london);
 ukSenate.setStandard(100);
@@ -40,4 +59,28 @@ ukSenate.setSize(50);
 
 
 let hq = new Site('HQ', london);
-hq.setOwner(world.entities.Player[0]);
+hq.setOwner(test);
+
+
+let secondary = new Site('FOB', london);
+secondary.setOwner(test);
+
+hq.addStaff(new Staff());
+hq.addStaff(new Staff());
+hq.addStaff(new Staff());
+hq.addStaff(new Staff());
+secondary.addStaff(new Staff());
+secondary.addStaff(new Staff());
+secondary.addStaff(new Staff());
+
+/****** STARTUP *******/
+
+world.save('./template-save.json');
+
+
+service.init();
+world.run();
+
+process.on('uncaughtException', function (exception) {
+    console.log(exception.stack);
+});
