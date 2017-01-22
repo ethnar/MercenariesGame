@@ -4,8 +4,8 @@ const Site = require('./site');
 const service = require('../singletons/service');
 
 class Staff extends Human {
-    constructor () {
-        super();
+    constructor (args) {
+        super(args);
     }
 
     setSite (site) {

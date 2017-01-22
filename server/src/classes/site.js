@@ -35,6 +35,7 @@ class Site extends Entity {
     addStaff (staff) {
         this.staff.push(staff);
         staff.setSite(this);
+        service.sendUpdate('sites', this.getOwner(), this.getPayload());
     }
 
     getRegion () {

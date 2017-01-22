@@ -17,6 +17,18 @@ class Country extends Entity {
         this.regions = [];
     }
 
+    setNameGenerator (nameGen) {
+        this.nameGenerator = nameGen;
+    }
+
+    generateName () {
+        if (this.nameGenerator) {
+            return require('../name-generator/' + this.nameGenerator)();
+        } else {
+            return 'No-name';
+        }
+    }
+
     cycle () {
         if (!this.processQueue())
         {

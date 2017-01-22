@@ -7,7 +7,7 @@ const Fact = require('./fact');
 
 class Politician extends Human {
     constructor (args) {
-        super();
+        super(args);
 
         args = args || {};
 

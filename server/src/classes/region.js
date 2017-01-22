@@ -69,7 +69,9 @@ class Region extends Entity {
     }
 
     newRecruit () {
-        const newGuy = new Staff();
+        const newGuy = new Staff({
+            country: this.getCountry()
+        });
         this.recruits.push(newGuy);
         const players = this.getCoveringPlayers();
         service.sendUpdate('recruits', players, newGuy.getPayload());
