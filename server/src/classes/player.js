@@ -52,6 +52,14 @@ class Player extends Entity {
         return result;
     }
 
+    getCoveredRegions () {
+        let regions = {};
+        this.getSites().forEach(site => {
+            regions[site.getRegion().getId()] = site.getRegion();
+        });
+        return Object.keys(regions).map(id => regions[id]);
+    }
+
     cycle () {
         this.gatherIntelligence();
     }

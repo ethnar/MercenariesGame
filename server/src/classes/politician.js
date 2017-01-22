@@ -1,7 +1,7 @@
 const Entity = require('./entity');
 const Human = require('./human');
 const Mission = require('./mission.js');
-const misc = require('../misc');
+const misc = require('../singletons/misc');
 let world = require('../singletons/world');
 const Fact = require('./fact');
 

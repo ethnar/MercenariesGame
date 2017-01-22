@@ -1,6 +1,6 @@
 const Entity = require('./entity');
 const service = require('../singletons/service');
-const misc = require('../misc');
+const misc = require('../singletons/misc');
 
 class Site extends Entity {
     constructor (name, region) {
