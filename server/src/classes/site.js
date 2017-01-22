@@ -32,6 +32,11 @@ class Site extends Entity {
         this.countryProperty = null;
     }
 
+    addStaff (staff) {
+        this.staff.push(staff);
+        staff.setSite(this);
+    }
+
     getRegion () {
         return this.region;
     }

@@ -6,8 +6,8 @@ require(['views/news', 'views/missions', 'views/sites', 'views/site', 'services/
     };
 
     ServerService.request('authenticate', {
-        user: 'ethnar',
-        password: 'abc'
+        user: 'test',
+        password: 'test'
     }).then(() => {
         const router = new VueRouter({
             routes: [{

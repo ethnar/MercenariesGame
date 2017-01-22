@@ -4,6 +4,7 @@ const Worldview = require('./worldview');
 class Human extends Entity {
     constructor () {
         super();
+        this.name = Math.random();
         this.worldview = new Worldview();
     }
 }

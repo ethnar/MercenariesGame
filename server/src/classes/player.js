@@ -44,6 +44,14 @@ class Player extends Entity {
         return this.sites;
     }
 
+    getStaff () {
+        let result = [];
+        this.getSites().forEach(site => {
+            result = result.concat(site.getStaff())
+        });
+        return result;
+    }
+
     cycle () {
         this.gatherIntelligence();
     }

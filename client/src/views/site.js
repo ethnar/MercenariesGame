@@ -1,11 +1,12 @@
 define('views/site', [
-    'components/navbar', 'components/region', 'components/tabs/tabs', 'services/sites'
-], function (navbar, region, tabs, SitesService) {
+    'components/navbar', 'components/region', 'components/tabs/tabs', 'components/staff/staff', 'services/sites'
+], function (navbar, region, tabs, staff, SitesService) {
     return {
         components: {
             navbar,
             region,
-            tabs
+            tabs,
+            staff
         },
 
         template: `
@@ -16,7 +17,9 @@ define('views/site', [
         <div class="name">{{site.name}}</div>
         <region :regionId="site.region"></region>
         <tabs>
-            <tab header="Staff">List of staff</tab>
+            <tab header="Staff">
+                <staff :filter="filterSiteStaff"></staff>
+            </tab>
             <tab header="Equipment">List of installed equipment</tab>
             <tab header="Inventory">Inventory list</tab>
         </tabs>
@@ -46,6 +49,12 @@ define('views/site', [
         },
 
         destroyed () {
+        },
+
+        methods: {
+            filterSiteStaff (person) {
+                return person.site === this.siteId;
+            }
         }
     };
 });
