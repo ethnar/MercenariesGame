@@ -29,6 +29,8 @@ class Service {
                 delete this.playerMap[conn];
                 console.log('Connection closed');
             });
+
+            conn.on('error', () => {});
         }).listen(8001);
     }
 
@@ -45,14 +47,19 @@ class Service {
         this.handlers[topic] = callback;
     }
 
-    sendUpdate (topic, player, data) {
-        this.connections.forEach(connection => {
-            if (!player || this.playerMap[connection] === player) {
-                connection.sendText(JSON.stringify({
-                    update: topic,
-                    data: data
-                }));
-            }
+    sendUpdate (topic, players, data) {
+        if (!Array.isArray(players)) {
+            players = [players];
+        }
+        players.forEach(player => {
+            this.connections.forEach(connection => {
+                if (!player || this.playerMap[connection] === player) {
+                    connection.sendText(JSON.stringify({
+                        update: topic,
+                        data: data
+                    }));
+                }
+            });
         });
     }
 

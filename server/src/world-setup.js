@@ -11,10 +11,15 @@ let Worldview = require('./classes/worldview');
 
 
 let canada = new Country('Canada');
+canada.setNameGenerator('canada');
 let india = new Country('India');
+india.setNameGenerator('canada');
 let poland = new Country('Poland');
+poland.setNameGenerator('canada');
 let russia = new Country('Russia');
+russia.setNameGenerator('canada');
 let uk = new Country('United Kingdom');
+uk.setNameGenerator('canada');
 
 let test = new Player('test', 'test');
 
@@ -61,17 +66,16 @@ ukSenate.setSize(50);
 let hq = new Site('HQ', london);
 hq.setOwner(test);
 
-
 let secondary = new Site('FOB', london);
 secondary.setOwner(test);
 
-hq.addStaff(new Staff());
-hq.addStaff(new Staff());
-hq.addStaff(new Staff());
-hq.addStaff(new Staff());
-secondary.addStaff(new Staff());
-secondary.addStaff(new Staff());
-secondary.addStaff(new Staff());
+hq.addStaff(new Staff({country: uk}));
+hq.addStaff(new Staff({country: uk}));
+hq.addStaff(new Staff({country: uk}));
+hq.addStaff(new Staff({country: uk}));
+secondary.addStaff(new Staff({country: uk}));
+secondary.addStaff(new Staff({country: uk}));
+secondary.addStaff(new Staff({country: uk}));
 
 /****** STARTUP *******/
 

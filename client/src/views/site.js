@@ -1,6 +1,8 @@
 define('views/site', [
-    'components/navbar', 'components/region', 'components/tabs/tabs', 'components/staff/staff', 'services/sites'
-], function (navbar, region, tabs, staff, SitesService) {
+    'components/navbar', 'components/region', 'components/tabs/tabs', 'components/staff/staff',
+    'services/sites', 'services/staff', 'services/recruits'
+], function (navbar, region, tabs, staff,
+             SitesService, StaffService, RecruitsService) {
     return {
         components: {
             navbar,
@@ -18,7 +20,19 @@ define('views/site', [
         <region :regionId="site.region"></region>
         <tabs>
             <tab header="Staff">
-                <staff :filter="filterSiteStaff"></staff>
+                <div v-if="mode === 'list'">
+                    <button @click="mode = 'recruit'">Recruit</button>
+                    <div v-for="person in staff">
+                        <staff :person="person"></staff>
+                    </div>
+                </div>
+                <div v-if="mode === 'recruit'">
+                    <button @click="mode = 'list'">Cancel</button>
+                    <div v-for="person in recruits">
+                        <staff :person="person"></staff>
+                        <button @click="recruit(person.id);mode = 'list';">Recruit</button>
+                    </div>
+                </div>
             </tab>
             <tab header="Equipment">List of installed equipment</tab>
             <tab header="Inventory">Inventory list</tab>
@@ -27,6 +41,7 @@ define('views/site', [
 </div>
 `,
         data: () => ({
+            mode: 'list'
         }),
 
         computed: {
@@ -37,7 +52,19 @@ define('views/site', [
 
         subscriptions () {
             return {
-                site: this.$watchAsObservable('siteId').startWith(this.siteId).flatMapLatest(siteId => {
+                staff: StaffService.getStaffStream().map(staff => {
+                    return staff.filter(person => person.site === this.siteId);
+                }),
+                recruits: this.stream('siteId').flatMapLatest(siteId => {
+                    return SitesService.getSitesStream().map(sites => {
+                        console.log(siteId);
+                        console.log(sites);
+                        return sites.find(site => site.id === siteId);
+                    }).flatMapLatest(site => {
+                        return RecruitsService.getRecruitsStream(site.region);
+                    });
+                }),
+                site: this.stream('siteId').flatMapLatest(siteId => {
                     return SitesService.getSitesStream().map(sites => {
                         return sites.find(site => site.id === siteId);
                     });
@@ -52,8 +79,12 @@ define('views/site', [
         },
 
         methods: {
-            filterSiteStaff (person) {
-                return person.site === this.siteId;
+            recruit (recruitId) {
+                RecruitsService.recruit(recruitId, this.siteId).then(result => {
+                    if (!result) {
+                        alert('Something went wrong');
+                    }
+                });
             }
         }
     };

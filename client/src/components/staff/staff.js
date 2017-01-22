@@ -1,30 +1,21 @@
-define('components/staff/staff', ['services/staff'], function (StaffService) {
+define('components/staff/staff', [], function () {
     return {
         components: {
         },
 
         template: `
             <div>
-                <header>Staff list:</header>
-                <div v-for="person in staff">{{person}}</div>
+                {{person}}
             </div>
         `,
         props: [
-            'filter'
+            'person'
         ],
 
         data: () => ({
-            staff: []
         }),
 
         subscriptions () {
-            return {
-                staff: this.stream('filter').flatMapLatest(filter => {
-                    return StaffService.getStaffStream().map(staff => {
-                        return staff.filter(filter);
-                    });
-                })
-            }
         },
 
         created () {

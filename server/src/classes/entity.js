@@ -21,6 +21,11 @@ class Entity {
         return this.id;
     }
 
+    static getById (entityId) {
+        const className = this.name;
+        return world.entities[className].find(entity => entity.getId() === entityId);
+    }
+
     getRelatedFacts () {
         return this.relatedFacts;
     }

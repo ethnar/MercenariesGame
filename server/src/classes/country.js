@@ -2,7 +2,7 @@ const Entity = require('./entity');
 const Fact = require('./fact');
 const Politician = require('./politician');
 const world = require('../singletons/world');
-const misc = require('../misc');
+const misc = require('../singletons/misc');
 
 class Country extends Entity {
     constructor (name) {
@@ -15,6 +15,18 @@ class Country extends Entity {
         this.eventsQueue = [];
         this.politicians = [];
         this.regions = [];
+    }
+
+    setNameGenerator (nameGen) {
+        this.nameGenerator = nameGen;
+    }
+
+    generateName () {
+        if (this.nameGenerator) {
+            return require('../name-generator/' + this.nameGenerator)();
+        } else {
+            return 'No-name';
+        }
     }
 
     cycle () {
