@@ -87,9 +87,8 @@ class Player extends Entity {
     }
 
     addKnownMission(mission){
-        //console.log('Player' + this.name + ' learned about mission: ' + mission.id + ': ' + mission.description);
         this.knownMissions[mission.id] = mission;
-        //service.sendUpdate('missions', this, mission.getFormatted());
+        service.sendUpdate('known-missions', this, mission.getPayload());
     }
 }
 
