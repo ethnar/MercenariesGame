@@ -8,15 +8,16 @@ define('views/missions', ['components/navbar', 'services/missions'], function (n
 <div>
     <navbar></navbar>
     <header>Current missions:</header>
-    <header>Available missions:</header>
+    <header>Known missions:</header>
+    <div v-for="item in knownMissions">{{item}}</div>
 </div>
 `,
         data: () => ({
-            availableMissions: MissionsService.getAvailableMissionsStream(),
-            currentMissions: MissionsService.getCurrentMissionsStream()
         }),
 
         subscriptions: () => ({
+            knownMissions: MissionsService.getKnownMissionsStream(),
+            currentMissions: MissionsService.getCurrentMissionsStream()
         }),
 
         created () {

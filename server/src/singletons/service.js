@@ -36,7 +36,7 @@ class Service {
 
     handleRequest (request, conn) {
         if (!this.handlers[request.request]) {
-            console.error('Invalid request');
+            console.error('Invalid request: ' + request.request);
             return null;
         } else {
             return this.handlers[request.request](request.params, this.playerMap[conn], conn);
