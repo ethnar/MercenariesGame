@@ -1,6 +1,6 @@
 const Entity = require('./entity');
 const service = require('../singletons/service');
-const misc = require('../misc');
+const misc = require('../singletons/misc');
 
 class Site extends Entity {
     constructor (name, region) {
@@ -35,6 +35,7 @@ class Site extends Entity {
     addStaff (staff) {
         this.staff.push(staff);
         staff.setSite(this);
+        service.sendUpdate('sites', this.getOwner(), this.getPayload());
     }
 
     getRegion () {

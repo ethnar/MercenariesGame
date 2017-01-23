@@ -50,29 +50,34 @@ define('services/server', function () {
         getListStream (message) {
             if (!streams[message]) {
                 streams[message] = {
-                    raw: new Rx.ReplaySubject()
+                    data: [],
+                    stream: new Rx.ReplaySubject()
                 };
                 self.request(message).then(items => {
-                    items.forEach(item => streams[message].raw.onNext(item));
+                    streams[message].data = items;
+                    streams[message].stream.onNext(items);
                 });
-                self.onUpdate(message, item => streams[message].raw.onNext(item));
-                streams[message].output = streams[message].raw.scan((acc, item) => {
-                    const result = acc.slice();
+                self.onUpdate(message, item => {
+                    const items = streams[message].data;
                     if (item.id)
                     {
-                        const existing = acc.findIndex(i => i.id === item.id);
+                        const existing = items.findIndex(i => i.id === item.id);
                         if (~existing) {
-                            result[existing] = item;
+                            if (item.delete) {
+                                items.splice(existing, 1);
+                            } else {
+                                items[existing] = item;
+                            }
                         } else {
-                            result.push(item);
+                            items.push(item);
                         }
                     } else {
-                        result.push(item);
+                        items.push(item);
                     }
-                    return result;
-                }, []);
+                    streams[message].stream.onNext(items)
+                });
             }
-            return streams[message].output;
+            return streams[message].stream;
         },
 
         onUpdate (name, handler) {
