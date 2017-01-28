@@ -6,6 +6,7 @@ const service = require('../singletons/service');
 class Staff extends Human {
     constructor (args) {
         super(args);
+        this.strength = 5;
     }
 
     setSite (site) {
@@ -13,11 +14,16 @@ class Staff extends Human {
         service.sendUpdate('staff', site.getOwner(), this.getPayload());
     }
 
+    getHireCost () {
+        return this.strength + 1000;
+    }
+
     getPayload () {
         return {
             id: this.id,
             name: this.name,
-            site: this.site ? this.site.getId() : null
+            site: this.site ? this.site.getId() : null,
+            cost: this.getHireCost()
         }
     }
 }
@@ -36,11 +42,15 @@ service.registerHandler('recruit', (params, player) => {
     const recruit = Staff.getById(params.staff);
 
     if (player && site && recruit && site.getOwner() === player) {
-        site.getRegion().withdrawRecruit(recruit);
-        site.addStaff(recruit);
-        return true;
+        if (player.pay(recruit.getHireCost()))
+        {
+            site.getRegion().withdrawRecruit(recruit);
+            site.addStaff(recruit);
+            return true;
+        }
+        return 'Not enough funds';
     }
-    return false;
+    return 'Invalid request';
 });
 
 Entity.registerClass(Staff);

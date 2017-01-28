@@ -69,6 +69,8 @@ hq.setOwner(test);
 let secondary = new Site('FOB', london);
 secondary.setOwner(test);
 
+test.addFunds(10000);
+
 hq.addStaff(new Staff({country: uk}));
 hq.addStaff(new Staff({country: uk}));
 hq.addStaff(new Staff({country: uk}));

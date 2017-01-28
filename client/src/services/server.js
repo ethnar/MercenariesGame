@@ -47,6 +47,19 @@ define('services/server', function () {
             });
         },
 
+        getStream (message) {
+            if (!streams[message]) {
+                streams[message] = new Rx.ReplaySubject(1);
+                self.request(message).then(result => {
+                    streams[message].onNext(result);
+                });
+                self.onUpdate(message, update => {
+                    streams[message].onNext(update)
+                });
+            }
+            return streams[message];
+        },
+
         getListStream (message) {
             if (!streams[message]) {
                 streams[message] = {

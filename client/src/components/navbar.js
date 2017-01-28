@@ -1,14 +1,20 @@
-define('components/navbar', [], function () {
+define('components/navbar', ['services/player'], function (PlayerService) {
     return {
         name: 'navbar',
         template: `
-<div>
-    <a href="#/news">News</a>
-    <a href="#/missions">Missions</a>
-    <a href="#/sites">Sites</a>
+<div class="navbar">
+    <div>
+        <a href="#/news">News</a>
+        <a href="#/missions">Missions</a>
+        <a href="#/sites">Sites</a>
+    </div>
+    <div class="funds">
+        {{funds}}
+    </div>
 </div>
 `,
-        created () {
-        }
+        subscriptions: () => ({
+            funds: PlayerService.getFundsStream()
+        })
     };
 });

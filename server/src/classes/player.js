@@ -4,16 +4,6 @@ const world = require('../singletons/world');
 const service = require('../singletons/service');
 const crypto = require('crypto');
 
-service.registerHandler('authenticate', (params, previousPlayer, conn) => {
-    let player = world.getEntitiesArray('Player').find(player => {
-        return player.verifyUsernameAndPassword(params.user, params.password);
-    });
-    if (player) {
-        service.setPlayer(conn, player);
-    }
-    return !!player;
-});
-
 class Player extends Entity {
     constructor (name, password, npc) {
         super();
@@ -26,7 +16,7 @@ class Player extends Entity {
         this.knownMissions = {};
         this.currentMissions = {};
         this.knownFacts = {};
-        this.money = 0;
+        this.funds = 0;
         this.sites = [];
     }
 
@@ -38,6 +28,24 @@ class Player extends Entity {
 
     addSite (site) {
         this.sites.push(site);
+    }
+
+    getFunds () {
+        return this.funds;
+    }
+
+    addFunds (funds) {
+        this.funds += funds;
+        service.sendUpdate('funds', this, this.funds);
+    }
+
+    pay (funds) {
+        if (this.funds >= funds) {
+            this.funds -= funds;
+            service.sendUpdate('funds', this, this.funds);
+            return true;
+        }
+        return false;
     }
 
     getSites () {
@@ -100,6 +108,23 @@ class Player extends Entity {
         //service.sendUpdate('missions', this, mission.getFormatted());
     }
 }
+
+service.registerHandler('authenticate', (params, previousPlayer, conn) => {
+    let player = world.getEntitiesArray('Player').find(player => {
+        return player.verifyUsernameAndPassword(params.user, params.password);
+    });
+    if (player) {
+        service.setPlayer(conn, player);
+    }
+    return !!player;
+});
+
+service.registerHandler('funds', (params, player) => {
+    if (player) {
+        return player.getFunds();
+    }
+    return null;
+});
 
 Entity.registerClass(Player);
 module.exports = Player;

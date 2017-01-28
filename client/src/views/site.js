@@ -81,8 +81,8 @@ define('views/site', [
         methods: {
             recruit (recruitId) {
                 RecruitsService.recruit(recruitId, this.siteId).then(result => {
-                    if (!result) {
-                        alert('Something went wrong');
+                    if (result !== true) {
+                        alert(result);
                     }
                 });
             }
