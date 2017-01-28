@@ -2,6 +2,7 @@ const Entity = require('./entity');
 const Human = require('./human');
 const Site = require('./site');
 const service = require('../singletons/service');
+const errorResponse = require('../functions/error-response');
 
 class Staff extends Human {
     constructor (args) {
@@ -45,22 +46,18 @@ service.registerHandler('recruit', (params, player) => {
     const site = Site.getById(params.site);
     const recruit = Staff.getById(params.staff);
 
-    if (player && site && recruit && site.getOwner() === player) {
-        if (player.pay(recruit.getHireCost()))
-        {
-            site.getRegion().withdrawRecruit(recruit);
-            site.addStaff(recruit);
-            return {
-                result: true
-            };
-        }
-        return {
-            message: 'Not enough funds'
-        };
+    if (!player || !site || !recruit) {
+        return errorResponse('Invalid request');
     }
-    return {
-        message: 'Invalid request'
-    };
+    if (site.getOwner() !== player) {
+        return errorResponse('Managing non-owned site');
+    }
+    if (!player.pay(recruit.getHireCost())) {
+        return errorResponse('Not enough funds');
+    }
+    site.getRegion().withdrawRecruit(recruit);
+    site.addStaff(recruit);
+    return { result: true };
 });
 
 Entity.registerClass(Staff);

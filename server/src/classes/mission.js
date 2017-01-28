@@ -2,6 +2,7 @@ let service = require('../singletons/service');
 const Entity = require('./entity');
 const Site = require('./site');
 const Staff = require('./staff');
+const errorResponse = require('../functions/error-response');
 
 class Mission extends Entity {
     constructor (args) {
@@ -76,18 +77,20 @@ service.registerHandler('startMission', (params, player) => {
     const mission = Mission.getById(params.mission);
     const staffList = params.staffList.map(staffId => Staff.getById(staffId));
 
-    if (player && mission && site && staffList.length && site.getOwner() === player) {
-        if (!player.isMissionKnown(mission)) {
-            return { message: 'Sending staff to an unknown mission' }
-        }
-        staffList.forEach(staff => {
-            if (staff.getSite() !== site) {
-                return { message: 'Sending staff from wrong site' }
-            }
-        });
-        return { result: true };
+    if (!player || !mission || !site || !staffList || !staffList.length) {
+        return errorResponse('Invalid request');
     }
-    return { message: 'Invalid request' };
+    if (site.getOwner() !== player) {
+        return errorResponse('Managing non-owned site');
+    }
+    if (!player.isMissionKnown(mission)) {
+        return errorResponse('Sending staff to an unknown mission');
+    }
+    if (staffList.find(staff => staff.getSite() !== site)) {
+        return errorResponse('Sending staff from wrong site');
+    }
+
+    return { result: true };
 });
 
 Entity.registerClass(Mission);
