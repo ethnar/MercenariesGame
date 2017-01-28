@@ -8,6 +8,7 @@ class Staff extends Human {
     constructor (args) {
         super(args);
         this.strength = 5;
+        this.currentMission = null;
     }
 
     setSite (site) {
@@ -19,6 +20,14 @@ class Staff extends Human {
         return this.site;
     }
 
+    getMission () {
+        return this.currentMission;
+    }
+
+    goOnMission (mission) {
+        this.currentMission = mission;
+    }
+
     getHireCost () {
         return this.strength + 1000;
     }
@@ -27,8 +36,9 @@ class Staff extends Human {
         return {
             id: this.id,
             name: this.name,
-            site: this.site ? this.site.getId() : null,
-            cost: this.getHireCost()
+            site: this.getSite() ? this.getSite().getId() : null,
+            cost: this.getHireCost(),
+            mission: this.getMission() ? this.getMission().getId() : null
         }
     }
 }

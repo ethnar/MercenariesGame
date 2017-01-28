@@ -32,8 +32,16 @@ class Politician extends Human {
             discoverability: Math.floor(Math.random() * 100)
         });
         this.missions.push(newMission);
-        //console.log('New mission - ' + newMission.id + ': '+newMission.description + '. Chances of discovery: ' + newMission.discoverability + '%');
-        //new Fact(10,'%s has a new mission starting in %s: ' + message, this, startingRegion);
+    }
+
+    withdrawMission (mission) {
+        const idx = this.missions.findIndex(m => m === mission);
+        mission.setWithdrawn(true);
+        world.getEntitiesArray('Player').forEach(player => {
+            if (player.isMissionKnown(mission)) {
+                player.forgetMission(mission);
+            }
+        });
     }
 }
 

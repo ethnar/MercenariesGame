@@ -94,6 +94,11 @@ class Player extends Entity {
         return this.currentMissions;
     }
 
+    startedMission (mission) {
+        this.currentMissions[mission.id] = mission;
+        service.sendUpdate('current-missions', this, mission.getPayload());
+    }
+
     verifyUsernameAndPassword (name, password) {
         return !this.npc && this.password === Player.passwordHash(password) && this.name === name;
     }
@@ -105,6 +110,11 @@ class Player extends Entity {
     addKnownMission(mission){
         this.knownMissions[mission.id] = mission;
         service.sendUpdate('known-missions', this, mission.getPayload());
+    }
+
+    forgetMission (mission) {
+        delete this.knownMissions[mission.id];
+        service.sendUpdate('known-missions', this, { delete: true, id: mission.getId() });
     }
 
     isFactKnown(fact){

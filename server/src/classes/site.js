@@ -69,7 +69,7 @@ class Site extends Entity {
         });
         let missions = region.getMissions();
         missions.forEach(mission => {
-            if(!owner.isMissionKnown(mission) && misc.chances(mission.getDiscoverability())){
+            if(!owner.isMissionKnown(mission) && !mission.isWithdrawn() && misc.chances(mission.getDiscoverability())){
                 owner.addKnownMission(mission);
             }
         });

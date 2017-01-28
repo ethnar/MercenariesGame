@@ -8,6 +8,11 @@ define('views/missions', ['components/navbar', 'services/missions'], function (n
 <div>
     <navbar></navbar>
     <header>Current missions:</header>
+    <div v-for="mission in currentMissions">
+        <a :href="'#/mission/' + mission.id">
+            {{mission}}
+        </a>
+    </div>
     <header>Known missions:</header>
     <div v-for="mission in knownMissions">
         <a :href="'#/mission/' + mission.id">

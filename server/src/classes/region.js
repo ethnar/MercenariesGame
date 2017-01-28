@@ -81,7 +81,7 @@ class Region extends Entity {
         const index = this.recruits.indexOf(recruit);
         this.recruits.splice(index, 1);
         const players = this.getCoveringPlayers();
-        service.sendUpdate('recruits', players, {delete: true, id: recruit.id});
+        service.sendUpdate('recruits', players, { delete: true, id: recruit.getId() });
     }
 
     cycle () {

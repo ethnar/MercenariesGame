@@ -16,13 +16,25 @@ class Mission extends Entity {
         this.description = args.description;
         this.region = args.region;
         this.discoverability = args.discoverability;
+        this.withdrawn = false;
 
         if (this.region) {
             this.region.addMission(this);
         }
     }
 
-    isInvalid () {
+    setWithdrawn () {
+        this.withdrawn = true;
+    }
+
+    isWithdrawn () {
+        return this.withdrawn;
+    }
+
+    start (player, site, staffList) {
+        this.getOwner().withdrawMission(this);
+        player.startedMission(this);
+        staffList.forEach(staff => staff.goOnMission(this));
     }
 
     getDiscoverability(){
@@ -83,6 +95,9 @@ service.registerHandler('startMission', (params, player) => {
     if (site.getOwner() !== player) {
         return errorResponse('Managing non-owned site');
     }
+    if (staffList.find(staff => staff.getMission())) {
+        return errorResponse('Sending staff that\'s currently on mission');
+    }
     if (!player.isMissionKnown(mission)) {
         return errorResponse('Sending staff to an unknown mission');
     }
@@ -90,7 +105,7 @@ service.registerHandler('startMission', (params, player) => {
         return errorResponse('Sending staff from wrong site');
     }
 
-
+    mission.start(player, site, staffList);
 
     return { result: true };
 });
