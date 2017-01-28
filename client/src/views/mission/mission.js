@@ -72,7 +72,9 @@ define('views/mission/mission', ['components/navbar', 'components/site/site', 'c
                     .filter(staffId => this.selectedStaff[staffId])
                     .map(staffId => +staffId);
                 MissionsService.startMission(this.missionId, this.selectedSite.id, staffIds).then(response => {
-                    if (response.result !== true) {
+                    if (response.result) {
+                        window.router.push('/missions');
+                    } else {
                         alert(response.message);
                     }
                 });

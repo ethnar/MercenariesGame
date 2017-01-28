@@ -55,8 +55,10 @@ service.registerHandler('recruit', (params, player) => {
     if (!player.pay(recruit.getHireCost())) {
         return errorResponse('Not enough funds');
     }
+
     site.getRegion().withdrawRecruit(recruit);
     site.addStaff(recruit);
+
     return { result: true };
 });
 

@@ -90,6 +90,8 @@ service.registerHandler('startMission', (params, player) => {
         return errorResponse('Sending staff from wrong site');
     }
 
+
+
     return { result: true };
 });
 

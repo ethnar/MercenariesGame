@@ -30,7 +30,7 @@ define('views/site', [
                     <button @click="mode = 'list'">Cancel</button>
                     <div v-for="person in recruits">
                         <staff :person="person"></staff>
-                        <button @click="recruit(person.id);mode = 'list';">Recruit</button>
+                        <button @click="recruit(person.id);">Recruit</button>
                     </div>
                 </div>
             </tab>
@@ -78,7 +78,9 @@ define('views/site', [
         methods: {
             recruit (recruitId) {
                 RecruitsService.recruit(recruitId, this.siteId).then(response => {
-                    if (response.result !== true) {
+                    if (response.result) {
+                        this.mode = 'list';
+                    } else {
                         alert(response.message);
                     }
                 });

@@ -10,7 +10,7 @@ require(['views/news', 'views/missions', 'views/mission/mission', 'views/sites',
         user: 'test',
         password: 'test'
     }).then(() => {
-        const router = new VueRouter({
+        window.router = new VueRouter({
             routes: [{
                 path: '/news',
                 component: NewsView
@@ -33,7 +33,7 @@ require(['views/news', 'views/missions', 'views/mission/mission', 'views/sites',
         });
 
         const app = new Vue({
-            router: router
+            router: window.router
         }).$mount('#app');
     });
 });
