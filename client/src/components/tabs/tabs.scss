@@ -2,6 +2,7 @@
     .tab-headers {
         display: flex;
         flex-wrap: wrap;
+        cursor: pointer;
 
         > * {
             padding: 5px;

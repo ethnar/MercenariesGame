@@ -59,8 +59,8 @@ class Site extends Entity {
         let country = region.getCountry();
         let facts = country.getRelatedFacts();
         facts.forEach(fact => {
-            if (!owner.getFacts()[fact.id] && misc.chances(fact.getDiscoverability())) {
-                owner.getFacts()[fact.id] = fact;
+            if (!owner.isFactKnown(fact) && misc.chances(fact.getDiscoverability())) {
+                owner.addKnownFact(fact);
                 service.sendUpdate('news', owner, fact.getFormatted());
             }
         });

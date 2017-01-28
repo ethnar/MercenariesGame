@@ -1,8 +1,8 @@
 define('services/missions', ['services/server'], function (ServerService) {
 
     return {
-        getAvailableMissionsStream () {
-            return ServerService.getListStream('available-missions');
+        getKnownMissionsStream () {
+            return ServerService.getListStream('known-missions');
         },
 
         getCurrentMissionsStream () {

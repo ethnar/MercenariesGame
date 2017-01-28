@@ -82,7 +82,7 @@ class Player extends Entity {
         return this.name;
     }
 
-    getFacts () {
+    getKnownFacts () {
         return this.knownFacts;
     }
 
@@ -103,9 +103,17 @@ class Player extends Entity {
     }
 
     addKnownMission(mission){
-        //console.log('Player' + this.name + ' learned about mission: ' + mission.id + ': ' + mission.description);
         this.knownMissions[mission.id] = mission;
-        //service.sendUpdate('missions', this, mission.getFormatted());
+        service.sendUpdate('known-missions', this, mission.getPayload());
+    }
+
+    isFactKnown(fact){
+        return !!this.getKnownFacts()[fact.id]
+    }
+
+    addKnownFact(fact){
+        this.knownFacts[fact.id] = fact;
+        service.sendUpdate('news', this, fact.getFormatted());
     }
 }
 

@@ -25,12 +25,33 @@ class Mission extends Entity {
     getDiscoverability(){
         return this.discoverability;
     }
+
+    getDescription(){
+        return this.description;
+    }
+
+    getRegion(){
+        return this.region;
+    }
+
+    getDeadline(){
+        return this.deadline;
+    }
+
+    getPayload () {
+        return {
+            id: this.getId(),
+            description: this.getDescription(),
+            region: this.getRegion().getId(),
+            deadline: this.getDeadline()
+        }
+    }
 }
 
-service.registerHandler('available-missions', (params, player) => {
+service.registerHandler('known-missions', (params, player) => {
     if (player) {
-        let missions = player.getAvailableMissions();
-        return Object.keys(missions).map(key => missions[key].id);
+        let missions = player.getKnownMissions();
+        return Object.keys(missions).map(key => missions[key].getPayload());
     }
     return [];
 });
@@ -38,7 +59,7 @@ service.registerHandler('available-missions', (params, player) => {
 service.registerHandler('current-missions', (params, player) => {
     if (player) {
         let missions = player.getCurrentMissions();
-        return Object.keys(missions).map(key => missions[key].id);
+        return Object.keys(missions).map(key => missions[key].getPayload());
     }
     return [];
 });
