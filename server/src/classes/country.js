@@ -21,6 +21,13 @@ class Country extends Entity {
         return this.name;
     }
 
+    getPayload () {
+        return {
+            id: this.getId(),
+            name: this.name
+        }
+    }
+
     setNameGenerator (nameGen) {
         this.nameGenerator = nameGen;
     }

@@ -1,6 +1,7 @@
-define('views/sites', ['components/region', 'components/navbar', 'services/sites'], function (region, navbar, SitesService) {
+define('views/sites', ['components/region', 'components/site/site', 'components/navbar', 'services/sites'], function (region, site, navbar, SitesService) {
     return {
         components: {
+            site,
             navbar,
             region
         },
@@ -10,9 +11,7 @@ define('views/sites', ['components/region', 'components/navbar', 'services/sites
     <navbar></navbar>
     <header>Sites:</header>
     <a v-for="site in sites" class="site" :href="'#/site/' + site.id">
-        <div class="name">{{site.name}}</div>
-        <region :region-id="site.region"></region>
-        <div class="staffCount">Staff: {{site.staffCount}}</div>
+        <site :siteId="site.id"/>
     </a>
 </div>
 `,

@@ -55,19 +55,16 @@ define('views/site', [
                 staff: StaffService.getStaffStream().map(staff => {
                     return staff.filter(person => person.site === this.siteId);
                 }),
-                recruits: this.stream('siteId').flatMapLatest(siteId => {
-                    return SitesService.getSitesStream().map(sites => {
-                        console.log(siteId);
-                        console.log(sites);
-                        return sites.find(site => site.id === siteId);
-                    }).flatMapLatest(site => {
-                        return RecruitsService.getRecruitsStream(site.region);
-                    });
-                }),
                 site: this.stream('siteId').flatMapLatest(siteId => {
-                    return SitesService.getSitesStream().map(sites => {
-                        return sites.find(site => site.id === siteId);
-                    });
+                    return SitesService
+                        .getSiteStream(siteId);
+                }),
+                recruits: this.stream('siteId').flatMapLatest(siteId => {
+                    return SitesService
+                        .getSiteStream(siteId)
+                        .flatMapLatest(site => {
+                            return RecruitsService.getRecruitsStream(site.region);
+                        });
                 })
             }
         },
@@ -80,9 +77,9 @@ define('views/site', [
 
         methods: {
             recruit (recruitId) {
-                RecruitsService.recruit(recruitId, this.siteId).then(result => {
-                    if (result !== true) {
-                        alert(result);
+                RecruitsService.recruit(recruitId, this.siteId).then(response => {
+                    if (response.result !== true) {
+                        alert(response.message);
                     }
                 });
             }

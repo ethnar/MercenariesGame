@@ -14,6 +14,10 @@ class Staff extends Human {
         service.sendUpdate('staff', site.getOwner(), this.getPayload());
     }
 
+    getSite () {
+        return this.site;
+    }
+
     getHireCost () {
         return this.strength + 1000;
     }
@@ -46,11 +50,17 @@ service.registerHandler('recruit', (params, player) => {
         {
             site.getRegion().withdrawRecruit(recruit);
             site.addStaff(recruit);
-            return true;
+            return {
+                result: true
+            };
         }
-        return 'Not enough funds';
+        return {
+            message: 'Not enough funds'
+        };
     }
-    return 'Invalid request';
+    return {
+        message: 'Invalid request'
+    };
 });
 
 Entity.registerClass(Staff);

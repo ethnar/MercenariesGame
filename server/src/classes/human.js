@@ -19,6 +19,13 @@ class Human extends Entity {
     getLabel () {
         return this.name;
     }
+
+    getPayload () {
+        return {
+            id: this.getId(),
+            name: this.name
+        }
+    }
 }
 
 Entity.registerClass(Human);
