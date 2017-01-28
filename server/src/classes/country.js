@@ -17,6 +17,10 @@ class Country extends Entity {
         this.regions = [];
     }
 
+    getLabel () {
+        return this.name;
+    }
+
     setNameGenerator (nameGen) {
         this.nameGenerator = nameGen;
     }

@@ -1,14 +1,15 @@
-define('views/news', ['services/news', 'components/navbar'], function (NewsService, navbar) {
+define('views/news', ['services/news', 'components/navbar', 'components/info/info'], function (NewsService, navbar, info) {
     return {
         components: {
-            navbar
+            navbar,
+            info
         },
 
         template: `
 <div>
     <navbar></navbar>
     <header>Recent news:</header>
-    <div v-for="item in news">{{item}}</div>
+    <info v-for="item in news" :message="item">{{item}}</info>
 </div>
 `,
         data: () => ({

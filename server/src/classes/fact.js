@@ -19,9 +19,7 @@ class Fact extends Entity {
     }
 
     getFormatted () {
-        const args = this.references.map(object => {
-            return '{' + object.className + ':' + object.id + '}';
-        });
+        const args = this.references.map(object => object.getLabelPayload());
         args.unshift(this.message);
         return util.format.apply(util, args);
     }

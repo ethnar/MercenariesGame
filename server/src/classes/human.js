@@ -15,6 +15,10 @@ class Human extends Entity {
             this.name = Math.random();
         }
     }
+
+    getLabel () {
+        return this.name;
+    }
 }
 
 Entity.registerClass(Human);

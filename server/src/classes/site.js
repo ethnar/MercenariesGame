@@ -18,6 +18,10 @@ class Site extends Entity {
         this.staff = [];
     }
 
+    getLabel () {
+        return this.name;
+    }
+
     setStandard (value) {
         this.standard = value;
     }
@@ -61,7 +65,6 @@ class Site extends Entity {
         facts.forEach(fact => {
             if (!owner.isFactKnown(fact) && misc.chances(fact.getDiscoverability())) {
                 owner.addKnownFact(fact);
-                service.sendUpdate('news', owner, fact.getFormatted());
             }
         });
         let missions = region.getMissions();

@@ -30,6 +30,14 @@ class Entity {
         return this.relatedFacts;
     }
 
+    getLabel () {
+        return 'No-label';
+    }
+
+    getLabelPayload () {
+        return '{' + this.className + ':' + this.id + ':' + this.getLabel() + '}';
+    }
+
     getSaveData () {
         return Entity.recursiveEncodeEntities(this);
     }
