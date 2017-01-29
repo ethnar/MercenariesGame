@@ -75,14 +75,16 @@ define('services/server', function () {
                     if (item.id)
                     {
                         const existing = items.findIndex(i => i.id === item.id);
-                        if (~existing) {
-                            if (item.delete) {
+                        if (item.delete) {
+                            if (~existing) {
                                 items.splice(existing, 1);
-                            } else {
-                                items[existing] = item;
                             }
                         } else {
-                            items.push(item);
+                            if (~existing) {
+                                items[existing] = item;
+                            } else {
+                                items.push(item);
+                            }
                         }
                     } else {
                         items.push(item);

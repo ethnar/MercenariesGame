@@ -17,9 +17,20 @@ class Mission extends Entity {
         this.region = args.region;
         this.discoverability = args.discoverability;
         this.withdrawn = false;
+        this.duration = args.duration || 15000;
+        this.contractedPlayer = null;
+        this.contractedStaff = [];
+        this.finished = false;
+        this.payout = args.payout || 500;
 
         if (this.region) {
             this.region.addMission(this);
+        }
+    }
+
+    cycle () {
+        if (!this.finished && new Date().getTime() >= this.startTime + this.duration) {
+            this.finish();
         }
     }
 
@@ -33,8 +44,18 @@ class Mission extends Entity {
 
     start (player, site, staffList) {
         this.getOwner().withdrawMission(this);
+        this.contractedPlayer = player;
         player.startedMission(this);
         staffList.forEach(staff => staff.goOnMission(this));
+        this.contractedStaff = staffList;
+        this.startTime = new Date().getTime();
+    }
+
+    finish () {
+        this.finished = true;
+        this.contractedPlayer.finishedMission(this);
+        this.contractedPlayer.addFunds(this.payout);
+        this.contractedStaff.forEach(staff => staff.returnFromMission());
     }
 
     getDiscoverability(){

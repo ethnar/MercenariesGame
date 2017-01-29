@@ -99,6 +99,11 @@ class Player extends Entity {
         service.sendUpdate('current-missions', this, mission.getPayload());
     }
 
+    finishedMission (mission) {
+        delete this.currentMissions[mission.id];
+        service.sendUpdate('current-missions', this, { delete: true, id: mission.getId() });
+    }
+
     verifyUsernameAndPassword (name, password) {
         return !this.npc && this.password === Player.passwordHash(password) && this.name === name;
     }

@@ -13,7 +13,11 @@ class Staff extends Human {
 
     setSite (site) {
         this.site = site;
-        service.sendUpdate('staff', site.getOwner(), this.getPayload());
+        this.sendUpdate();
+    }
+
+    sendUpdate () {
+        service.sendUpdate('staff', this.getSite().getOwner(), this.getPayload());
     }
 
     getSite () {
@@ -26,6 +30,12 @@ class Staff extends Human {
 
     goOnMission (mission) {
         this.currentMission = mission;
+        this.sendUpdate();
+    }
+
+    returnFromMission () {
+        this.currentMission = null;
+        this.sendUpdate();
     }
 
     getHireCost () {
