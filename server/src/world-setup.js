@@ -63,21 +63,21 @@ ukSenate.setStandard(100);
 ukSenate.setSize(50);
 
 
-let hq = new Site('HQ', london);
+let hq = new Site('HQ', toronto);
 hq.setOwner(test);
 
-let secondary = new Site('FOB', london);
+let secondary = new Site('FOB', quebec);
 secondary.setOwner(test);
 
 test.addFunds(10000);
 
-hq.addStaff(new Staff({country: uk}));
-hq.addStaff(new Staff({country: uk}));
-hq.addStaff(new Staff({country: uk}));
-hq.addStaff(new Staff({country: uk}));
-secondary.addStaff(new Staff({country: uk}));
-secondary.addStaff(new Staff({country: uk}));
-secondary.addStaff(new Staff({country: uk}));
+hq.addStaff(new Staff({country: canada}));
+hq.addStaff(new Staff({country: canada}));
+hq.addStaff(new Staff({country: canada}));
+hq.addStaff(new Staff({country: canada}));
+secondary.addStaff(new Staff({country: canada}));
+secondary.addStaff(new Staff({country: canada}));
+secondary.addStaff(new Staff({country: canada}));
 
 /****** STARTUP *******/
 

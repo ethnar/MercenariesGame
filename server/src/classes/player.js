@@ -68,16 +68,6 @@ class Player extends Entity {
         return Object.keys(regions).map(id => regions[id]);
     }
 
-    cycle () {
-        this.gatherIntelligence();
-    }
-
-    gatherIntelligence () {
-        this.sites.forEach(site => {
-            site.gatherIntelligence();
-        });
-    }
-
     getName () {
         return this.name;
     }

@@ -12,9 +12,10 @@ class Country extends Entity {
         this.seatOfPower = null;
         this.armyLeader = null;
         this.missions = [];
-        this.eventsQueue = [];
         this.politicians = [];
         this.regions = [];
+
+        this.elections = false;
     }
 
     getLabel () {
@@ -40,37 +41,30 @@ class Country extends Entity {
         }
     }
 
-    cycle () {
-        if (!this.processQueue())
-        {
-            this.generateEvents();
-        }
+    cycle (cycles) {
+        this.generateEvents(cycles);
     }
 
     addRegion (region) {
         this.regions.push(region);
     }
 
-    processQueue () {
-        let result = false;
-        while (this.eventsQueue.length && !result) {
-            let event = this.eventsQueue.shift();
-            result = this[event]();
-        }
-        return result;
-    }
-
-    generateEvents () {
+    generateEvents (cycles) {
         switch (true) {
-            case !this.ruler && this.politicians.length && misc.chances(50 + this.politicians.length * 10):
+            case !this.elections && !this.ruler:
                 new Fact(95, '%s is preparing elections', this);
-                this.queueEvent(this.elections);
+                this.elections = true;
+                break;
+            case this.elections && this.politicians.length > 3 && misc.chances(10):
+                this.ruler = this.politicians.pop();
+                new Fact(98, '%s was elected leader of %s', this.ruler, this);
+                this.elections = false;
                 break;
             case this.ruler && !this.seatOfPower && misc.chances(80):
                 let selected = null;
                 this.regions.forEach(region => {
                     region.sites.forEach(site => {
-                        if (!selected || (site.size > 15 && size.standard > selected.standard)) {
+                        if (!selected || (site.size > 15 && site.standard > selected.standard)) {
                             selected = site;
                         }
                     });
@@ -80,24 +74,10 @@ class Country extends Entity {
                     new Fact(95, '%s has chosen %s as their seat of power.', this, selected);
                 }
                 break;
-            case misc.chances(100 - this.politicians.length * 5):
+            case cycles.regular && misc.chances(100 - this.politicians.length * 5):
                 this.newPolitician();
                 break;
         }
-    }
-
-    queueEvent (callback) {
-        this.eventsQueue.push(callback.name);
-    }
-
-    /** events **/
-    elections () {
-        if (!this.politicians.length) {
-            return false;
-        }
-        this.ruler = this.politicians.pop();
-        new Fact(98, '%s was elected leader of %s', this.ruler, this);
-        return true;
     }
 
     newPolitician () {

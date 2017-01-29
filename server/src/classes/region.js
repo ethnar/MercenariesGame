@@ -1,9 +1,14 @@
 const Entity = require('./entity');
 const Worldview = require('./worldview');
 const Staff = require('./staff');
+const Fact = require('./fact');
 const service = require('../singletons/service');
 const world = require('../singletons/world');
 const misc = require('../singletons/misc');
+
+const npcSites = {
+    coalMine: require('./sites/coal-mine')
+};
 
 class Region extends Entity {
     constructor (name, country) {
@@ -18,6 +23,17 @@ class Region extends Entity {
         this.population = 10000;
         this.worldview = new Worldview(); // median worldview
         this.recruits = [];
+    }
+
+    getLabel () {
+        return this.name;
+    }
+
+    getWorldview (section) {
+        if (section) {
+            return this.worldview.get(section);
+        }
+        return this.worldview;
     }
 
     addSite (site) {
@@ -84,8 +100,11 @@ class Region extends Entity {
         service.sendUpdate('recruits', players, { delete: true, id: recruit.getId() });
     }
 
-    cycle () {
-        this.cycleRecruits();
+    cycle (cycles) {
+        if (cycles.regular) {
+            this.cycleRecruits();
+            this.cycleSites();
+        }
     }
 
     cycleRecruits () {
@@ -99,6 +118,31 @@ class Region extends Entity {
                 this.withdrawRecruit(recruit);
                 break;
         }
+    }
+
+    cycleSites () {
+        // at least 20 sites without an owner
+        // at least 50 sites owned by npcs
+        const emptySites = this.getSites().filter(site => !site.getOwner() && !site.npcOwned);
+        const npcSites = this.getSites().filter(site => site.npcOwned);
+        switch (true) {
+            case misc.chances(20 - emptySites.length):
+                this.newEmptySite();
+                break;
+            case misc.chances(200 - npcSites * 4):
+                this.newNpcSite();
+                break;
+        }
+    }
+
+    newEmptySite () {
+        const site = new npcSites.coalMine({region: this});
+        this.addSite(site);
+        new Fact(25, 'A new %s was opened in %s', site, this);
+    }
+
+    newNpcSite () {
+
     }
 }
 

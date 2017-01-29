@@ -15,7 +15,14 @@ class Site extends Entity {
         this.standard = 50;
         this.size = 1;
         this.destroyed = false;
+        this.npcOwned = false;
         this.staff = [];
+    }
+
+    cycle (cycles) {
+        if (cycles.regular) {
+            this.gatherIntelligence();
+        }
     }
 
     getLabel () {
@@ -55,13 +62,14 @@ class Site extends Entity {
     }
 
     gatherIntelligence () {
-        if (this.isDestroyed() || this.countryProperty) {
+        let owner = this.getOwner();
+        if (this.isDestroyed() || !owner) {
             return;
         }
         let region = this.getRegion();
-        let owner = this.getOwner();
         let country = region.getCountry();
         let facts = country.getRelatedFacts();
+        facts = facts.concat(region.getRelatedFacts());
         facts.forEach(fact => {
             if (!owner.isFactKnown(fact) && misc.chances(fact.getDiscoverability())) {
                 owner.addKnownFact(fact);

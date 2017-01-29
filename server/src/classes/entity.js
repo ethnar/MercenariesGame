@@ -6,9 +6,6 @@ class Entity {
     constructor () {
         const className = this.constructor.name;
         this.className = className;
-        if (!world.entities[className]) {
-            world.entities[className] = [];
-        }
         ids[className] = (ids[className] || 0) + 1;
         this.id = ids[className];
 
@@ -51,6 +48,7 @@ class Entity {
 let classRegistry = {};
 Entity.registerClass = classConstructor => {
     classRegistry[classConstructor.name] = classConstructor;
+    world.entities[classConstructor.name] = [];
 };
 
 Entity.loadFromJson = data => {

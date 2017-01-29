@@ -4,6 +4,19 @@ let fs = require('fs');
 class World {
     constructor () {
         this.entities = {};
+
+        // timers in seconds
+        this.cycles = [{
+            name: 'frequent',
+            timer: 1 // 10
+        }, {
+            name: 'regular',
+            timer: 6 // 60
+        }, {
+            name: 'rare',
+            timer: 60 // 600
+        }];
+        this.timeout = 1000;
     }
 
     getEntitiesArray (type) {
@@ -12,26 +25,38 @@ class World {
 
     run () {
         this.loop();
+        this.secondsCount = 0;
     }
 
     loop () {
         this.cycle();
-        setTimeout(this.loop.bind(this), 2000);
+        setTimeout(this.loop.bind(this), this.timeout);
     }
 
     cycle () {
-        console.log('- new cycle -');
-        this.cycleEntities('Country');
-        this.cycleEntities('Player');
-        this.cycleEntities('Politician');
-        this.cycleEntities('Region');
-        this.cycleEntities('Mission');
+        // initial values included for static code analysis only
+        const cycles = {
+            frequent: false,
+            regular: false,
+            rare: false
+        };
+        this.cycles.forEach(cycle => {
+            cycles[cycle.name] = (this.secondsCount % cycle.timer === 0);
+        });
+        this.secondsCount += this.timeout / 1000;
+        console.log('');
+        console.log('---------------------------------------- new cycle ----------------------------------------');
+        this.cycleEntities('Country', cycles);
+        this.cycleEntities('Site', cycles);
+        this.cycleEntities('Politician', cycles);
+        this.cycleEntities('Region', cycles);
+        this.cycleEntities('Mission', cycles);
         this.save('./rolling-save.json');
     }
 
-    cycleEntities (type) {
+    cycleEntities (type, cycles) {
         this.getEntitiesArray(type).forEach(entity => {
-            entity.cycle();
+            entity.cycle(cycles);
         });
     }
 
