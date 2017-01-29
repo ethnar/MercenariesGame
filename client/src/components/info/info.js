@@ -15,7 +15,6 @@ define('components/info/info', [], function () {
         computed: {
             pieces () {
                 return this.message.match(/\{[^}]+\}|[^{}]+/g).map(item => {
-                    console.log(JSON.stringify(item));
                     if (item.substr(0, 1) === '{') {
                         let [type, id, label] = item.match(/[^:{}]+/g);
                         return {
