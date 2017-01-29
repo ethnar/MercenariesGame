@@ -7,12 +7,13 @@ class Human extends Entity {
 
         args = args || {};
 
-        this.worldview = new Worldview();
+        this.region = args.region;
 
-        if (args.country) {
-            this.name = args.country.generateName();
+        if (args.region) {
+            this.name = args.region.getCountry().generateName();
+            this.worldview = new Worldview(args.region.getWorldview());
         } else {
-            this.name = Math.random();
+            throw new Error('Creating a new guy with no region of origin');
         }
     }
 

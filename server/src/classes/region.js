@@ -86,7 +86,7 @@ class Region extends Entity {
 
     newRecruit () {
         const newGuy = new Staff({
-            country: this.getCountry()
+            region: this
         });
         this.recruits.push(newGuy);
         const players = this.getCoveringPlayers();

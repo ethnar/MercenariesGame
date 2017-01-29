@@ -11,7 +11,7 @@ class Player extends Entity {
         this.name = name;
         this.password = Player.passwordHash(password);
         this.npc = !!npc;
-        this.worldview = new Worldview();
+        this.worldview = new Worldview(50);
 
         this.knownMissions = {};
         this.currentMissions = {};

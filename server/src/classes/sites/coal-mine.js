@@ -40,7 +40,8 @@ class CoalMine extends Site {
                 case !this.slavery && misc.chances(1) && !this.striking:
                     new Fact(30, 'A strike has begun in %s, %s', this, this.getRegion());
                     this.striking = true;
-                    break; // TODO: we could include rebellion?
+                    break;
+                    // TODO: we could include rebellion?
                 case this.slavery && this.striking:
                     new Fact(40, 'A strike has ended in %s, %s', this, this.getRegion());
                     new Fact(2, 'A strike was brutally ended in %s, %s', this, this.getRegion());

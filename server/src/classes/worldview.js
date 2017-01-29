@@ -1,25 +1,24 @@
 const misc = require('../singletons/misc');
 
 class Worldview {
-    constructor () {
-        this.slavery = 0;
-        this.environmentalism = 0;
-        this.drugUse = 0;
-        // // 100 - dominating
-        // this.supremacy = {
-        //     black: 0,
-        //     white: 0,
-        //     yellow: 0
-        // };
-        // // 100 - oppressive religion
-        // this.fanaticism = {
-        //     buddhism: 0,
-        //     christianity: 0,
-        //     islam: 0,
-        //     judaism: 0,
-        //     hinduism: 0,
-        //     sikhism: 0
-        // };
+    constructor (derivativeWorldview) {
+        const dimensions = [
+            'slavery',
+            'environmentalism',
+            'drugUse'
+        ];
+
+        dimensions.forEach(dimension => {
+            if (derivativeWorldview) {
+                if (typeof derivativeWorldview === 'number') {
+                    this[dimension] = derivativeWorldview;
+                } else {
+                    this[dimension] = misc.gaussian(100, derivativeWorldview.get(dimension));
+                }
+            } else {
+                this[dimension] = misc.gaussian(100);
+            }
+        });
     }
 
     get (section) {
@@ -68,6 +67,7 @@ example:
 
     missions:
         change of rules
+        find new workers
 
     worldview
         environmentalism

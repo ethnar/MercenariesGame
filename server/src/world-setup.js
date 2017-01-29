@@ -71,13 +71,13 @@ secondary.setOwner(test);
 
 test.addFunds(10000);
 
-hq.addStaff(new Staff({country: canada}));
-hq.addStaff(new Staff({country: canada}));
-hq.addStaff(new Staff({country: canada}));
-hq.addStaff(new Staff({country: canada}));
-secondary.addStaff(new Staff({country: canada}));
-secondary.addStaff(new Staff({country: canada}));
-secondary.addStaff(new Staff({country: canada}));
+hq.addStaff(new Staff({region: toronto}));
+hq.addStaff(new Staff({region: toronto}));
+hq.addStaff(new Staff({region: toronto}));
+hq.addStaff(new Staff({region: toronto}));
+secondary.addStaff(new Staff({region: toronto}));
+secondary.addStaff(new Staff({region: toronto}));
+secondary.addStaff(new Staff({region: toronto}));
 
 /****** STARTUP *******/
 
