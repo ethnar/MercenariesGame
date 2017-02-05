@@ -79,7 +79,7 @@ class Mission extends Entity {
     }
 
     getContractedPlayer(){
-        return this.contractedPlayer();
+        return this.contractedPlayer;
     }
 
     getPayload () {

@@ -137,7 +137,7 @@ class Region extends Entity {
     }
 
     newEmptySite () {
-        let siteType = misc.randomEntity(npcSites);
+        const siteType = misc.randomEntity(npcSites);
         const site = new siteType({region: this});
         this.addSite(site);
         new Fact(25, 'A new %s was opened in %s', site, this);
