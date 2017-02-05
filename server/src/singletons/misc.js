@@ -1,4 +1,4 @@
-module.exports = {
+const self = {
     chances (percentage) {
         return Math.random() * 100 < percentage;
     },
@@ -20,7 +20,13 @@ module.exports = {
         return result;
     },
 
-    randomEntity (array) {
-        return array[Math.floor(Math.random() * array.length)];
+    randomEntity (collection) {
+        if(Array.isArray(collection)){
+            return collection[Math.floor(Math.random() * collection.length)];
+        } else {
+            return collection[self.randomEntity(Object.keys(collection))];
+        }
     }
 };
+
+module.exports = self;
