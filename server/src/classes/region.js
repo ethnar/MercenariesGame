@@ -7,7 +7,8 @@ const world = require('../singletons/world');
 const misc = require('../singletons/misc');
 
 const npcSites = {
-    coalMine: require('./sites/coal-mine')
+    mine: require('./sites/mine'),
+    plantation: require('./sites/plantation')
 };
 
 class Region extends Entity {
@@ -136,7 +137,8 @@ class Region extends Entity {
     }
 
     newEmptySite () {
-        const site = new npcSites.coalMine({region: this});
+        const siteType = misc.randomEntity(npcSites);
+        const site = new siteType({region: this});
         this.addSite(site);
         new Fact(25, 'A new %s was opened in %s', site, this);
     }

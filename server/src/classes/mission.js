@@ -78,6 +78,10 @@ class Mission extends Entity {
         return this.owner;
     }
 
+    getContractedPlayer(){
+        return this.contractedPlayer;
+    }
+
     getPayload () {
         return {
             id: this.getId(),
