@@ -124,8 +124,9 @@ class Site extends Entity {
     }
 
     installEquipment (equipment) {
-        equipment.install(this);
-        this.equipment.push(equipment);
+        if (equipment.install(this)) {
+            this.equipment.push(equipment);
+        }
     }
 
     getEquipment () {

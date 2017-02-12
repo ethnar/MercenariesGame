@@ -24,9 +24,12 @@ class Equipment extends Entity {
     }
 
     install (site) {
-        this.site = site;
-        service.sendUpdate('equipment', site.getOwner(), this.getPayload());
-        return site.useSpace(this.space);
+        if (site.useSpace(this.space)) {
+            this.site = site;
+            service.sendUpdate('equipment', site.getOwner(), this.getPayload());
+            return true;
+        }
+        return false;
     }
 
     uninstall (site) {
