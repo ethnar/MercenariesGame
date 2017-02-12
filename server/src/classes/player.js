@@ -28,6 +28,7 @@ class Player extends Entity {
 
     addSite (site) {
         this.sites.push(site);
+        service.sendUpdate('sites', this, site.getPayload());
     }
 
     getFunds () {

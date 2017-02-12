@@ -6,9 +6,11 @@ define('components/site/site', ['components/region', 'services/sites'], function
 
         template: `
 <div class="component-site">
-    <div class="name">{{site.name}}</div>
-    <region :region-id="site.region"></region>
-    <div class="staffCount">Staff: {{site.staffCount}}</div>
+    <a :href="'#/site/' + site.id">
+        <div class="name">{{site.name}}</div>
+        <region :region-id="site.region"></region>
+        <div class="staffCount">Staff: {{site.staffCount}}</div>
+    </a>
 </div>
 `,
         props: [

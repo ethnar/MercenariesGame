@@ -2,6 +2,7 @@ const Entity = require('./entity');
 const service = require('../singletons/service');
 const misc = require('../singletons/misc');
 const world = require('../singletons/world');
+const errorResponse = require('../functions/error-response');
 
 class Site extends Entity {
     constructor (args) {
@@ -44,9 +45,9 @@ class Site extends Entity {
 
     setOwner (owner) {
         this.owner = owner;
+        this.makeAvailable(false);
         owner.addSite(this);
         this.countryProperty = null;
-        this.makeAvailable(false);
     }
 
     setOwnedByNpc (isOwned) {
@@ -66,6 +67,10 @@ class Site extends Entity {
         this.staff.push(staff);
         staff.setSite(this);
         service.sendUpdate('sites', this.getOwner(), this.getPayload());
+    }
+
+    getPrice () {
+        return 1000;
     }
 
     getRegion () {
@@ -111,7 +116,8 @@ class Site extends Entity {
             id: this.getId(),
             name: this.name,
             region: this.getRegion().getId(),
-            staffCount: this.getStaff().length
+            staffCount: this.getStaff().length,
+            price: this.getPrice()
         }
     }
 }
@@ -130,6 +136,23 @@ service.registerHandler('available-sites', (params, player) => {
         .getEntitiesArray('Site')
         .filter(site => !site.isOccupied())
         .map(site => site.getPayload());
+});
+
+service.registerHandler('purchase', (params, player) => {
+    if (player) {
+        const site = Site.getById(params.site);
+
+        if (site.isOccupied()) {
+            return errorResponse('Trying to purchase occupied site');
+        }
+
+        if (!player.pay(site.getPrice())) {
+            return errorResponse('Not enough funds');
+        }
+
+        site.setOwner(player);
+        return { result: true };
+    }
 });
 
 Entity.registerClass(Site);

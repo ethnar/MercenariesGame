@@ -18,8 +18,12 @@ define('views/site', [
     <div v-if="site">
         <div class="name">{{site.name}}</div>
         <region :regionId="site.region"></region>
+        <div v-if="!site.owned">
+            Price: {{site.price}}
+            <button @click="purchase();">Purchase</button>
+        </div>
         <tabs>
-            <tab header="Staff">
+            <tab header="Staff" v-show="site.owned">
                 <div v-if="mode === 'list'">
                     <button @click="mode = 'recruit'">Recruit</button>
                     <div v-for="person in staff">
@@ -34,8 +38,12 @@ define('views/site', [
                     </div>
                 </div>
             </tab>
-            <tab header="Equipment">List of installed equipment</tab>
-            <tab header="Inventory">Inventory list</tab>
+            <tab header="Equipment">
+                List of installed equipment
+            </tab>
+            <tab header="Inventory" v-show="site.owned">
+                Inventory list
+            </tab>
         </tabs>
     </div>
 </div>
@@ -52,16 +60,18 @@ define('views/site', [
 
         subscriptions () {
             return {
-                staff: StaffService.getStaffStream().map(staff => {
-                    return staff.filter(person => person.site === this.siteId);
+                staff: this.stream('siteId').flatMapLatest(siteId => {
+                    return StaffService.getStaffStream().map(staff => {
+                        return staff.filter(person => person.site === siteId);
+                    });
                 }),
                 site: this.stream('siteId').flatMapLatest(siteId => {
                     return SitesService
-                        .getOwnSiteStream(siteId);
+                        .getSiteStream(siteId);
                 }),
                 recruits: this.stream('siteId').flatMapLatest(siteId => {
                     return SitesService
-                        .getOwnSiteStream(siteId)
+                        .getSiteStream(siteId)
                         .flatMapLatest(site => {
                             return RecruitsService.getRecruitsStream(site.region);
                         });
@@ -81,6 +91,14 @@ define('views/site', [
                     if (response.result) {
                         this.mode = 'list';
                     } else {
+                        alert(response.message);
+                    }
+                });
+            },
+
+            purchase () {
+                SitesService.purchase(this.siteId).then(response => {
+                    if (!response.result) {
                         alert(response.message);
                     }
                 });

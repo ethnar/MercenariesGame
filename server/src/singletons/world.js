@@ -45,7 +45,7 @@ class World {
             cycles[cycle.name] = (this.secondsCount % cycle.timer === 0);
         });
         this.secondsCount += this.timeout / 1000;
-        console.log('---------------------------------------- new cycle ----------------------------------------');
+//        console.log('---------------------------------------- new cycle ----------------------------------------');
         this.cycleEntities('Country', cycles);
         this.cycleEntities('Site', cycles);
         this.cycleEntities('Politician', cycles);
