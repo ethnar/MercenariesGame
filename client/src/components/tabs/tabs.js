@@ -15,7 +15,11 @@ define('components/tabs/tabs', [], function () {
         }),
 
         mounted () {
-            this.$parent.registerTab(this.header, this.setVisibility);
+            const nodes = [].slice.call(this.$el.parentNode.childNodes)
+                .filter(node => node.nodeType !== node.TEXT_NODE);
+            const idx = nodes.indexOf(this.$el);
+
+            this.$parent.registerTab(idx, this.header, this.setVisibility);
         },
 
         methods: {
@@ -32,7 +36,9 @@ define('components/tabs/tabs', [], function () {
                 <div class="tab-headers">
                     <div v-for="tab in tabs" @click="setVisible(tab);">{{tab.header}}</div>
                 </div>
-                <slot></slot>
+                <div class="tab-contents">
+                    <slot></slot>
+                </div>
             </div>
         `,
 
@@ -41,8 +47,8 @@ define('components/tabs/tabs', [], function () {
         }),
 
         methods: {
-            registerTab (header, setVisibleCallback) {
-                this.tabs.push({
+            registerTab (idx, header, setVisibleCallback) {
+                this.tabs.splice(idx, 0, {
                     header: header,
                     callback: setVisibleCallback
                 });

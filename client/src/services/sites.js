@@ -24,8 +24,10 @@ define('services/sites', ['services/server'], function (ServerService) {
             ]).map(([available, own]) => {
                 if (available) {
                     return Object.assign({}, available, { available: true });
-                } else {
+                } else if (own) {
                     return Object.assign({}, own, { owned: true });
+                } else {
+                    return { npc: true };
                 }
             });
         },

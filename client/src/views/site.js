@@ -1,14 +1,15 @@
 define('views/site', [
-    'components/navbar', 'components/region', 'components/tabs/tabs', 'components/staff/staff',
-    'services/sites', 'services/staff', 'services/recruits'
-], function (navbar, region, tabs, staff,
-             SitesService, StaffService, RecruitsService) {
+    'components/navbar', 'components/region', 'components/tabs/tabs', 'components/staff/staff', 'components/info/info',
+    'services/sites', 'services/staff', 'services/recruits', 'services/news'
+], function (navbar, region, tabs, staff, info,
+             SitesService, StaffService, RecruitsService, NewsService) {
     return {
         components: {
             navbar,
             region,
             tabs,
-            staff
+            staff,
+            info
         },
 
         template: `
@@ -18,12 +19,15 @@ define('views/site', [
     <div v-if="site">
         <div class="name">{{site.name}}</div>
         <region :regionId="site.region"></region>
-        <div v-if="!site.owned">
+        <div v-if="site.available">
             Price: {{site.price}}
             <button @click="purchase();">Purchase</button>
         </div>
         <tabs>
-            <tab header="Staff" v-show="site.owned">
+            <tab header="News" v-if="site.npc">
+                <info v-for="item in news" :message="item">{{item}}</info>
+            </tab>
+            <tab header="Staff" v-if="site.owned">
                 <div v-if="mode === 'list'">
                     <button @click="mode = 'recruit'">Recruit</button>
                     <div v-for="person in staff">
@@ -38,10 +42,10 @@ define('views/site', [
                     </div>
                 </div>
             </tab>
-            <tab header="Equipment">
+            <tab header="Equipment" v-if="site.owned || site.available">
                 List of installed equipment
             </tab>
-            <tab header="Inventory" v-show="site.owned">
+            <tab header="Inventory" v-if="site.owned">
                 Inventory list
             </tab>
         </tabs>
@@ -75,7 +79,13 @@ define('views/site', [
                         .flatMapLatest(site => {
                             return RecruitsService.getRecruitsStream(site.region);
                         });
-                })
+                }),
+                news:
+                    this.stream('siteId')
+                        .flatMapLatest(siteId =>
+                            NewsService
+                                .getRelatedStream('Site', siteId)
+                        )
             }
         },
 

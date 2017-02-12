@@ -1,14 +1,15 @@
 define('views/region', [
-    'components/navbar', 'components/region', 'components/tabs/tabs', 'components/site/site',
-    'services/regions', 'services/sites'
-], function (navbar, region, tabs, site,
-             RegionsService, SitesService) {
+    'components/navbar', 'components/region', 'components/tabs/tabs', 'components/site/site', 'components/info/info',
+    'services/regions', 'services/sites', 'services/news'
+], function (navbar, region, tabs, site, info,
+             RegionsService, SitesService, NewsService) {
     return {
         components: {
             navbar,
             region,
             tabs,
-            site
+            site,
+            info
         },
 
         template: `
@@ -17,6 +18,9 @@ define('views/region', [
     <header>Region:</header>
     <region :region-id="regionId"></region>
     <tabs>
+        <tab header="News">
+            <info v-for="item in news" :message="item">{{item}}</info>
+        </tab>
         <tab header="Available Sites">
             <div v-for="site in availableSites">
                 <site :site="site"></site>
@@ -42,6 +46,12 @@ define('views/region', [
                             SitesService
                                 .getAvailableSitesStream()
                                 .map(sites => sites.filter(site => site.region === regionId))
+                        ),
+                news:
+                    this.stream('regionId')
+                        .flatMapLatest(regionId =>
+                            NewsService
+                                .getRelatedStream('Region', regionId)
                         )
             }
         },
