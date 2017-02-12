@@ -1,12 +1,16 @@
 define('services/sites', ['services/server'], function (ServerService) {
 
     return {
-        getSitesStream () {
-            return ServerService.getListStream('sites')
+        getOwnSitesStream () {
+            return ServerService.getListStream('sites');
         },
 
-        getSiteStream (siteId) {
-            return this.getSitesStream().map(sites => sites.find(site => site.id === siteId));
+        getOwnSiteStream (siteId) {
+            return this.getOwnSitesStream().map(sites => sites.find(site => site.id === siteId));
+        },
+
+        getAvailableSitesStream () {
+            return ServerService.getListStream('available-sites');
         }
     };
 

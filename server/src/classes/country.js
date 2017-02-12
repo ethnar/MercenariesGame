@@ -63,14 +63,18 @@ class Country extends Entity {
             case this.ruler && !this.seatOfPower && misc.chances(80):
                 let selected = null;
                 this.regions.forEach(region => {
-                    region.sites.forEach(site => {
-                        if (!selected || (site.size > 15 && site.standard > selected.standard)) {
-                            selected = site;
-                        }
-                    });
+                    region.sites
+                    .filter(site => !site.isOccupied())
+                    .filter(site => site.size > 15)
+                        .forEach(site => {
+                            if (!selected || site.standard > selected.standard) {
+                                selected = site;
+                            }
+                        });
                 });
                 if (selected) {
                     this.seatOfPower = selected;
+                    selected.setOwnedByNpc(true);
                     new Fact(95, '%s has chosen %s as their seat of power.', this, selected);
                 }
                 break;

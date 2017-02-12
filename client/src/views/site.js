@@ -57,11 +57,11 @@ define('views/site', [
                 }),
                 site: this.stream('siteId').flatMapLatest(siteId => {
                     return SitesService
-                        .getSiteStream(siteId);
+                        .getOwnSiteStream(siteId);
                 }),
                 recruits: this.stream('siteId').flatMapLatest(siteId => {
                     return SitesService
-                        .getSiteStream(siteId)
+                        .getOwnSiteStream(siteId)
                         .flatMapLatest(site => {
                             return RecruitsService.getRecruitsStream(site.region);
                         });

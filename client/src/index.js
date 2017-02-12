@@ -1,5 +1,10 @@
-require(['views/news', 'views/missions', 'views/mission/mission', 'views/sites', 'views/site', 'services/server'],
-    function (NewsView, MissionsView, MissionView, SitesView, SiteView, ServerService) {
+require([
+    'services/server',
+    'views/news', 'views/missions', 'views/mission/mission', 'views/sites', 'views/site', 'views/region'
+], function (
+    ServerService,
+    NewsView, MissionsView, MissionView, SitesView, SiteView, RegionView
+) {
     Vue.use(VueRx, Rx);
 
     Vue.prototype.stream = function (prop) {
@@ -26,6 +31,9 @@ require(['views/news', 'views/missions', 'views/mission/mission', 'views/sites',
             }, {
                 path: '/site/:siteId',
                 component: SiteView
+            }, {
+                path: '/region/:regionId',
+                component: RegionView
             }, {
                 path: '*',
                 redirect: '/news'

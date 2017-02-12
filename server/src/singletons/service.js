@@ -49,7 +49,12 @@ class Service {
 
     sendUpdate (topic, players, data) {
         if (!Array.isArray(players)) {
-            players = [players];
+            if (!players) {
+                const world = require('./world');
+                players = world.getEntitiesArray('Player');
+            } else {
+                players = [players];
+            }
         }
         players.forEach(player => {
             this.connections.forEach(connection => {
@@ -61,6 +66,10 @@ class Service {
                 }
             });
         });
+    }
+
+    sendDeletion (topic, players, id) {
+        this.sendUpdate(topic, players, { delete: true, id: id });
     }
 
     setPlayer (conn, player) {

@@ -1,13 +1,14 @@
 const Entity = require('./entity');
 const service = require('../singletons/service');
 const misc = require('../singletons/misc');
+const world = require('../singletons/world');
 
 class Site extends Entity {
-    constructor (name, region) {
-        super();
-        this.name = name;
-        this.region = region;
-        if (region) {
+    constructor (args) {
+        super(args);
+        this.name = args.name;
+        this.region = args.region;
+        if (args.region) {
             this.region.addSite(this);
         }
         this.owner = null;
@@ -29,6 +30,10 @@ class Site extends Entity {
         return this.name;
     }
 
+    isOccupied () {
+        return !!this.npcOwned || !!this.owner;
+    }
+
     setStandard (value) {
         this.standard = value;
     }
@@ -41,6 +46,20 @@ class Site extends Entity {
         this.owner = owner;
         owner.addSite(this);
         this.countryProperty = null;
+        this.makeAvailable(false);
+    }
+
+    setOwnedByNpc (isOwned) {
+        this.npcOwned = isOwned;
+        this.makeAvailable(!isOwned);
+    }
+
+    makeAvailable (available) {
+        if (available) {
+            service.sendUpdate('available-sites', null, this.getPayload());
+        } else {
+            service.sendDeletion('available-sites', null, this.getId());
+        }
     }
 
     addStaff (staff) {
@@ -104,6 +123,13 @@ service.registerHandler('sites', (params, player) => {
         return sites.map(site => site.getPayload());
     }
     return [];
+});
+
+service.registerHandler('available-sites', (params, player) => {
+    return world
+        .getEntitiesArray('Site')
+        .filter(site => !site.isOccupied())
+        .map(site => site.getPayload());
 });
 
 Entity.registerClass(Site);

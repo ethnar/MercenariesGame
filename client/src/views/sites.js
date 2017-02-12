@@ -11,7 +11,7 @@ define('views/sites', ['components/region', 'components/site/site', 'components/
     <navbar></navbar>
     <header>Sites:</header>
     <a v-for="site in sites" class="site" :href="'#/site/' + site.id">
-        <site :siteId="site.id"/>
+        <site :site="site"/>
     </a>
 </div>
 `,
@@ -19,7 +19,7 @@ define('views/sites', ['components/region', 'components/site/site', 'components/
         }),
 
         subscriptions: () => ({
-            sites: SitesService.getSitesStream()
+            sites: SitesService.getOwnSitesStream()
         }),
 
         created () {

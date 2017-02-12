@@ -91,7 +91,7 @@ class Player extends Entity {
 
     finishedMission (mission) {
         delete this.currentMissions[mission.id];
-        service.sendUpdate('current-missions', this, { delete: true, id: mission.getId() });
+        service.sendDeletion('current-missions', this, mission.getId());
     }
 
     verifyUsernameAndPassword (name, password) {
@@ -109,7 +109,7 @@ class Player extends Entity {
 
     forgetMission (mission) {
         delete this.knownMissions[mission.id];
-        service.sendUpdate('known-missions', this, { delete: true, id: mission.getId() });
+        service.sendDeletion('known-missions', this, mission.getId());
     }
 
     isFactKnown(fact){

@@ -16,7 +16,7 @@ define('views/mission/mission', ['components/navbar', 'components/site/site', 'c
     </div>
     <div v-if="state === 'selectSite'">
         <div v-for="site in sites" class="site" @click="state = 'selectStaff'; selectedSite = site;">
-            <site :siteId="site.id"/>
+            <site :site="site"/>
         </div>
     </div>
     <div v-if="state === 'selectStaff'">
@@ -50,7 +50,7 @@ define('views/mission/mission', ['components/navbar', 'components/site/site', 'c
 
         subscriptions: function () {
             return {
-                sites: SitesService.getSitesStream(),
+                sites: SitesService.getOwnSitesStream(),
                 staff: this.stream('selectedSite').flatMapLatest(site => StaffService.getStaffStream().map(staff => {
                     return staff.filter(person => site && person.site === site.id);
                 })),

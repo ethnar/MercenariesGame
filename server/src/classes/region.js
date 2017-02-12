@@ -2,6 +2,7 @@ const Entity = require('./entity');
 const Worldview = require('./worldview');
 const Staff = require('./staff');
 const Fact = require('./fact');
+const Site = require('./site');
 const service = require('../singletons/service');
 const world = require('../singletons/world');
 const misc = require('../singletons/misc');
@@ -97,7 +98,7 @@ class Region extends Entity {
         const index = this.recruits.indexOf(recruit);
         this.recruits.splice(index, 1);
         const players = this.getCoveringPlayers();
-        service.sendUpdate('recruits', players, { delete: true, id: recruit.getId() });
+        service.sendDeletion('recruits', players, recruit.getId());
     }
 
     cycle (cycles) {
@@ -122,27 +123,30 @@ class Region extends Entity {
 
     cycleSites () {
         // at least 20 sites without an owner
+        const emptySites = this.getSites().filter(site => !site.isOccupied());
         // at least 50 sites owned by npcs
-        const emptySites = this.getSites().filter(site => !site.getOwner() && !site.npcOwned);
         const npcSites = this.getSites().filter(site => site.npcOwned);
         switch (true) {
             case misc.chances(20 - emptySites.length):
                 this.newEmptySite();
                 break;
-            case misc.chances(200 - npcSites * 4):
+            case misc.chances(200 - npcSites.length * 4):
                 this.newNpcSite();
                 break;
         }
     }
 
     newEmptySite () {
-        const site = new npcSites.coalMine({region: this});
+        const site = new Site({name: 'Barracks', region: this});
+        site.makeAvailable(true);
         this.addSite(site);
-        new Fact(25, 'A new %s was opened in %s', site, this);
     }
 
     newNpcSite () {
-
+        const site = new npcSites.coalMine({region: this});
+        site.setOwnedByNpc(true);
+        new Fact(25, 'A new %s was opened in %s', site, this);
+        this.addSite(site);
     }
 }
 
