@@ -1,8 +1,8 @@
 define('views/site', [
     'components/navbar', 'components/region', 'components/tabs/tabs', 'components/staff/staff', 'components/info/info',
-    'services/sites', 'services/staff', 'services/recruits', 'services/news'
+    'services/sites', 'services/staff', 'services/recruits', 'services/news', 'services/equipment'
 ], function (navbar, region, tabs, staff, info,
-             SitesService, StaffService, RecruitsService, NewsService) {
+             SitesService, StaffService, RecruitsService, NewsService, EquipmentService) {
     return {
         components: {
             navbar,
@@ -28,14 +28,14 @@ define('views/site', [
                 <info v-for="item in news" :message="item">{{item}}</info>
             </tab>
             <tab header="Staff" v-if="site.owned">
-                <div v-if="mode === 'list'">
+                <div v-if="mode !== 'recruit'">
                     <button @click="mode = 'recruit'">Recruit</button>
                     <div v-for="person in staff">
                         <staff :person="person"></staff>
                     </div>
                 </div>
                 <div v-if="mode === 'recruit'">
-                    <button @click="mode = 'list'">Cancel</button>
+                    <button @click="mode = ''">Cancel</button>
                     <div v-for="person in recruits">
                         <staff :person="person"></staff>
                         <button @click="recruit(person.id);">Recruit</button>
@@ -43,7 +43,19 @@ define('views/site', [
                 </div>
             </tab>
             <tab header="Equipment" v-if="site.owned || site.available">
-                List of installed equipment
+                <div v-if="mode !== 'buy-eq'">
+                    <button @click="mode = 'buy-eq'">Purchase new equipment</button>
+                    <div v-for="eq in equipment">
+                        {{eq}}
+                    </div>
+                </div>
+                <div v-if="mode === 'buy-eq'">
+                    <button @click="mode = ''">Cancel</button>
+                    <div v-for="equipment in availableEquipment">
+                        {{equipment}}
+                        <button @click="purchase(equipment)">Purchase</button>
+                    </div>
+                </div>
             </tab>
             <tab header="Inventory" v-if="site.owned">
                 Inventory list
@@ -72,6 +84,18 @@ define('views/site', [
                 site: this.stream('siteId').flatMapLatest(siteId => {
                     return SitesService
                         .getSiteStream(siteId);
+                }),
+                equipment: this.stream('siteId').flatMapLatest(siteId => {
+                    return EquipmentService.getEquipmentStream(siteId);
+                }),
+                availableEquipment: this.stream('siteId').flatMapLatest(siteId => {
+                    return SitesService
+                        .getSiteStream(siteId)
+                        .map(site => site.region)
+                        .distinctUntilChanged()
+                        .flatMapLatest(region => {
+                            return EquipmentService.getAvailableEquipmentStream(region);
+                        });
                 }),
                 recruits: this.stream('siteId').flatMapLatest(siteId => {
                     return SitesService
@@ -106,8 +130,8 @@ define('views/site', [
                 });
             },
 
-            purchase () {
-                SitesService.purchase(this.siteId).then(response => {
+            purchase (equipment) {
+                EquipmentService.purchase(this.siteId, equipment.id).then(response => {
                     if (!response.result) {
                         alert(response.message);
                     }

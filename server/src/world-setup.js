@@ -8,6 +8,7 @@ let Fact = require('./classes/fact');
 let Site = require('./classes/site');
 let Cell = require('./classes/sites/cell');
 let Mission = require('./classes/mission');
+let Equipment = require('./classes/equipment/equipment');
 let Worldview = require('./classes/worldview');
 
 

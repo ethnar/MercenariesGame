@@ -69,6 +69,10 @@ class Player extends Entity {
         return Object.keys(regions).map(id => regions[id]);
     }
 
+    isCoveringRegion (region) {
+        return !!this.getSites().find(site => site.getRegion() === region);
+    }
+
     getName () {
         return this.name;
     }

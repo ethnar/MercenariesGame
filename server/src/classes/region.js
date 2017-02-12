@@ -7,6 +7,8 @@ const service = require('../singletons/service');
 const world = require('../singletons/world');
 const misc = require('../singletons/misc');
 
+const Equipment = require('./equipment/equipment');
+
 const npcSites = {
     coalMine: require('./sites/coal-mine')
 };
@@ -24,6 +26,7 @@ class Region extends Entity {
         this.population = 10000;
         this.worldview = new Worldview(); // median worldview
         this.recruits = [];
+        this.equipment = [];
     }
 
     getLabel () {
@@ -65,15 +68,10 @@ class Region extends Entity {
         return this.population;
     }
 
-    getCoveringPlayers () { // TODO: does virtually the same what getCoveredRegions does. There's a high risk of discrepancy
-        const players = {};
-        this.getSites().forEach(site => {
-            const player = site.getOwner();
-            if (player) {
-                players[player.getId()] = player;
-            }
-        });
-        return Object.keys(players).map(id => players[id]);
+    getCoveringPlayers () {
+        return world
+            .getEntitiesArray('Player')
+            .filter(player => player.isCoveringRegion(this));
     }
 
     getPayload () {
@@ -106,6 +104,9 @@ class Region extends Entity {
             this.cycleRecruits();
             this.cycleSites();
         }
+        if (cycles.rare) {
+            this.cycleStores();
+        }
     }
 
     cycleRecruits () {
@@ -134,6 +135,33 @@ class Region extends Entity {
                 this.newNpcSite();
                 break;
         }
+    }
+
+    cycleStores () {
+        // this.equipment.forEach(eq => {
+        //     if (misc.chances(10)) {
+        //         this.removeEquipment(eq);
+        //     }
+        // });
+        while (this.equipment.length < 50) {
+            const equipment = Equipment.generateRandomEquipment();
+            this.addEquipment(equipment);
+        }
+    }
+
+    getEquipment () {
+        return this.equipment;
+    }
+
+    addEquipment (eq) {
+        this.equipment.push(eq);
+        eq.setRegion(this);
+    }
+
+    removeEquipment (eq) {
+        const idx = this.equipment.indexOf(eq);
+        this.equipment.splice(idx, 1);
+        eq.setRegion(null);
     }
 
     newEmptySite () {

@@ -15,13 +15,28 @@ class Site extends Entity {
         this.owner = null;
         this.countryProperty = null;
         this.standard = 50;
-        this.size = 1;
+        this.size = 15;
+        this.space = this.size;
         this.destroyed = false;
         this.npcOwned = false;
         this.staff = [];
+        this.equipment = [];
     }
 
     cycle () {
+    }
+
+    useSpace (space) {
+        if (this.space >= space) {
+            this.space -= space;
+            return true;
+        }
+        return false;
+    }
+
+    freeSpace () {
+        this.space += space;
+        return true;
     }
 
     getLabel () {
@@ -104,6 +119,19 @@ class Site extends Entity {
         });
     }
 
+    hasSpace (space) {
+        return this.space >= space;
+    }
+
+    installEquipment (equipment) {
+        equipment.install(this);
+        this.equipment.push(equipment);
+    }
+
+    getEquipment () {
+        return this.equipment;
+    }
+
     isDestroyed () {
         return this.destroyed;
     }
@@ -136,20 +164,22 @@ service.registerHandler('available-sites', (params, player) => {
 });
 
 service.registerHandler('purchase', (params, player) => {
-    if (player) {
-        const site = Site.getById(params.site);
+    const site = Site.getById(params.site);
 
-        if (site.isOccupied()) {
-            return errorResponse('Trying to purchase occupied site');
-        }
-
-        if (!player.pay(site.getPrice())) {
-            return errorResponse('Not enough funds');
-        }
-
-        site.setOwner(player);
-        return { result: true };
+    if (!player || !site) {
+        return errorResponse('Invalid request');
     }
+
+    if (site.isOccupied()) {
+        return errorResponse('Trying to purchase occupied site');
+    }
+
+    if (!player.pay(site.getPrice())) {
+        return errorResponse('Not enough funds');
+    }
+
+    site.setOwner(player);
+    return { result: true };
 });
 
 Entity.registerClass(Site);
