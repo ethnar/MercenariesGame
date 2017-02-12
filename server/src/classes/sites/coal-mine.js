@@ -5,7 +5,7 @@ const misc = require('../../singletons/misc');
 
 class CoalMine extends Site {
     constructor (args) {
-        args = Object.assign(args);
+        args = Object.assign({}, args);
         args.className = 'Site';
         super(args);
 

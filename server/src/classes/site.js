@@ -21,10 +21,7 @@ class Site extends Entity {
         this.staff = [];
     }
 
-    cycle (cycles) {
-        if (cycles.regular) {
-            this.gatherIntelligence();
-        }
+    cycle () {
     }
 
     getLabel () {

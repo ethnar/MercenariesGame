@@ -6,6 +6,7 @@ let Region = require('./classes/region');
 let Staff = require('./classes/staff');
 let Fact = require('./classes/fact');
 let Site = require('./classes/site');
+let Cell = require('./classes/sites/cell');
 let Mission = require('./classes/mission');
 let Worldview = require('./classes/worldview');
 
@@ -63,10 +64,10 @@ ukSenate.setStandard(100);
 ukSenate.setSize(50);
 
 
-let hq = new Site({ name: 'HQ', region: toronto });
+let hq = new Cell({ name: 'HQ', region: toronto });
 hq.setOwner(test);
 
-let secondary = new Site({ name: 'FOB', region: quebec });
+let secondary = new Cell({ name: 'FOB', region: quebec });
 secondary.setOwner(test);
 
 test.addFunds(10000);
