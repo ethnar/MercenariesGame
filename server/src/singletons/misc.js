@@ -36,18 +36,18 @@ module.exports = {
         let multiplier;
         switch (type) {
             case 'region':
-                base = 3;
-                multiplier = 10;
-                break;
-            case 'site':
                 base = 2;
                 multiplier = 10;
                 break;
+            case 'site':
+                base = 1.5;
+                multiplier = 5;
+                break;
             case 'politician':
-                base = 4;
+                base = 3;
                 multiplier = 20;
                 break;
         }
-        return Math.pow(3, current + 1) * 10;
+        return Math.pow(base, current + 1) * multiplier;
     }
 };
