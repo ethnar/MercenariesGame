@@ -8,6 +8,7 @@ let Staff = require('./classes/staff');
 let Fact = require('./classes/fact');
 let Site = require('./classes/site');
 let Mission = require('./classes/mission');
+let Equipment = require('./classes/equipment/equipment');
 let Worldview = require('./classes/worldview');
 
 world.load('./rolling-save.json');

@@ -3,8 +3,8 @@ const world = require('../singletons/world');
 let ids = {};
 
 class Entity {
-    constructor () {
-        const className = this.constructor.name;
+    constructor (args = {}) {
+        const className = args.className || this.constructor.name;
         this.className = className;
         ids[className] = (ids[className] || 0) + 1;
         this.id = ids[className];

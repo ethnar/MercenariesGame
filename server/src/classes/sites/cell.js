@@ -3,16 +3,11 @@ const Fact = require('../fact');
 const Entity = require('../entity');
 const misc = require('../../singletons/misc');
 
-class CoalMine extends Site {
+class Cell extends Site {
     constructor (args) {
         args = Object.assign({}, args);
         args.className = 'Site';
         super(args);
-
-        this.name = 'Mine';
-
-        this.striking = false;
-        this.slavery = this.region.getWorldview().chances('slavery', 2);
     }
 
     getLabelPayload () {
@@ -24,11 +19,11 @@ class CoalMine extends Site {
     }
 
     cycle (cycles) {
-        if (cycles.rare)
-        {
+        if (cycles.regular) {
+            this.gatherIntelligence();
         }
     }
 }
 
-Entity.registerClass(CoalMine);
-module.exports = CoalMine;
+Entity.registerClass(Cell);
+module.exports = Cell;

@@ -5,20 +5,19 @@ define('components/site/site', ['components/region', 'services/sites'], function
         },
 
         template: `
-<div>
-    <div class="name">{{site.name}}</div>
-    <region :region-id="site.region"></region>
-    <div class="staffCount">Staff: {{site.staffCount}}</div>
+<div class="component-site">
+    <a :href="'#/site/' + site.id">
+        <div class="name">{{site.name}}</div>
+        <region :region-id="site.region"></region>
+        <div class="staffCount">Staff: {{site.staffCount}}</div>
+    </a>
 </div>
 `,
         props: [
-            'siteId'
+            'site'
         ],
 
         subscriptions () {
-            return {
-                site: this.stream('siteId').flatMapLatest(siteId => SitesService.getSiteStream(siteId))
-            }
         },
 
         created () {

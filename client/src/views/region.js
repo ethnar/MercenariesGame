@@ -1,28 +1,49 @@
 define('views/region', [
-    'components/navbar', 'services/regions'
-], function (navbar, RegionsService) {
+    'components/navbar', 'components/region', 'components/tabs/tabs', 'components/site/site', 'components/info/info',
+    'services/regions', 'services/sites'
+], function (navbar, region, tabs, site, info,
+             RegionsService, SitesService) {
     return {
         components: {
-            navbar
+            navbar,
+            region,
+            tabs,
+            site,
+            info
         },
 
         template: `
 <div>
     <navbar></navbar>
-    <div v-if="region">{{region.name}}</div>
+    <header>Region:</header>
+    <region :region-id="regionId"></region>
+    <tabs>
+        <tab header="Available Sites">
+            <div v-for="site in availableSites">
+                <site :site="site"></site>
+            </div>
+        </tab>
+    </tabs>
 </div>
 `,
+        data: () => ({
+        }),
+
         computed: {
             regionId () {
-                return +this.$route.params.regionId; // TODO: shouldn't need to use $route here
+                return +this.$route.params.regionId; // TODO: raise Vue-router ticket
             }
         },
 
         subscriptions () {
             return {
-                region: this
-                    .stream('regionId')
-                    .flatMapLatest(regionId => RegionsService.getRegionStream(regionId))
+                availableSites:
+                    this.stream('regionId')
+                        .flatMapLatest(regionId =>
+                            SitesService
+                                .getAvailableSitesStream()
+                                .map(sites => sites.filter(site => site.region === regionId))
+                        )
             }
         },
 

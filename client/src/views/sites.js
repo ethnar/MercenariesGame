@@ -10,16 +10,16 @@ define('views/sites', ['components/region', 'components/site/site', 'components/
 <div>
     <navbar></navbar>
     <header>Sites:</header>
-    <a v-for="site in sites" class="site" :href="'#/site/' + site.id">
-        <site :siteId="site.id"/>
-    </a>
+    <div v-for="site in sites">
+        <site :site="site"/>
+    </div>
 </div>
 `,
         data: () => ({
         }),
 
         subscriptions: () => ({
-            sites: SitesService.getSitesStream()
+            sites: SitesService.getOwnSitesStream()
         }),
 
         created () {

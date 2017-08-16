@@ -2,9 +2,12 @@ const Entity = require('./entity');
 const Worldview = require('./worldview');
 const Staff = require('./staff');
 const Fact = require('./fact');
+const Site = require('./site');
 const service = require('../singletons/service');
 const world = require('../singletons/world');
 const misc = require('../singletons/misc');
+
+const Equipment = require('./equipment/equipment');
 
 const npcSites = {
     coalMine: require('./sites/coal-mine')
@@ -23,6 +26,7 @@ class Region extends Entity {
         this.population = 10000;
         this.worldview = new Worldview(); // median worldview
         this.recruits = [];
+        this.equipment = [];
     }
 
     getLabel () {
@@ -64,15 +68,10 @@ class Region extends Entity {
         return this.population;
     }
 
-    getCoveringPlayers () { // TODO: does virtually the same what getCoveredRegions does. There's a high risk of discrepancy
-        const players = {};
-        this.getSites().forEach(site => {
-            const player = site.getOwner();
-            if (player) {
-                players[player.getId()] = player;
-            }
-        });
-        return Object.keys(players).map(id => players[id]);
+    getCoveringPlayers () {
+        return world
+            .getEntitiesArray('Player')
+            .filter(player => player.isCoveringRegion(this));
     }
 
     getPayload (player) {
@@ -98,13 +97,16 @@ class Region extends Entity {
         const index = this.recruits.indexOf(recruit);
         this.recruits.splice(index, 1);
         const players = this.getCoveringPlayers();
-        service.sendUpdate('recruits', players, { delete: true, id: recruit.getId() });
+        service.sendDeletion('recruits', players, recruit.getId());
     }
 
     cycle (cycles) {
         if (cycles.regular) {
             this.cycleRecruits();
             this.cycleSites();
+        }
+        if (cycles.rare) {
+            this.cycleStores();
         }
     }
 
@@ -123,26 +125,57 @@ class Region extends Entity {
 
     cycleSites () {
         // at least 20 sites without an owner
+        const emptySites = this.getSites().filter(site => !site.isOccupied());
         // at least 50 sites owned by npcs
-        const emptySites = this.getSites().filter(site => !site.getOwner() && !site.npcOwned);
         const npcSites = this.getSites().filter(site => site.npcOwned);
         switch (true) {
             case misc.chances(20 - emptySites.length):
                 this.newEmptySite();
                 break;
-            case misc.chances(200 - npcSites * 4):
+            case misc.chances(200 - npcSites.length * 4):
                 this.newNpcSite();
                 break;
         }
     }
 
+    cycleStores () {
+        // this.equipment.forEach(eq => {
+        //     if (misc.chances(10)) {
+        //         this.removeEquipment(eq);
+        //     }
+        // });
+        while (this.equipment.length < 50) {
+            const equipment = Equipment.generateRandomEquipment();
+            this.addEquipment(equipment);
+        }
+    }
+
+    getEquipment () {
+        return this.equipment;
+    }
+
+    addEquipment (eq) {
+        this.equipment.push(eq);
+        eq.setRegion(this);
+    }
+
+    removeEquipment (eq) {
+        const idx = this.equipment.indexOf(eq);
+        this.equipment.splice(idx, 1);
+        eq.setRegion(null);
+    }
+
     newEmptySite () {
-        const site = new npcSites.coalMine({region: this});
+        const site = new Site({name: 'Barracks', region: this});
+        site.makeAvailable(true);
         this.addSite(site);
     }
 
     newNpcSite () {
-
+        const site = new npcSites.coalMine({region: this});
+        site.setOwnedByNpc(true);
+        new Fact(25, 'A new %s was opened in %s', site, this);
+        this.addSite(site);
     }
 }
 

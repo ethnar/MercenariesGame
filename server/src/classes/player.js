@@ -29,6 +29,7 @@ class Player extends Entity {
 
     addSite (site) {
         this.sites.push(site);
+        service.sendUpdate('sites', this, site.getPayload());
     }
 
     getFunds () {
@@ -78,6 +79,10 @@ class Player extends Entity {
         return Object.keys(regions).map(id => regions[id]);
     }
 
+    isCoveringRegion (region) {
+        return !!this.getSites().find(site => site.getRegion() === region);
+    }
+
     getName () {
         return this.name;
     }
@@ -101,7 +106,7 @@ class Player extends Entity {
 
     finishedMission (mission) {
         delete this.currentMissions[mission.id];
-        service.sendUpdate('current-missions', this, { delete: true, id: mission.getId() });
+        service.sendDeletion('current-missions', this, mission.getId());
     }
 
     verifyUsernameAndPassword (name, password) {
@@ -119,7 +124,7 @@ class Player extends Entity {
 
     forgetMission (mission) {
         delete this.knownMissions[mission.id];
-        service.sendUpdate('known-missions', this, { delete: true, id: mission.getId() });
+        service.sendDeletion('known-missions', this, mission.getId());
     }
 
     isFactKnown(fact){

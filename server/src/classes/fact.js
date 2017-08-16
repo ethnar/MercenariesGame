@@ -10,9 +10,9 @@ class Fact extends Entity {
         this.message = message;
         this.references = args;
 
-        if (message) {
-            console.log(this.getFormatted());
-        }
+        // if (message) {
+        //     console.log(this.getFormatted());
+        // }
         this.references.forEach(object => {
             object.relatedFacts.push(this);
         });

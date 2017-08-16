@@ -17,6 +17,7 @@ class World {
             timer: 60 // 600
         }];
         this.timeout = 1000;
+        this.gameSpeed = 10;
     }
 
     getEntitiesArray (type) {
@@ -30,7 +31,7 @@ class World {
 
     loop () {
         this.cycle();
-        setTimeout(this.loop.bind(this), this.timeout);
+        setTimeout(this.loop.bind(this), this.timeout / this.gameSpeed);
     }
 
     cycle () {
@@ -44,8 +45,7 @@ class World {
             cycles[cycle.name] = (this.secondsCount % cycle.timer === 0);
         });
         this.secondsCount += this.timeout / 1000;
-        console.log('');
-        console.log('---------------------------------------- new cycle ----------------------------------------');
+//        console.log('---------------------------------------- new cycle ----------------------------------------');
         this.cycleEntities('Country', cycles);
         this.cycleEntities('Site', cycles);
         this.cycleEntities('Politician', cycles);
