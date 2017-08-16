@@ -20,6 +20,12 @@ define('services/sites', ['services/server', 'services/player'], function (Serve
             return ServerService.request('purchase', {
                 site: siteId
             });
+        },
+
+        investigate (site) {
+            return ServerService.request('investigate-site', {
+                site: site.id
+            });
         }
     };
 

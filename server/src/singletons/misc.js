@@ -48,6 +48,6 @@ module.exports = {
                 multiplier = 20;
                 break;
         }
-        return Math.pow(base, current + 1) * multiplier;
+        return Math.ceil(Math.pow(base, current + 1) * multiplier);
     }
 };

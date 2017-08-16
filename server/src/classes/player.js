@@ -19,7 +19,7 @@ class Player extends Entity {
         this.knownFacts = {};
         this.funds = 0;
         this.intel = 0;
-        this.sitesKnowledge = {};
+        this.siteKnowledge = {};
         this.regionKnowledge = {};
         this.politiciansKnowledge = {};
         this.sites = [];
@@ -33,7 +33,7 @@ class Player extends Entity {
 
     addSite (site) {
         this.sites.push(site);
-        this.sitesKnowledge[site.id] = {
+        this.siteKnowledge[site.id] = {
             familiarity: 10,
             site
         };
@@ -95,7 +95,20 @@ class Player extends Entity {
     }
 
     investigateSite(site) {
-
+        const knowledge = this.siteKnowledge[site.id] || {
+            familiarity: 0,
+            site
+        };
+        this.siteKnowledge[site.id] = knowledge;
+        if (knowledge.familiarity < 10) {
+            const intelNeeded = misc.getIntelCost('site', knowledge.familiarity);
+            if (this.useIntel(intelNeeded)) {
+                knowledge.familiarity = knowledge.familiarity + 1;
+                service.sendUpdate('sites', this, site.getPayload(this));
+                return true;
+            }
+        }
+        return false;
     }
 
     investigatePolitician(politician) {
@@ -103,7 +116,7 @@ class Player extends Entity {
     }
 
     revealSite(site, familiarity = 10) {
-        this.sitesKnowledge[site.getId()] = {
+        this.siteKnowledge[site.getId()] = {
             familiarity,
             site
         };
@@ -129,11 +142,11 @@ class Player extends Entity {
     }
 
     getKnownSites () {
-        return misc.toArray(this.sitesKnowledge).map(item => item.site);
+        return misc.toArray(this.siteKnowledge).map(item => item.site);
     }
 
     getSiteFamiliarity (site) {
-        return this.sitesKnowledge[site.id] ? this.sitesKnowledge[site.id].familiarity : 0;
+        return this.siteKnowledge[site.id] ? this.siteKnowledge[site.id].familiarity : 0;
     }
 
     getRegionFamiliarity (region) {

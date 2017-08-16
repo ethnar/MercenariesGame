@@ -84,7 +84,7 @@ secondary.addStaff(new Staff({region: toronto}));
 secondary.addStaff(new Staff({region: toronto}));
 
 regions.forEach(region => {
-    const count = Math.ceil(Math.random() * 20 + 80);
+    const count = Math.ceil(Math.random() * 5 + 30);
     for (let i = 0; i < count; i++) {
         const site = new Site({name: 'House', region: region});
     }

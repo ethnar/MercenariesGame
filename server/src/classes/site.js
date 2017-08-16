@@ -87,7 +87,7 @@ class Site extends Entity {
         if (this.isDestroyed() || !owner) {
             return;
         }
-        owner.addIntel(5000000);
+        owner.addIntel(5);
         // let region = this.getRegion();
         // let country = region.getCountry();
         // let facts = country.getRelatedFacts();
@@ -141,6 +141,13 @@ class Site extends Entity {
                 // fall-through
             case familiarity >= 5:
                 info.owner = this.getOwner() ? this.getOwner().getId() : null;
+
+                // size
+                // plot value
+                // staff
+                // defenses
+                // owner
+                // equipment
         }
         return info;
     }
@@ -173,6 +180,23 @@ service.registerHandler('purchase', (params, player) => {
     site.setOwner(player);
     return { result: true };
 });
+
+service.registerHandler('investigate-site', (params, player) => {
+    const site = Site.getById(params.site);
+
+    if (!player || !site) {
+        return errorResponse('Invalid request');
+    }
+
+    if (!player.investigateSite(site)) {
+        return errorResponse('Unable to investigate region');
+    }
+
+    service.sendUpdate('sites', player, site.getPayload(player));
+
+    return { result: true };
+});
+
 
 Entity.registerClass(Site);
 module.exports = Site;

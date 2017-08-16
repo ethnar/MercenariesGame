@@ -22,6 +22,9 @@ define('views/site', [
             Price: {{site.price}}
             <button @click="purchase();">Purchase</button>
         </div>
+        <div v-if="site.owner !== player.id">
+            <button @click="useIntel();">Use intel ({{site.intelCost}})</button>            
+        </div>
         <tabs>
             <tab header="Staff" v-if="site.owner === player.id">
                 <div v-if="mode !== 'recruit'">
@@ -127,6 +130,10 @@ define('views/site', [
                         alert(response.message);
                     }
                 });
+            },
+
+            useIntel() {
+                SitesService.investigate(this.site);
             }
         }
     };

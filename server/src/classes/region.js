@@ -183,8 +183,6 @@ service.registerHandler('investigate-region', (params, player) => {
     const region = Region.getById(params.region);
 
     if (!player || !region) {
-        console.log(region);
-        console.log(params);
         return errorResponse('Invalid request');
     }
 

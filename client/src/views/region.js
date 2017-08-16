@@ -18,7 +18,7 @@ define('views/region', [
     <div v-if="region">
         <header>Region:</header>
         <region :region-id="regionId"></region>
-        <button @click="spendIntel();">Spend intel ({{region.intelCost}})</button>
+        <button @click="useIntel();">Use intel ({{region.intelCost}})</button>
         <tabs>
             <tab header="Sites">
                 <div v-for="site in sites">
@@ -61,7 +61,7 @@ define('views/region', [
         },
 
         methods: {
-            spendIntel() {
+            useIntel() {
                 RegionsService.investigate(this.region);
             }
         }
