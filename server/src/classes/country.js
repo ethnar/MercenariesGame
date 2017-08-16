@@ -22,7 +22,7 @@ class Country extends Entity {
         return this.name;
     }
 
-    getPayload () {
+    getPayload (player) {
         return {
             id: this.getId(),
             name: this.name

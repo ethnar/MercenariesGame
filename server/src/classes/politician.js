@@ -29,7 +29,6 @@ class Politician extends Human {
             description: description,
             region: region,
             deadline: Date.now() + Math.floor(Math.random() * 1000 * 60 * 60 * 24), //within 24h
-            discoverability: Math.floor(Math.random() * 100)
         });
         this.missions.push(newMission);
     }

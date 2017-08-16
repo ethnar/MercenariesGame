@@ -75,12 +75,13 @@ class Region extends Entity {
         return Object.keys(players).map(id => players[id]);
     }
 
-    getPayload () {
+    getPayload (player) {
         return {
             id: this.getId(),
             name: this.name,
             country: this.getCountry().getId(),
-            population: this.getPopulation()
+            population: this.getPopulation(),
+            involvement: this.getInvolvement
         }
     }
 
@@ -90,7 +91,7 @@ class Region extends Entity {
         });
         this.recruits.push(newGuy);
         const players = this.getCoveringPlayers();
-        service.sendUpdate('recruits', players, newGuy.getPayload());
+        service.sendUpdate('recruits', players, newGuy.getPayload()); // TODO: nope, we need to change that so that you need to find places you can recruit people
     }
 
     withdrawRecruit (recruit) {
@@ -138,7 +139,6 @@ class Region extends Entity {
     newEmptySite () {
         const site = new npcSites.coalMine({region: this});
         this.addSite(site);
-        new Fact(25, 'A new %s was opened in %s', site, this);
     }
 
     newNpcSite () {
@@ -149,7 +149,7 @@ class Region extends Entity {
 service.registerHandler('regions', (params, player) => {
     if (player)
     {
-        return world.entities.Region.map(region => region.getPayload());
+        return world.entities.Region.map(region => region.getPayload(player));
     }
     return [];
 });
@@ -162,7 +162,7 @@ service.registerHandler('recruits', (params, player) => {
         regions.forEach(region => {
             recruits = recruits.concat(region.getRecruits());
         });
-        return recruits.map(personnel => personnel.getPayload());
+        return recruits.map(personnel => personnel.getPayload(player));
     }
     return [];
 });

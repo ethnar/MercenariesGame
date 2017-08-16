@@ -17,6 +17,7 @@ class Player extends Entity {
         this.currentMissions = {};
         this.knownFacts = {};
         this.funds = 0;
+        this.intel = 0;
         this.sites = [];
     }
 
@@ -32,6 +33,15 @@ class Player extends Entity {
 
     getFunds () {
         return this.funds;
+    }
+
+    getIntel () {
+        return this.intel;
+    }
+
+    addIntel (intel) {
+        this.intel += intel;
+        service.sendUpdate('intel', this, this.intel);
     }
 
     addFunds (funds) {
@@ -86,7 +96,7 @@ class Player extends Entity {
 
     startedMission (mission) {
         this.currentMissions[mission.id] = mission;
-        service.sendUpdate('current-missions', this, mission.getPayload());
+        service.sendUpdate('current-missions', this, mission.getPayload(this));
     }
 
     finishedMission (mission) {
@@ -104,7 +114,7 @@ class Player extends Entity {
 
     addKnownMission(mission){
         this.knownMissions[mission.id] = mission;
-        service.sendUpdate('known-missions', this, mission.getPayload());
+        service.sendUpdate('known-missions', this, mission.getPayload(this));
     }
 
     forgetMission (mission) {
@@ -135,6 +145,13 @@ service.registerHandler('authenticate', (params, previousPlayer, conn) => {
 service.registerHandler('funds', (params, player) => {
     if (player) {
         return player.getFunds();
+    }
+    return null;
+});
+
+service.registerHandler('intel', (params, player) => {
+    if (player) {
+        return player.getIntel();
     }
     return null;
 });

@@ -25,52 +25,6 @@ class CoalMine extends Site {
     cycle (cycles) {
         if (cycles.rare)
         {
-            //noinspection DuplicateCaseLabelJS
-            switch (true)
-            {
-                case this.slavery && misc.chances(5):
-                    new Fact(8, 'A fatal accident has happened in %s, %s', this, this.getRegion());
-                    break;
-                case !this.slavery && misc.chances(1):
-                    new Fact(10, 'A fatal accident has happened in %s, %s', this, this.getRegion());
-                    break;
-                case !this.slavery && misc.chances(1):
-                    new Fact(25, 'An accident has happened in %s, %s, trapped miners were rescued', this, this.getRegion());
-                    break;
-                case !this.slavery && misc.chances(1) && !this.striking:
-                    new Fact(30, 'A strike has begun in %s, %s', this, this.getRegion());
-                    this.striking = true;
-                    break;
-                    // TODO: we could include rebellion?
-                case this.slavery && this.striking:
-                    new Fact(40, 'A strike has ended in %s, %s', this, this.getRegion());
-                    new Fact(2, 'A strike was brutally ended in %s, %s', this, this.getRegion());
-                    this.striking = false;
-                    break;
-                case !this.slavery && misc.chances(1) && this.striking:
-                    new Fact(40, 'A strike has ended in %s, %s', this, this.getRegion());
-                    this.striking = false;
-                    break;
-                case misc.chances(1):
-                    new Fact(40, 'A new shaft was opened in %s, %s', this, this.getRegion());
-                    break;
-                case misc.chances(1):
-                    new Fact(40, 'A %s, %s is running into financial problems', this, this.getRegion());
-                    break;
-                case misc.chances(4):
-                    new Fact(40, 'A big transport has just arrived at %s, %s', this, this.getRegion());
-                    if (this.slavery && misc.chances(30))
-                    {
-                        new Fact(10, 'Several trucks transporting people just arrived at %s, %s', this, this.getRegion());
-                    }
-                    break;
-            }
-            // acqusition
-            // new shaft
-            // festival - no slavery
-            // transport to another site - environment impact
-            // contract with another site (power plant?) - environment impact
-            // new resource
         }
     }
 }

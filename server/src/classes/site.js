@@ -46,7 +46,7 @@ class Site extends Entity {
     addStaff (staff) {
         this.staff.push(staff);
         staff.setSite(this);
-        service.sendUpdate('sites', this.getOwner(), this.getPayload());
+        service.sendUpdate('sites', this.getOwner(), this.getPayload(this.getOwner()));
     }
 
     getRegion () {
@@ -66,28 +66,29 @@ class Site extends Entity {
         if (this.isDestroyed() || !owner) {
             return;
         }
-        let region = this.getRegion();
-        let country = region.getCountry();
-        let facts = country.getRelatedFacts();
-        facts = facts.concat(region.getRelatedFacts());
-        facts.forEach(fact => {
-            if (!owner.isFactKnown(fact) && misc.chances(fact.getDiscoverability())) {
-                owner.addKnownFact(fact);
-            }
-        });
-        let missions = region.getMissions();
-        missions.forEach(mission => {
-            if(!owner.isMissionKnown(mission) && !mission.isWithdrawn() && misc.chances(mission.getDiscoverability())){
-                owner.addKnownMission(mission);
-            }
-        });
+        owner.addIntel(5);
+        // let region = this.getRegion();
+        // let country = region.getCountry();
+        // let facts = country.getRelatedFacts();
+        // facts = facts.concat(region.getRelatedFacts());
+        // facts.forEach(fact => {
+        //     if (!owner.isFactKnown(fact) && misc.chances(fact.getDiscoverability())) {
+        //         owner.addKnownFact(fact);
+        //     }
+        // });
+        // let missions = region.getMissions();
+        // missions.forEach(mission => {
+        //     if(!owner.isMissionKnown(mission) && !mission.isWithdrawn() && misc.chances(mission.getDiscoverability())){
+        //         owner.addKnownMission(mission);
+        //     }
+        // });
     }
 
     isDestroyed () {
         return this.destroyed;
     }
 
-    getPayload () {
+    getPayload (player) {
         return {
             id: this.getId(),
             name: this.name,
@@ -101,7 +102,7 @@ service.registerHandler('sites', (params, player) => {
     if (player)
     {
         let sites = player.getSites();
-        return sites.map(site => site.getPayload());
+        return sites.map(site => site.getPayload(player));
     }
     return [];
 });

@@ -15,7 +15,6 @@ class Mission extends Entity {
         this.payment = args.payment;
         this.description = args.description;
         this.region = args.region;
-        this.discoverability = args.discoverability;
         this.withdrawn = false;
         this.duration = args.duration || 15000;
         this.contractedPlayer = null;
@@ -58,10 +57,6 @@ class Mission extends Entity {
         this.contractedStaff.forEach(staff => staff.returnFromMission());
     }
 
-    getDiscoverability(){
-        return this.discoverability;
-    }
-
     getDescription(){
         return this.description;
     }
@@ -78,7 +73,7 @@ class Mission extends Entity {
         return this.owner;
     }
 
-    getPayload () {
+    getPayload (player) {
         return {
             id: this.getId(),
             description: this.getDescription(),
@@ -92,7 +87,7 @@ class Mission extends Entity {
 service.registerHandler('known-missions', (params, player) => {
     if (player) {
         let missions = player.getKnownMissions();
-        return Object.keys(missions).map(key => missions[key].getPayload());
+        return Object.keys(missions).map(key => missions[key].getPayload(player));
     }
     return [];
 });
@@ -100,7 +95,7 @@ service.registerHandler('known-missions', (params, player) => {
 service.registerHandler('current-missions', (params, player) => {
     if (player) {
         let missions = player.getCurrentMissions();
-        return Object.keys(missions).map(key => missions[key].getPayload());
+        return Object.keys(missions).map(key => missions[key].getPayload(player));
     }
     return [];
 });

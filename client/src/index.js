@@ -1,5 +1,5 @@
-require(['views/news', 'views/missions', 'views/mission/mission', 'views/sites', 'views/site', 'services/server'],
-    function (NewsView, MissionsView, MissionView, SitesView, SiteView, ServerService) {
+require(['views/map', 'views/missions', 'views/mission/mission', 'views/sites', 'views/site', 'views/region', 'services/server'],
+    function (MapView, MissionsView, MissionView, SitesView, SiteView, RegionView, ServerService) {
     Vue.use(VueRx, Rx);
 
     Vue.prototype.stream = function (prop) {
@@ -12,8 +12,8 @@ require(['views/news', 'views/missions', 'views/mission/mission', 'views/sites',
     }).then(() => {
         window.router = new VueRouter({
             routes: [{
-                path: '/news',
-                component: NewsView
+                path: '/map',
+                component: MapView
             }, {
                 path: '/missions',
                 component: MissionsView
@@ -27,8 +27,11 @@ require(['views/news', 'views/missions', 'views/mission/mission', 'views/sites',
                 path: '/site/:siteId',
                 component: SiteView
             }, {
+                path: '/region/:regionId',
+                component: RegionView
+            }, {
                 path: '*',
-                redirect: '/news'
+                redirect: '/map'
             }]
         });
 
