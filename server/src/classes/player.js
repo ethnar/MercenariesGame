@@ -3,6 +3,7 @@ const Worldview = require('./worldview');
 const world = require('../singletons/world');
 const service = require('../singletons/service');
 const crypto = require('crypto');
+const misc = require('../singletons/misc');
 
 class Player extends Entity {
     constructor (name, password, npc) {
@@ -18,6 +19,9 @@ class Player extends Entity {
         this.knownFacts = {};
         this.funds = 0;
         this.intel = 0;
+        this.sitesKnowledge = {};
+        this.regionKnowledge = {};
+        this.politiciansKnowledge = {};
         this.sites = [];
     }
 
@@ -29,7 +33,11 @@ class Player extends Entity {
 
     addSite (site) {
         this.sites.push(site);
-        service.sendUpdate('sites', this, site.getPayload());
+        this.sitesKnowledge[site.id] = {
+            familiarity: 10,
+            site
+        };
+        service.sendUpdate('sites', this, site.getPayload(this));
     }
 
     getFunds () {
@@ -42,18 +50,75 @@ class Player extends Entity {
 
     addIntel (intel) {
         this.intel += intel;
-        service.sendUpdate('intel', this, this.intel);
+        service.sendUpdate('player', this, this.getPayload(this));
+    }
+
+    useIntel (intel) {
+        if (this.intel >= intel) {
+            this.intel -= intel;
+            service.sendUpdate('player', this, this.getPayload(this));
+            return true;
+        }
+        return false;
+    }
+
+    investigateRegion(region) {
+        const knowledge = this.regionKnowledge[region.id] || {
+            familiarity: 0,
+            region
+        };
+        this.regionKnowledge[region.id] = knowledge;
+        if (knowledge.familiarity < 10) {
+            const intelNeeded = misc.getIntelCost('region', knowledge.familiarity);
+            if (this.useIntel(intelNeeded)) {
+                knowledge.familiarity = knowledge.familiarity + 1;
+                service.sendUpdate('regions', this, region.getPayload(this));
+
+                const sites = [...region.getSites()];
+
+                sites.sort((a, b) => {
+                    return b.getVisibility() - a.getVisibility();
+                });
+
+                let reveal = Math.ceil(sites.length * (knowledge.familiarity + Math.random() * 0.2) / 10);
+                reveal = Math.min(reveal, sites.length);
+
+                for (let i = 0; i < reveal; i++) {
+                    if (this.getSiteFamiliarity(sites[i]) < 1) {
+                        this.revealSite(sites[i], 1);
+                    }
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    investigateSite(site) {
+
+    }
+
+    investigatePolitician(politician) {
+
+    }
+
+    revealSite(site, familiarity = 10) {
+        this.sitesKnowledge[site.getId()] = {
+            familiarity,
+            site
+        };
+        service.sendUpdateCB('sites', this, site.getPayload.bind(site));
     }
 
     addFunds (funds) {
         this.funds += funds;
-        service.sendUpdate('funds', this, this.funds);
+        service.sendUpdate('player', this, this.getPayload(this));
     }
 
     pay (funds) {
         if (this.funds >= funds) {
             this.funds -= funds;
-            service.sendUpdate('funds', this, this.funds);
+            service.sendUpdate('player', this, this.getPayload(this));
             return true;
         }
         return false;
@@ -61,6 +126,18 @@ class Player extends Entity {
 
     getSites () {
         return this.sites;
+    }
+
+    getKnownSites () {
+        return misc.toArray(this.sitesKnowledge).map(item => item.site);
+    }
+
+    getSiteFamiliarity (site) {
+        return this.sitesKnowledge[site.id] ? this.sitesKnowledge[site.id].familiarity : 0;
+    }
+
+    getRegionFamiliarity (region) {
+        return this.regionKnowledge[region.id] ? this.regionKnowledge[region.id].familiarity : 0;
     }
 
     getStaff () {
@@ -135,6 +212,14 @@ class Player extends Entity {
         this.knownFacts[fact.id] = fact;
         service.sendUpdate('news', this, fact.getFormatted());
     }
+
+    getPayload () {
+        return {
+            id: this.getId(),
+            funds: this.getFunds(),
+            intel: this.getIntel()
+        }
+    }
 }
 
 service.registerHandler('authenticate', (params, previousPlayer, conn) => {
@@ -147,16 +232,9 @@ service.registerHandler('authenticate', (params, previousPlayer, conn) => {
     return !!player;
 });
 
-service.registerHandler('funds', (params, player) => {
+service.registerHandler('player', (params, player) => {
     if (player) {
-        return player.getFunds();
-    }
-    return null;
-});
-
-service.registerHandler('intel', (params, player) => {
-    if (player) {
-        return player.getIntel();
+        return player.getPayload(player);
     }
     return null;
 });

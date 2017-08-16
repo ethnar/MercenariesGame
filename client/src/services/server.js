@@ -21,7 +21,7 @@ define('services/server', function () {
             if (updateHandlers[json.update]) {
                 updateHandlers[json.update](json.data);
             } else {
-                console.warn('Received update that does not have a handler ' + json.update);
+                console.warn('Received update that does not have a handler: ' + json.update);
                 console.warn(json.data);
             }
         }

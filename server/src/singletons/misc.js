@@ -22,5 +22,32 @@ module.exports = {
 
     randomEntity (array) {
         return array[Math.floor(Math.random() * array.length)];
+    },
+
+    toArray (object) {
+        return Object.keys(object).map(key => object[key]);
+    },
+
+    getIntelCost(type, current) {
+        if (current === 10) {
+            return null;
+        }
+        let base;
+        let multiplier;
+        switch (type) {
+            case 'region':
+                base = 3;
+                multiplier = 10;
+                break;
+            case 'site':
+                base = 2;
+                multiplier = 10;
+                break;
+            case 'politician':
+                base = 4;
+                multiplier = 20;
+                break;
+        }
+        return Math.pow(3, current + 1) * 10;
     }
 };

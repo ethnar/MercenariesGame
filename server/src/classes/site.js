@@ -14,13 +14,16 @@ class Site extends Entity {
         }
         this.owner = null;
         this.countryProperty = null;
-        this.standard = 50;
         this.size = 15;
         this.space = this.size;
         this.destroyed = false;
-        this.npcOwned = false;
+        this.visibility = Math.ceil(Math.random() * 100);
         this.staff = [];
         this.equipment = [];
+    }
+
+    getVisibility() {
+        return this.visibility;
     }
 
     cycle () {
@@ -44,11 +47,7 @@ class Site extends Entity {
     }
 
     isOccupied () {
-        return !!this.npcOwned || !!this.owner;
-    }
-
-    setStandard (value) {
-        this.standard = value;
+        return !!this.owner;
     }
 
     setSize (value) {
@@ -57,22 +56,8 @@ class Site extends Entity {
 
     setOwner (owner) {
         this.owner = owner;
-        this.makeAvailable(false);
         owner.addSite(this);
         this.countryProperty = null;
-    }
-
-    setOwnedByNpc (isOwned) {
-        this.npcOwned = isOwned;
-        this.makeAvailable(!isOwned);
-    }
-
-    makeAvailable (available) {
-        if (available) {
-            service.sendUpdate('available-sites', null, this.getPayload());
-        } else {
-            service.sendDeletion('available-sites', null, this.getId());
-        }
     }
 
     addStaff (staff) {
@@ -82,7 +67,7 @@ class Site extends Entity {
     }
 
     getPrice () {
-        return 1000;
+        return this.size * 100;
     }
 
     getRegion () {
@@ -102,7 +87,7 @@ class Site extends Entity {
         if (this.isDestroyed() || !owner) {
             return;
         }
-        owner.addIntel(5);
+        owner.addIntel(5000000);
         // let region = this.getRegion();
         // let country = region.getCountry();
         // let facts = country.getRelatedFacts();
@@ -139,30 +124,35 @@ class Site extends Entity {
     }
 
     getPayload (player) {
-        return {
+        const familiarity = player.getSiteFamiliarity(this);
+        if (!familiarity) {
+            return null;
+        }
+        const info = {
             id: this.getId(),
             name: this.name,
             region: this.getRegion().getId(),
-            staffCount: this.getStaff().length,
-            price: this.getPrice()
+            price: this.getPrice(),
+            intelCost: misc.getIntelCost('site', familiarity)
+        };
+        switch (true) {
+            case familiarity >= 10:
+                info.staffCount = this.getStaff().length;
+                // fall-through
+            case familiarity >= 5:
+                info.owner = this.getOwner() ? this.getOwner().getId() : null;
         }
+        return info;
     }
 }
 
 service.registerHandler('sites', (params, player) => {
     if (player)
     {
-        let sites = player.getSites();
+        let sites = player.getKnownSites();
         return sites.map(site => site.getPayload(player));
     }
     return [];
-});
-
-service.registerHandler('available-sites', (params, player) => {
-    return world
-        .getEntitiesArray('Site')
-        .filter(site => !site.isOccupied())
-        .map(site => site.getPayload());
 });
 
 service.registerHandler('purchase', (params, player) => {

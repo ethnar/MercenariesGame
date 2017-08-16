@@ -47,7 +47,11 @@ class Service {
         this.handlers[topic] = callback;
     }
 
-    sendUpdate (topic, players, data) {
+    sendUpdate (topic, players, data) { // TODO: deprecated?
+        this.sendUpdateCB(topic, players, () => data);
+    }
+
+    sendUpdateCB (topic, players, callback) {
         if (!Array.isArray(players)) {
             if (!players) {
                 const world = require('./world');
@@ -57,14 +61,17 @@ class Service {
             }
         }
         players.forEach(player => {
-            this.connections.forEach(connection => {
-                if (!player || this.playerMap[connection] === player) {
-                    connection.sendText(JSON.stringify({
-                        update: topic,
-                        data: data
-                    }));
-                }
-            });
+            const data = callback(player);
+            if (data) {
+                this.connections.forEach(connection => {
+                    if (!player || this.playerMap[connection] === player) {
+                        connection.sendText(JSON.stringify({
+                            update: topic,
+                            data: data
+                        }));
+                    }
+                });
+            }
         });
     }
 

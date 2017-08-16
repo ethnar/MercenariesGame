@@ -74,7 +74,6 @@ class Country extends Entity {
                 });
                 if (selected) {
                     this.seatOfPower = selected;
-                    selected.setOwnedByNpc(true);
                     new Fact(95, '%s has chosen %s as their seat of power.', this, selected);
                 }
                 break;

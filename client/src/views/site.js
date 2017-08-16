@@ -1,15 +1,14 @@
 define('views/site', [
-    'components/navbar', 'components/region', 'components/tabs/tabs', 'components/staff/staff', 'components/info/info',
-    'services/sites', 'services/staff', 'services/recruits', 'services/news', 'services/equipment'
-], function (navbar, region, tabs, staff, info,
-             SitesService, StaffService, RecruitsService, NewsService, EquipmentService) {
+    'components/navbar', 'components/region', 'components/tabs/tabs', 'components/staff/staff',
+    'services/sites', 'services/staff', 'services/recruits', 'services/player', 'services/equipment'
+], function (navbar, region, tabs, staff,
+             SitesService, StaffService, RecruitsService, PlayerService, EquipmentService) {
     return {
         components: {
             navbar,
             region,
             tabs,
-            staff,
-            info
+            staff
         },
 
         template: `
@@ -19,15 +18,12 @@ define('views/site', [
     <div v-if="site">
         <div class="name">{{site.name}}</div>
         <region :regionId="site.region"></region>
-        <div v-if="site.available">
+        <div v-if="site.owner === null">
             Price: {{site.price}}
             <button @click="purchase();">Purchase</button>
         </div>
         <tabs>
-            <tab header="News" v-if="site.npc">
-                <info v-for="item in news" :message="item">{{item}}</info>
-            </tab>
-            <tab header="Staff" v-if="site.owned">
+            <tab header="Staff" v-if="site.owner === player.id">
                 <div v-if="mode !== 'recruit'">
                     <button @click="mode = 'recruit'">Recruit</button>
                     <div v-for="person in staff">
@@ -42,7 +38,7 @@ define('views/site', [
                     </div>
                 </div>
             </tab>
-            <tab header="Equipment" v-if="site.owned || site.available">
+            <tab header="Equipment" v-if="site.owner === player.id">
                 <div v-if="mode !== 'buy-eq'">
                     <button @click="mode = 'buy-eq'">Purchase new equipment</button>
                     <div v-for="eq in equipment">
@@ -57,7 +53,7 @@ define('views/site', [
                     </div>
                 </div>
             </tab>
-            <tab header="Inventory" v-if="site.owned">
+            <tab header="Inventory" v-if="site.owner === player.id">
                 Inventory list
             </tab>
         </tabs>
@@ -104,12 +100,7 @@ define('views/site', [
                             return RecruitsService.getRecruitsStream(site.region);
                         });
                 }),
-                news:
-                    this.stream('siteId')
-                        .flatMapLatest(siteId =>
-                            NewsService
-                                .getRelatedStream('Site', siteId)
-                        )
+                player: PlayerService.getStream(),
             }
         },
 

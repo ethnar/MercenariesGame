@@ -6,6 +6,7 @@ const Site = require('./site');
 const service = require('../singletons/service');
 const world = require('../singletons/world');
 const misc = require('../singletons/misc');
+const errorResponse = require('../functions/error-response');
 
 const Equipment = require('./equipment/equipment');
 
@@ -75,12 +76,14 @@ class Region extends Entity {
     }
 
     getPayload (player) {
+        const familiarity = player.getRegionFamiliarity(this);
         return {
             id: this.getId(),
             name: this.name,
             country: this.getCountry().getId(),
             population: this.getPopulation(),
-            involvement: this.getInvolvement
+            intelCost: misc.getIntelCost('region', familiarity),
+            //involvement: this.getInvolvement
         }
     }
 
@@ -124,18 +127,7 @@ class Region extends Entity {
     }
 
     cycleSites () {
-        // at least 20 sites without an owner
-        const emptySites = this.getSites().filter(site => !site.isOccupied());
-        // at least 50 sites owned by npcs
-        const npcSites = this.getSites().filter(site => site.npcOwned);
-        switch (true) {
-            case misc.chances(20 - emptySites.length):
-                this.newEmptySite();
-                break;
-            case misc.chances(200 - npcSites.length * 4):
-                this.newNpcSite();
-                break;
-        }
+
     }
 
     cycleStores () {
@@ -164,19 +156,6 @@ class Region extends Entity {
         this.equipment.splice(idx, 1);
         eq.setRegion(null);
     }
-
-    newEmptySite () {
-        const site = new Site({name: 'Barracks', region: this});
-        site.makeAvailable(true);
-        this.addSite(site);
-    }
-
-    newNpcSite () {
-        const site = new npcSites.coalMine({region: this});
-        site.setOwnedByNpc(true);
-        new Fact(25, 'A new %s was opened in %s', site, this);
-        this.addSite(site);
-    }
 }
 
 service.registerHandler('regions', (params, player) => {
@@ -198,6 +177,24 @@ service.registerHandler('recruits', (params, player) => {
         return recruits.map(personnel => personnel.getPayload(player));
     }
     return [];
+});
+
+service.registerHandler('investigate-region', (params, player) => {
+    const region = Region.getById(params.region);
+
+    if (!player || !region) {
+        console.log(region);
+        console.log(params);
+        return errorResponse('Invalid request');
+    }
+
+    if (!player.investigateRegion(region)) {
+        return errorResponse('Unable to investigate region');
+    }
+
+    service.sendUpdate('regions', player, region.getPayload(player));
+
+    return { result: true };
 });
 
 Entity.registerClass(Region);

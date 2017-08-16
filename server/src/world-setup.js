@@ -25,43 +25,45 @@ uk.setNameGenerator('canada');
 
 let test = new Player('test', 'test');
 
+let regions = [];
+
 let toronto = new Region('Toronto', canada);
 let quebec = new Region('Quebec City', canada);
+regions = [...regions, toronto, quebec];
 
 let canadianSenate = new Site({ name: 'Senate', region: quebec });
-canadianSenate.setStandard(100);
 canadianSenate.setSize(50);
 
 
 let dheli = new Region('Dheli', india);
 let kolkata = new Region('Kolkata', india);
+regions = [...regions, dheli, kolkata];
 
 let indianSenate = new Site({ name: 'Senate', region: dheli });
-indianSenate.setStandard(100);
 indianSenate.setSize(50);
 
 
 let warsaw = new Region('Warsaw', poland);
 let krakow = new Region('Krakow', poland);
+regions = [...regions, warsaw, krakow];
 
 let polishSenate = new Site({ name: 'Senate', region: warsaw });
-polishSenate.setStandard(100);
 polishSenate.setSize(50);
 
 
 let moscow = new Region('Moscow', russia);
 let stpetersburg = new Region('Saint Petersburg', russia);
+regions = [...regions, stpetersburg, moscow];
 
 let russianSenate = new Site({ name: 'Senate', region: moscow });
-russianSenate.setStandard(100);
 russianSenate.setSize(50);
 
 
 let london = new Region('London', uk);
 let cardiff = new Region('Cardiff', uk);
+regions = [...regions, london, cardiff];
 
 let ukSenate = new Site({ name: 'Senate', region: london });
-ukSenate.setStandard(100);
 ukSenate.setSize(50);
 
 
@@ -80,6 +82,13 @@ hq.addStaff(new Staff({region: toronto}));
 secondary.addStaff(new Staff({region: toronto}));
 secondary.addStaff(new Staff({region: toronto}));
 secondary.addStaff(new Staff({region: toronto}));
+
+regions.forEach(region => {
+    const count = Math.ceil(Math.random() * 20 + 80);
+    for (let i = 0; i < count; i++) {
+        const site = new Site({name: 'House', region: region});
+    }
+});
 
 /****** STARTUP *******/
 

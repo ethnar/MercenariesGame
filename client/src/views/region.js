@@ -15,15 +15,18 @@ define('views/region', [
         template: `
 <div>
     <navbar></navbar>
-    <header>Region:</header>
-    <region :region-id="regionId"></region>
-    <tabs>
-        <tab header="Available Sites">
-            <div v-for="site in availableSites">
-                <site :site="site"></site>
-            </div>
-        </tab>
-    </tabs>
+    <div v-if="region">
+        <header>Region:</header>
+        <region :region-id="regionId"></region>
+        <button @click="spendIntel();">Spend intel ({{region.intelCost}})</button>
+        <tabs>
+            <tab header="Sites">
+                <div v-for="site in sites">
+                    <site :site="site"></site>
+                </div>
+            </tab>
+        </tabs>
+    </div>
 </div>
 `,
         data: () => ({
@@ -37,11 +40,15 @@ define('views/region', [
 
         subscriptions () {
             return {
-                availableSites:
+                region: this.stream('regionId')
+                    .flatMapLatest(regionId =>
+                        RegionsService.getRegionStream(regionId)
+                    ),
+                sites:
                     this.stream('regionId')
                         .flatMapLatest(regionId =>
                             SitesService
-                                .getAvailableSitesStream()
+                                .getSitesStream()
                                 .map(sites => sites.filter(site => site.region === regionId))
                         )
             }
@@ -54,6 +61,9 @@ define('views/region', [
         },
 
         methods: {
+            spendIntel() {
+                RegionsService.investigate(this.region);
+            }
         }
     };
 });

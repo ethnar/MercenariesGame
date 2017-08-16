@@ -1,12 +1,20 @@
 define('services/player', ['services/server'], function (ServerService) {
 
     return {
+        getIdStream () {
+            return this.getStream().map(player => player.id);
+        },
+
         getFundsStream () {
-            return ServerService.getStream('funds');
+            return this.getStream().map(player => player.funds);
         },
 
         getIntelStream () {
-            return ServerService.getStream('intel');
+            return this.getStream().map(player => player.intel);
+        },
+
+        getStream () {
+            return ServerService.getStream('player');
         }
     };
 
