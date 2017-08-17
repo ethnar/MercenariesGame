@@ -1,4 +1,4 @@
-define('views/news', ['services/news', 'components/navbar', 'components/info/info'], function (NewsService, navbar, info) {
+define('views/news', ['services/news', 'components/navbar/navbar', 'components/info/info'], function (NewsService, navbar, info) {
     return {
         components: {
             navbar,

@@ -1,4 +1,4 @@
-define('views/missions', ['components/navbar', 'services/missions'], function (navbar, MissionsService) {
+define('views/missions', ['components/navbar/navbar', 'services/missions'], function (navbar, MissionsService) {
     return {
         components: {
             navbar

@@ -6,11 +6,18 @@ define('services/player', ['services/server'], function (ServerService) {
         },
 
         getFundsStream () {
-            return this.getStream().map(player => player.funds);
+            return this.getStream().map(player => ({
+                value: player.funds,
+                delta: player.fundsDelta
+            }));
         },
 
         getIntelStream () {
-            return this.getStream().map(player => player.intel);
+            return this.getStream().map(player => ({
+                value: player.intel,
+                delta: player.intelDelta,
+                cap: player.intelCap
+            }));
         },
 
         getStream () {

@@ -1,4 +1,4 @@
-define('views/sites', ['components/region', 'components/site/site', 'components/navbar', 'services/sites'], function (region, site, navbar, SitesService) {
+define('views/sites', ['components/region', 'components/site/site', 'components/navbar/navbar', 'services/sites'], function (region, site, navbar, SitesService) {
     return {
         components: {
             site,

@@ -1,5 +1,5 @@
 define('views/site', [
-    'components/navbar', 'components/region', 'components/tabs/tabs', 'components/staff/staff',
+    'components/navbar/navbar', 'components/region', 'components/tabs/tabs', 'components/staff/staff',
     'services/sites', 'services/staff', 'services/recruits', 'services/player', 'services/equipment'
 ], function (navbar, region, tabs, staff,
              SitesService, StaffService, RecruitsService, PlayerService, EquipmentService) {
@@ -16,11 +16,12 @@ define('views/site', [
     <navbar></navbar>
     <header>Site:</header>
     <div v-if="site">
+        {{site}}
         <div class="name">{{site.name}}</div>
         <region :regionId="site.region"></region>
-        <div v-if="site.owner === null">
+        <div v-if="site.occupied === false && site.price">
             Price: {{site.price}}
-            <button @click="purchase();">Purchase</button>
+            <button @click="purchaseSite();">Purchase</button>
         </div>
         <div v-if="site.owner !== player.id">
             <button @click="useIntel();">Use intel ({{site.intelCost}})</button>            
@@ -52,7 +53,7 @@ define('views/site', [
                     <button @click="mode = ''">Cancel</button>
                     <div v-for="equipment in availableEquipment">
                         {{equipment}}
-                        <button @click="purchase(equipment)">Purchase</button>
+                        <button @click="purchaseEquipment(equipment)">Purchase</button>
                     </div>
                 </div>
             </tab>
@@ -124,7 +125,11 @@ define('views/site', [
                 });
             },
 
-            purchase (equipment) {
+            purchaseSite () {
+                SitesService.purchase(this.siteId);
+            },
+
+            purchaseEquipment (equipment) {
                 EquipmentService.purchase(this.siteId, equipment.id).then(response => {
                     if (!response.result) {
                         alert(response.message);

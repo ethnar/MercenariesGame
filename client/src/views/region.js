@@ -1,5 +1,5 @@
 define('views/region', [
-    'components/navbar', 'components/region', 'components/tabs/tabs', 'components/site/site', 'components/info/info',
+    'components/navbar/navbar', 'components/region', 'components/tabs/tabs', 'components/site/site', 'components/info/info',
     'services/regions', 'services/sites'
 ], function (navbar, region, tabs, site, info,
              RegionsService, SitesService) {

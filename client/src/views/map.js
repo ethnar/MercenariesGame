@@ -1,4 +1,4 @@
-define('views/map', ['services/regions', 'components/navbar'], function (RegionService, navbar) {
+define('views/map', ['services/regions', 'components/navbar/navbar'], function (RegionService, navbar) {
     return {
         components: {
             navbar

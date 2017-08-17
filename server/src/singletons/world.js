@@ -51,6 +51,7 @@ class World {
         this.cycleEntities('Politician', cycles);
         this.cycleEntities('Region', cycles);
         this.cycleEntities('Mission', cycles);
+        this.cycleEntities('Player', cycles);
         this.save('./rolling-save.json');
     }
 

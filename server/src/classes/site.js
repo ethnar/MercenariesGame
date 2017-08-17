@@ -37,7 +37,7 @@ class Site extends Entity {
         return false;
     }
 
-    freeSpace () {
+    freeSpace (space) {
         this.space += space;
         return true;
     }
@@ -82,29 +82,6 @@ class Site extends Entity {
         return this.staff;
     }
 
-    gatherIntelligence () {
-        let owner = this.getOwner();
-        if (this.isDestroyed() || !owner) {
-            return;
-        }
-        owner.addIntel(5);
-        // let region = this.getRegion();
-        // let country = region.getCountry();
-        // let facts = country.getRelatedFacts();
-        // facts = facts.concat(region.getRelatedFacts());
-        // facts.forEach(fact => {
-        //     if (!owner.isFactKnown(fact) && misc.chances(fact.getDiscoverability())) {
-        //         owner.addKnownFact(fact);
-        //     }
-        // });
-        // let missions = region.getMissions();
-        // missions.forEach(mission => {
-        //     if(!owner.isMissionKnown(mission) && !mission.isWithdrawn() && misc.chances(mission.getDiscoverability())){
-        //         owner.addKnownMission(mission);
-        //     }
-        // });
-    }
-
     hasSpace (space) {
         return this.space >= space;
     }
@@ -132,22 +109,43 @@ class Site extends Entity {
             id: this.getId(),
             name: this.name,
             region: this.getRegion().getId(),
-            price: this.getPrice(),
             intelCost: misc.getIntelCost('site', familiarity)
         };
         switch (true) {
             case familiarity >= 10:
-                info.staffCount = this.getStaff().length;
+                info.equipment = this.getEquipment().map(item => item.getPayload(player));
+                // fall-through
+            case familiarity >= 9:
+                info.owner = this.getOwner() ? this.getOwner().getId() : null;
+                // fall-through
+            case familiarity >= 8:
+                // fall-through
+            case familiarity >= 7:
+                info.equipment = this
+                    .getEquipment()
+                    .filter(item => item.defenses)
+                    .map(item => item.getPayload(player));
+                // fall-through
+            case familiarity >= 6:
                 // fall-through
             case familiarity >= 5:
-                info.owner = this.getOwner() ? this.getOwner().getId() : null;
+                info.staff = this
+                    .getStaff()
+                    .map(staff => staff.getPayload(player));
+                // fall-through
+            case familiarity >= 4:
+                info.staffCount = this.getStaff().length;
+                // fall-through
+            case familiarity >= 3:
+                info.price = this.getPrice();
+                // fall-through
+            case familiarity >= 2:
+                info.occupied = !!this.getOwner();
+                // fall-through
+            case familiarity >= 1:
+                info.size = this.size;
+                // fall-through
 
-                // size
-                // plot value
-                // staff
-                // defenses
-                // owner
-                // equipment
         }
         return info;
     }
@@ -171,6 +169,11 @@ service.registerHandler('purchase', (params, player) => {
 
     if (site.isOccupied()) {
         return errorResponse('Trying to purchase occupied site');
+    }
+
+    const familiarity = player.getSiteFamiliarity(site);
+    if (familiarity < 3) {
+        return errorResponse('Trying to purchase site when lacking the info')
     }
 
     if (!player.pay(site.getPrice())) {

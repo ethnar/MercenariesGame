@@ -20,7 +20,7 @@ class Cell extends Site {
 
     cycle (cycles) {
         if (cycles.regular) {
-            this.gatherIntelligence();
+
         }
     }
 }

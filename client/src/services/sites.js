@@ -13,7 +13,7 @@ define('services/sites', ['services/server', 'services/player'], function (Serve
             return Rx.Observable.combineLatest(
                 this.getSitesStream(),
                 PlayerService.getIdStream()
-            ).map(([sites, playerId]) => sites.filter(site => site.owner === playerId));
+            ).map(([sites, playerId]) => sites.filter(site => site.owner.id === playerId));
         },
 
         purchase (siteId) {

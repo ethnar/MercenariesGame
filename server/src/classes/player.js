@@ -18,10 +18,13 @@ class Player extends Entity {
         this.currentMissions = {};
         this.knownFacts = {};
         this.funds = 0;
+        this.fundsDelta = 0;
         this.intel = 0;
+        this.intelDelta = 10;
+        this.intelCap = 1000;
         this.siteKnowledge = {};
         this.regionKnowledge = {};
-        this.politiciansKnowledge = {};
+        //this.politiciansKnowledge = {};
         this.sites = [];
     }
 
@@ -40,16 +43,34 @@ class Player extends Entity {
         service.sendUpdate('sites', this, site.getPayload(this));
     }
 
+    cycle (cycles) {
+        if (cycles.regular) {
+            this.gatherIntelligence();
+        }
+    }
+
+    gatherIntelligence () {
+        this.addIntel(this.getIntelDelta());
+    }
+
     getFunds () {
         return this.funds;
+    }
+
+    getFundsDelta () {
+        return this.fundsDelta;
     }
 
     getIntel () {
         return this.intel;
     }
 
+    getIntelDelta () {
+        return this.intelDelta;
+    }
+
     addIntel (intel) {
-        this.intel += intel;
+        this.intel = Math.min(this.intel + intel, this.intelCap);
         service.sendUpdate('player', this, this.getPayload(this));
     }
 
@@ -230,7 +251,10 @@ class Player extends Entity {
         return {
             id: this.getId(),
             funds: this.getFunds(),
-            intel: this.getIntel()
+            intel: this.getIntel(),
+            fundsDelta: this.getFundsDelta(),
+            intelDelta: this.getIntelDelta(),
+            intelCap: this.intelCap
         }
     }
 }
