@@ -4,6 +4,7 @@
   "description": "Mercenaries server app",
   "main": "src/index.js",
   "dependencies": {
+    "crypto": "^1.0.1",
     "nodejs-websocket": "^1.6.0"
   },
   "devDependencies": {},

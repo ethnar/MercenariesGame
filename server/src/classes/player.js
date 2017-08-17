@@ -4,6 +4,14 @@ const world = require('../singletons/world');
 const service = require('../singletons/service');
 const crypto = require('crypto');
 const misc = require('../singletons/misc');
+const errorResponse = require('../functions/error-response');
+
+const hash = method => string => crypto.createHash(method).update(string).digest('hex');
+
+const shasum = hash('sha1');
+const md5 = hash('md5');
+
+const authTokens = {};
 
 class Player extends Entity {
     constructor (name, password, npc) {
@@ -29,9 +37,7 @@ class Player extends Entity {
     }
 
     static passwordHash (password) {
-        const shasum = crypto.createHash('sha1');
-        shasum.update(password + '-mercenaries-game');
-        return shasum.digest('hex');
+        return shasum(password + '-mercenaries-game');
     }
 
     addSite (site) {
@@ -259,6 +265,23 @@ class Player extends Entity {
     }
 }
 
+service.registerHandler('authenticate-token', (params, previousPlayer, conn) => {
+    const auth = authTokens[params.token];
+    if (!auth) {
+        return errorResponse('Unrecognised token');
+    }
+
+    if (auth.expires <= new Date().getTime()) {
+        return errorResponse('Expired token');
+    }
+
+    service.setPlayer(conn, auth.player);
+
+    return {
+        success: true
+    };
+}, true);
+
 service.registerHandler('authenticate', (params, previousPlayer, conn) => {
     let player = world.getEntitiesArray('Player').find(player => {
         return player.verifyUsernameAndPassword(params.user, params.password);
@@ -266,7 +289,17 @@ service.registerHandler('authenticate', (params, previousPlayer, conn) => {
     if (player) {
         service.setPlayer(conn, player);
     }
-    return !!player;
+    const token = md5(player.name + new Date().getTime());
+    const expires = new Date();
+    expires.setDate(expires.getDate() + 1);
+    authTokens[token] = {
+        player,
+        expires: expires.getTime()
+    };
+    return {
+        token,
+        success: !!player
+    };
 }, true);
 
 service.registerHandler('player', (params, player) => {

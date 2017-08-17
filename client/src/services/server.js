@@ -11,8 +11,7 @@ define('services/server', function () {
         if (json.request) {
             if (json.data.message) {
                 if (json.data.message === 'Unauthenticated') {
-                    window.location.hash = '/login';
-                    window.location.search = 'token=' + Math.random();
+                    window.location = '?token=' + Math.random() + '#/login';
                 }
             } else {
                 if (pendingRequests[json.request]) {
@@ -109,6 +108,17 @@ define('services/server', function () {
             updateHandlers[name] = handler;
         },
 
+        authUsingToken () {
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                return Promise.reject();
+            } else {
+                return this.request('authenticate-token', {
+                    token
+                });
+            }
+        },
+
         authenticate (user, password) {
             return new Promise((resolve, reject) =>
                 this.request('authenticate', {
@@ -116,6 +126,7 @@ define('services/server', function () {
                     password: password
                 }).then((result) => {
                     if (result) {
+                        localStorage.setItem('authToken', result.token);
                         resolve();
                     } else {
                         reject('Invalid user or password');

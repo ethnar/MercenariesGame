@@ -14,12 +14,24 @@ define('views/login', ['services/server'], function (ServerService) {
             error: ''
         }),
 
+        created() {
+            ServerService
+                .authUsingToken()
+                .then(() => {
+                    this.goToTheGame();
+                });
+        },
+
         methods: {
+            goToTheGame() {
+                window.location.hash = '/map';
+            },
+
             logIn() {
                 ServerService
                     .authenticate(this.user, this.password)
                     .then(() => {
-                        window.location.hash = '/map';
+                        this.goToTheGame();
                     }).catch((error) => {
                         this.error = error;
                     });
