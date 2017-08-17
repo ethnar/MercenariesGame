@@ -6,15 +6,21 @@ define('services/server', function () {
 
     let openPromise = new Promise(resolve => connection.onopen = resolve);
 
-
     connection.onmessage = string => {
         let json = JSON.parse(string.data);
         if (json.request) {
-            if (pendingRequests[json.request]) {
-                pendingRequests[json.request](json.data);
-                delete pendingRequests[json.request];
+            if (json.data.message) {
+                if (json.data.message === 'Unauthenticated') {
+                    window.location.hash = '/login';
+                    window.location.search = 'token=' + Math.random();
+                }
             } else {
-                throw new Error('Received response to a request that wasn\'t sent');
+                if (pendingRequests[json.request]) {
+                    pendingRequests[json.request](json.data);
+                    delete pendingRequests[json.request];
+                } else {
+                    throw new Error('Received response to a request that wasn\'t sent');
+                }
             }
         }
         if (json.update) {
@@ -101,6 +107,23 @@ define('services/server', function () {
                 throw new Error('Adding handler to replace already existing handler');
             }
             updateHandlers[name] = handler;
+        },
+
+        authenticate (user, password) {
+            return new Promise((resolve, reject) =>
+                this.request('authenticate', {
+                    user: user,
+                    password: password
+                }).then((result) => {
+                    if (result) {
+                        resolve();
+                    } else {
+                        reject('Invalid user or password');
+                    }
+                }).catch(() => {
+                    reject('Unable to authenticate');
+                })
+            );
         }
     };
 

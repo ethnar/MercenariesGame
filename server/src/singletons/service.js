@@ -1,4 +1,5 @@
-let ws = require('nodejs-websocket');
+const ws = require('nodejs-websocket');
+const errorResponse = require('../functions/error-response');
 
 class Service {
     constructor () {
@@ -39,12 +40,19 @@ class Service {
             console.error('Invalid request: ' + request.request);
             return null;
         } else {
-            return this.handlers[request.request](request.params, this.playerMap[conn], conn);
+            const handler = this.handlers[request.request];
+            if (!this.playerMap[conn] && !handler.unauthenticated) {
+                return errorResponse('Unauthenticated');
+            }
+            return handler.callback(request.params, this.playerMap[conn], conn);
         }
     }
 
-    registerHandler (topic, callback) {
-        this.handlers[topic] = callback;
+    registerHandler (topic, callback, unauthenticated = false) {
+        this.handlers[topic] = {
+            callback,
+            unauthenticated
+        };
     }
 
     sendUpdate (topic, players, data) { // TODO: deprecated?

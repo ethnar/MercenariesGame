@@ -267,7 +267,7 @@ service.registerHandler('authenticate', (params, previousPlayer, conn) => {
         service.setPlayer(conn, player);
     }
     return !!player;
-});
+}, true);
 
 service.registerHandler('player', (params, player) => {
     if (player) {
