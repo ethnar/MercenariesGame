@@ -21,7 +21,7 @@ define('services/player', ['services/server'], function (ServerService) {
         },
 
         getStream () {
-            return ServerService.getStream('player');
+            return ServerService.getStreamGENERIC('Player', 1);
         }
     };
 

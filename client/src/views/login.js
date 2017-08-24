@@ -20,6 +20,11 @@ define('views/login', ['services/server'], function (ServerService) {
                 .then(() => {
                     this.goToTheGame();
                 });
+
+            // TODO: remove
+            this.user = 'test';
+            this.password = 'test';
+            this.logIn();
         },
 
         methods: {

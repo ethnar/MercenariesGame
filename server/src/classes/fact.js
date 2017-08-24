@@ -29,14 +29,5 @@ class Fact extends Entity {
     }
 }
 
-service.registerHandler('news', (params, player) => {
-    if (player)
-    {
-        let facts = player.getKnownFacts();
-        return Object.keys(facts).map(key => facts[key].getFormatted());
-    }
-    return [];
-});
-
 Entity.registerClass(Fact);
 module.exports = Fact;

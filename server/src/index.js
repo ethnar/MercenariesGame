@@ -1,4 +1,4 @@
-let world = require('./singletons/world');
+const world = require('./singletons/world');
 let service = require('./singletons/service');
 let Player = require('./classes/player');
 let Politician = require('./classes/politician');

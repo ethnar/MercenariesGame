@@ -18,7 +18,8 @@ class Service {
 
                 let response = {
                     request: json.request,
-                    data: this.handleRequest(json, conn)
+                    data: this.handleRequest(json, conn),
+                    key: json.key,
                 };
 
                 conn.sendText(JSON.stringify(response));
@@ -27,7 +28,7 @@ class Service {
             conn.on('close', (code, reason) => {
                 let idx = this.connections.indexOf(conn);
                 this.connections.splice(idx, 1);
-                delete this.playerMap[conn];
+                this.playerMap.delete(conn);
                 console.log('Connection closed');
             });
 
@@ -41,10 +42,10 @@ class Service {
             return null;
         } else {
             const handler = this.handlers[request.request];
-            if (!this.playerMap[conn] && !handler.unauthenticated) {
+            if (!this.playerMap.get(conn) && !handler.unauthenticated) {
                 return errorResponse('Unauthenticated');
             }
-            return handler.callback(request.params, this.playerMap[conn], conn);
+            return handler.callback(request.params, this.playerMap.get(conn), conn);
         }
     }
 
@@ -55,41 +56,20 @@ class Service {
         };
     }
 
-    sendUpdate (topic, players, data) { // TODO: deprecated?
-        this.sendUpdateCB(topic, players, () => data);
+    getPlayer(connection) {
+        return this.playerMap.get(connection);
     }
 
-    sendUpdateCB (topic, players, callback) {
-        if (!Array.isArray(players)) {
-            if (!players) {
-                const world = require('./world');
-                players = world.getEntitiesArray('Player');
-            } else {
-                players = [players];
-            }
-        }
-        players.forEach(player => {
-            const data = callback(player);
-            if (data) {
-                this.connections.forEach(connection => {
-                    if (!player || this.playerMap[connection] === player) {
-                        connection.sendText(JSON.stringify({
-                            update: topic,
-                            data: data
-                        }));
-                    }
-                });
-            }
-        });
-    }
-
-    sendDeletion (topic, players, id) {
-        this.sendUpdate(topic, players, { delete: true, id: id });
+    sendUpdate (topic, connection, data) {
+        connection.sendText(JSON.stringify({
+            update: topic,
+            data: data
+        }));
     }
 
     setPlayer (conn, player) {
         console.log(player.name + ' authenticated');
-        this.playerMap[conn] = player;
+        this.playerMap.set(conn, player);
     }
 }
 

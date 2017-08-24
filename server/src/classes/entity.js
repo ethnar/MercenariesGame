@@ -1,4 +1,5 @@
 const world = require('../singletons/world');
+const service = require('../singletons/service');
 
 let ids = {};
 
@@ -43,7 +44,86 @@ class Entity {
         let idx = world.entities[this.className].indexOf(this);
         world.entities[this.className].splice(idx, 1);
     }
+
+    getPayload() {
+        throw new Error('Payload retrieve function not defined: ' + this.className);
+    }
+
+    updated(targetPlayer = null) {
+        subscriptions.forEach((subs, connection) => {
+            const entitySubscriptions = subs[this.className] || [];
+            entitySubscriptions.forEach(subscription => {
+                if (subscription.filter(this)) {
+                    const player = service.getPlayer(connection);
+                    if (!targetPlayer || targetPlayer === player) {
+                        const payload = this.getPayload(player);
+                        if (payload) {
+                            service.sendUpdate(`update-${subscription.key}`, connection, payload);
+                            subscription.ids[this.getId()] = true;
+                        } else {
+                            service.sendUpdate(`remove-${subscription.key}`, connection, this.getId());
+                            delete subscription.ids[this.getId()];
+                        }
+                    }
+                } else {
+                    if (subscription.ids[this.getId()]) {
+                        service.sendUpdate(`remove-${subscription.key}`, connection, this.getId());
+                        delete subscription.ids[this.getId()];
+                    }
+                }
+            });
+        });
+    }
+
+    static buildFilteringFunction (filterObject) {
+        return (entity) => {
+            let matching = true;
+            Object.keys(filterObject).forEach(key => {
+                matching = matching && (entity[key] === filterObject[key]);
+            });
+            return matching;
+        };
+    }
 }
+
+const subscriptions = new Map();
+
+function getSubscriptionsStorage(connection) {
+    if (!subscriptions.get(connection)) {
+        subscriptions.set(connection, {});
+
+        connection.on('close', () => {
+            subscriptions.delete(connection);
+        });
+    }
+    return subscriptions.get(connection);
+}
+
+service.registerHandler('subscribe', (params, player, conn) => {
+    if (!player) {
+        return null;
+    }
+
+    const filterFunction = Entity.buildFilteringFunction(params.filter);
+
+    const entities = world
+        .getEntitiesArray(params.entity)
+        .filter(filterFunction);
+
+    const connectionSubscriptions = getSubscriptionsStorage(conn);
+    connectionSubscriptions[params.entity] = connectionSubscriptions[params.entity] || [];
+    connectionSubscriptions[params.entity].push({
+        filter: filterFunction,
+        key: params.key,
+        ids: entities
+            .map(entity => entity.getId())
+            .reduce((acc, item) => Object.assign(acc, {[item]: true}), {}),
+    });
+
+    return entities
+        .map(entity => entity.getPayload(player))
+        .filter(entity => !!entity);
+});
 
 let classRegistry = {};
 Entity.registerClass = classConstructor => {

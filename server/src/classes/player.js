@@ -22,7 +22,6 @@ class Player extends Entity {
         this.npc = !!npc;
         this.worldview = new Worldview(50);
 
-        this.knownMissions = {};
         this.currentMissions = {};
         this.knownFacts = {};
         this.funds = 0;
@@ -46,7 +45,7 @@ class Player extends Entity {
             familiarity: 10,
             site
         };
-        service.sendUpdate('sites', this, site.getPayload(this));
+        site.updated(this);
     }
 
     cycle (cycles) {
@@ -77,13 +76,13 @@ class Player extends Entity {
 
     addIntel (intel) {
         this.intel = Math.min(this.intel + intel, this.intelCap);
-        service.sendUpdate('player', this, this.getPayload(this));
+        this.updated(this);
     }
 
     useIntel (intel) {
         if (this.intel >= intel) {
             this.intel -= intel;
-            service.sendUpdate('player', this, this.getPayload(this));
+            this.updated(this);
             return true;
         }
         return false;
@@ -99,7 +98,7 @@ class Player extends Entity {
             const intelNeeded = misc.getIntelCost('region', knowledge.familiarity);
             if (this.useIntel(intelNeeded)) {
                 knowledge.familiarity = knowledge.familiarity + 1;
-                service.sendUpdate('regions', this, region.getPayload(this));
+                region.updated(this);
 
                 const sites = [...region.getSites()];
 
@@ -131,7 +130,7 @@ class Player extends Entity {
             const intelNeeded = misc.getIntelCost('site', knowledge.familiarity);
             if (this.useIntel(intelNeeded)) {
                 knowledge.familiarity = knowledge.familiarity + 1;
-                service.sendUpdate('sites', this, site.getPayload(this));
+                site.updated(this);
                 return true;
             }
         }
@@ -147,18 +146,18 @@ class Player extends Entity {
             familiarity,
             site
         };
-        service.sendUpdateCB('sites', this, site.getPayload.bind(site));
+        site.updated(this);
     }
 
     addFunds (funds) {
         this.funds += funds;
-        service.sendUpdate('player', this, this.getPayload(this));
+        this.updated(this);
     }
 
     pay (funds) {
         if (this.funds >= funds) {
             this.funds -= funds;
-            service.sendUpdate('player', this, this.getPayload(this));
+            this.updated(this);
             return true;
         }
         return false;
@@ -208,17 +207,13 @@ class Player extends Entity {
         return this.knownFacts;
     }
 
-    getKnownMissions () {
-        return this.knownMissions;
-    }
-
     getCurrentMissions () {
         return this.currentMissions;
     }
 
     startedMission (mission) {
         this.currentMissions[mission.id] = mission;
-        service.sendUpdate('current-missions', this, mission.getPayload(this));
+        mission.updated(this);
     }
 
     finishedMission (mission) {
@@ -230,38 +225,22 @@ class Player extends Entity {
         return !this.npc && this.password === Player.passwordHash(password) && this.name === name;
     }
 
-    isMissionKnown(mission){
-        return !!this.getKnownMissions()[mission.id];
-    }
-
-    addKnownMission(mission){
-        this.knownMissions[mission.id] = mission;
-        service.sendUpdate('known-missions', this, mission.getPayload(this));
-    }
-
-    forgetMission (mission) {
-        delete this.knownMissions[mission.id];
-        service.sendDeletion('known-missions', this, mission.getId());
-    }
-
-    isFactKnown(fact){
-        return !!this.getKnownFacts()[fact.id]
-    }
-
-    addKnownFact(fact){
-        this.knownFacts[fact.id] = fact;
-        service.sendUpdate('news', this, fact.getFormatted());
-    }
-
-    getPayload () {
-        return {
+    getPayload (player) {
+        let result = {
             id: this.getId(),
-            funds: this.getFunds(),
-            intel: this.getIntel(),
-            fundsDelta: this.getFundsDelta(),
-            intelDelta: this.getIntelDelta(),
-            intelCap: this.intelCap
+            name: this.getName(),
+        };
+
+        if (player === this) {
+            result = Object.assign(result, {
+                funds: this.getFunds(),
+                intel: this.getIntel(),
+                fundsDelta: this.getFundsDelta(),
+                intelDelta: this.getIntelDelta(),
+                intelCap: this.intelCap,
+            });
         }
+        return result;
     }
 }
 
@@ -278,6 +257,7 @@ service.registerHandler('authenticate-token', (params, previousPlayer, conn) => 
     service.setPlayer(conn, auth.player);
 
     return {
+        player: auth.player.getId(),
         success: true
     };
 }, true);
@@ -298,16 +278,10 @@ service.registerHandler('authenticate', (params, previousPlayer, conn) => {
     };
     return {
         token,
+        player: player.getId(),
         success: !!player
     };
 }, true);
-
-service.registerHandler('player', (params, player) => {
-    if (player) {
-        return player.getPayload(player);
-    }
-    return null;
-});
 
 Entity.registerClass(Player);
 module.exports = Player;

@@ -11,7 +11,7 @@ const errorResponse = require('../functions/error-response');
 const Equipment = require('./equipment/equipment');
 
 const npcSites = {
-    coalMine: require('./sites/coal-mine')
+    mine: require('../factories/sites/mine')
 };
 
 class Region extends Entity {
@@ -93,14 +93,12 @@ class Region extends Entity {
         });
         this.recruits.push(newGuy);
         const players = this.getCoveringPlayers();
-        service.sendUpdate('recruits', players, newGuy.getPayload()); // TODO: nope, we need to change that so that you need to find places you can recruit people
     }
 
     withdrawRecruit (recruit) {
         const index = this.recruits.indexOf(recruit);
         this.recruits.splice(index, 1);
         const players = this.getCoveringPlayers();
-        service.sendDeletion('recruits', players, recruit.getId());
     }
 
     cycle (cycles) {
@@ -158,27 +156,6 @@ class Region extends Entity {
     }
 }
 
-service.registerHandler('regions', (params, player) => {
-    if (player)
-    {
-        return world.entities.Region.map(region => region.getPayload(player));
-    }
-    return [];
-});
-
-service.registerHandler('recruits', (params, player) => {
-    if (player)
-    {
-        let regions = player.getCoveredRegions();
-        let recruits = [];
-        regions.forEach(region => {
-            recruits = recruits.concat(region.getRecruits());
-        });
-        return recruits.map(personnel => personnel.getPayload(player));
-    }
-    return [];
-});
-
 service.registerHandler('investigate-region', (params, player) => {
     const region = Region.getById(params.region);
 
@@ -190,7 +167,7 @@ service.registerHandler('investigate-region', (params, player) => {
         return errorResponse('Unable to investigate region');
     }
 
-    service.sendUpdate('regions', player, region.getPayload(player));
+    region.updated(player);
 
     return { result: true };
 });

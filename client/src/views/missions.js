@@ -13,19 +13,12 @@ define('views/missions', ['components/navbar/navbar', 'services/missions'], func
             {{mission}}
         </a>
     </div>
-    <header>Known missions:</header>
-    <div v-for="mission in knownMissions">
-        <a :href="'#/mission/' + mission.id">
-            {{mission}}
-        </a>
-    </div>
 </div>
 `,
         data: () => ({
         }),
 
         subscriptions: () => ({
-            knownMissions: MissionsService.getKnownMissionsStream(),
             currentMissions: MissionsService.getCurrentMissionsStream()
         }),
 

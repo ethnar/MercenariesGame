@@ -24,6 +24,10 @@ module.exports = {
         return array[Math.floor(Math.random() * array.length)];
     },
 
+    random (max) {
+        return Math.floor(Math.random() * (max + 1));
+    },
+
     toArray (object) {
         return Object.keys(object).map(key => object[key]);
     },

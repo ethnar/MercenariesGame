@@ -13,8 +13,7 @@ class Site extends Entity {
             this.region.addSite(this);
         }
         this.owner = null;
-        this.countryProperty = null;
-        this.size = 15;
+        this.size = args.size || 5;
         this.space = this.size;
         this.destroyed = false;
         this.visibility = Math.ceil(Math.random() * 100);
@@ -63,11 +62,11 @@ class Site extends Entity {
     addStaff (staff) {
         this.staff.push(staff);
         staff.setSite(this);
-        service.sendUpdate('sites', this.getOwner(), this.getPayload(this.getOwner()));
+        this.updated();
     }
 
     getPrice () {
-        return this.size * 100;
+        return 100000 + this.size * 40000;
     }
 
     getRegion () {
@@ -151,15 +150,6 @@ class Site extends Entity {
     }
 }
 
-service.registerHandler('sites', (params, player) => {
-    if (player)
-    {
-        let sites = player.getKnownSites();
-        return sites.map(site => site.getPayload(player));
-    }
-    return [];
-});
-
 service.registerHandler('purchase', (params, player) => {
     const site = Site.getById(params.site);
 
@@ -195,7 +185,7 @@ service.registerHandler('investigate-site', (params, player) => {
         return errorResponse('Unable to investigate region');
     }
 
-    service.sendUpdate('sites', player, site.getPayload(player));
+    site.updated(player);
 
     return { result: true };
 });

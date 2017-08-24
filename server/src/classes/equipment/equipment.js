@@ -15,18 +15,20 @@ class Equipment extends Entity {
 
     setRegion (region) {
         if (this.region) {
-            service.sendDeletion('available-equipment', this.region.getCoveringPlayers(), this.getId());
+            this.region.updated();
         }
         this.region = region;
         if (region) {
-            service.sendUpdate('available-equipment', region.getCoveringPlayers(), this.getPayload());
+            region.updated();
         }
+        this.updated();
     }
 
     install (site) {
         if (site.useSpace(this.space)) {
             this.site = site;
-            service.sendUpdate('equipment', site.getOwner(), this.getPayload());
+            site.updated();
+            this.updated();
             return true;
         }
         return false;
@@ -66,34 +68,6 @@ class Equipment extends Entity {
         return new BunkBeds();
     }
 }
-
-service.registerHandler('available-equipment', (params, player) => {
-    if (player) {
-        let equipment = [];
-        const regions = player.getCoveredRegions();
-        regions.forEach(region => {
-            const regionEquipment = region
-                .getEquipment()
-                .map(eq => eq.getPayload());
-            equipment = equipment.concat(regionEquipment);
-        });
-        return equipment;
-    }
-});
-
-service.registerHandler('equipment', (params, player) => {
-    if (player) {
-        let equipment = [];
-        const sites = player.getSites();
-        sites.forEach(site => {
-            const siteEquipment = site
-            .getEquipment()
-            .map(eq => eq.getPayload());
-            equipment = equipment.concat(siteEquipment);
-        });
-        return equipment;
-    }
-});
 
 service.registerHandler('purchase-equipment', (params, player) => {
     const site = Site.getById(params.site);

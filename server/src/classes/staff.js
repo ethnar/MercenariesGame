@@ -13,11 +13,7 @@ class Staff extends Human {
 
     setSite (site) {
         this.site = site;
-        this.sendUpdate();
-    }
-
-    sendUpdate () {
-        service.sendUpdate('staff', this.getSite().getOwner(), this.getPayload());
+        this.updated();
     }
 
     getSite () {
@@ -30,12 +26,12 @@ class Staff extends Human {
 
     goOnMission (mission) {
         this.currentMission = mission;
-        this.sendUpdate();
+        this.updated();
     }
 
     returnFromMission () {
         this.currentMission = null;
-        this.sendUpdate();
+        this.updated();
     }
 
     getHireCost () {
@@ -52,15 +48,6 @@ class Staff extends Human {
         }
     }
 }
-
-service.registerHandler('staff', (params, player) => {
-    if (player)
-    {
-        let staff = player.getStaff();
-        return staff.map(personnel => personnel.getPayload());
-    }
-    return [];
-});
 
 service.registerHandler('recruit', (params, player) => {
     const site = Site.getById(params.site);

@@ -1,4 +1,4 @@
-let world = require('./singletons/world');
+const world = require('./singletons/world');
 let service = require('./singletons/service');
 let Player = require('./classes/player');
 let Country = require('./classes/country');
@@ -6,11 +6,12 @@ let Region = require('./classes/region');
 let Staff = require('./classes/staff');
 let Fact = require('./classes/fact');
 let Site = require('./classes/site');
-let Cell = require('./classes/sites/cell');
 let Mission = require('./classes/mission');
 let Equipment = require('./classes/equipment/equipment');
 let Worldview = require('./classes/worldview');
-
+let Organisation = require('./classes/organisation');
+let SiteFactory = require('./factories/sites');
+let misc = require('./singletons/misc');
 
 let canada = new Country('Canada');
 canada.setNameGenerator('canada');
@@ -22,6 +23,23 @@ let russia = new Country('Russia');
 russia.setNameGenerator('canada');
 let uk = new Country('United Kingdom');
 uk.setNameGenerator('canada');
+
+let organisations = {};
+
+Object.keys(Worldview.TYPE).forEach(dimension => {
+    organisations['+' + dimension] = new Organisation({
+        name: 'Defenders of ' + dimension,
+        worldview: {
+            [dimension]: 1
+        }
+    });
+    organisations['-' + dimension] = new Organisation({
+        name: 'Oppressors of ' + dimension,
+        worldview: {
+            [dimension]: 1
+        }
+    });
+});
 
 let test = new Player('test', 'test');
 
@@ -67,10 +85,10 @@ let ukSenate = new Site({ name: 'Senate', region: london });
 ukSenate.setSize(50);
 
 
-let hq = new Cell({ name: 'HQ', region: toronto });
+let hq = new Site({ name: 'HQ', region: toronto });
 hq.setOwner(test);
 
-let secondary = new Cell({ name: 'FOB', region: quebec });
+let secondary = new Site({ name: 'FOB', region: quebec });
 secondary.setOwner(test);
 
 test.addFunds(10000);
@@ -86,7 +104,8 @@ secondary.addStaff(new Staff({region: toronto}));
 regions.forEach(region => {
     const count = Math.ceil(Math.random() * 5 + 30);
     for (let i = 0; i < count; i++) {
-        const site = new Site({name: 'House', region: region});
+        const type = misc.randomEntity(Object.keys(SiteFactory));
+        const site = SiteFactory[type]({region: region});
     }
 });
 

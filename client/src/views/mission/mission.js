@@ -54,7 +54,7 @@ define('views/mission/mission', ['components/navbar/navbar', 'components/site/si
                 staff: this.stream('selectedSite').flatMapLatest(site => StaffService.getStaffStream().map(staff => {
                     return staff.filter(person => site && person.site === site.id);
                 })),
-                missionData: this.stream('missionId').flatMapLatest(missionId => MissionsService.getKnownMissionStream(missionId))
+                missionData: this.stream('missionId').flatMapLatest(missionId => MissionsService.getMissionStream(missionId))
             };
         },
 

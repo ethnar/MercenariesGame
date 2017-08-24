@@ -2,7 +2,7 @@ const Entity = require('./entity');
 const Human = require('./human');
 const Mission = require('./mission.js');
 const misc = require('../singletons/misc');
-let world = require('../singletons/world');
+const world = require('../singletons/world');
 const Fact = require('./fact');
 
 class Politician extends Human {
@@ -36,11 +36,10 @@ class Politician extends Human {
     withdrawMission (mission) {
         const idx = this.missions.findIndex(m => m === mission);
         mission.setWithdrawn(true);
-        world.getEntitiesArray('Player').forEach(player => {
-            if (player.isMissionKnown(mission)) {
-                player.forgetMission(mission);
-            }
-        });
+    }
+
+    getPayload() {
+
     }
 }
 

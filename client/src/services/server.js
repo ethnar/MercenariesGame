@@ -3,6 +3,7 @@ define('services/server', function () {
     let pendingRequests = {};
     let updateHandlers = {};
     let connection = new WebSocket("ws://localhost:8001/mercenaries");
+    let playerId = null;
 
     let openPromise = new Promise(resolve => connection.onopen = resolve);
 
@@ -13,10 +14,11 @@ define('services/server', function () {
                 if (json.data.message === 'Unauthenticated') {
                     window.location = '?token=' + Math.random() + '#/login';
                 }
+                delete pendingRequests[json.key];
             } else {
-                if (pendingRequests[json.request]) {
-                    pendingRequests[json.request](json.data);
-                    delete pendingRequests[json.request];
+                if (pendingRequests[json.key]) {
+                    pendingRequests[json.key](json.data);
+                    delete pendingRequests[json.key];
                 } else {
                     throw new Error('Received response to a request that wasn\'t sent');
                 }
@@ -37,18 +39,19 @@ define('services/server', function () {
     };
 
     const streams = {};
+    const streamsGENERIC = {};
 
     return self = {
         request (name, params) {
             return openPromise.then(() => {
                 return new Promise(resolve => {
-                    if (!pendingRequests[name]) {
-                        connection.send(JSON.stringify({
-                            request: name,
-                            params: params
-                        }));
-                        pendingRequests[name] = resolve;
-                    }
+                    const key = Math.random(); // TODO: improve
+                    connection.send(JSON.stringify({
+                        request: name,
+                        params: params,
+                        key: key,
+                    }));
+                    pendingRequests[key] = resolve;
                 });
             });
         },
@@ -64,6 +67,49 @@ define('services/server', function () {
                 });
             }
             return streams[message];
+        },
+
+        getStreamGENERIC (entityType, id) {
+            return this
+                .getListStreamGENERIC(entityType, {id: id})
+                .map(array => (array || [])[0]);
+        },
+
+        getListStreamGENERIC (entityType, filter = {}) {
+            const key = entityType + '__' + JSON.stringify(filter);
+            if (!streamsGENERIC[key]) {
+                streamsGENERIC[key] = {
+                    data: [],
+                    stream: new Rx.ReplaySubject()
+                };
+                self.request('subscribe', {
+                    entity: entityType,
+                    filter: filter,
+                    key: key,
+                }).then(items => {
+                    streamsGENERIC[key].data = items;
+                    streamsGENERIC[key].stream.onNext(items);
+                });
+                self.onUpdate(`update-${key}`, item => {
+                    const items = streamsGENERIC[key].data;
+                    const existing = items.findIndex(i => i.id === item.id);
+                    if (~existing) {
+                        items[existing] = item;
+                    } else {
+                        items.push(item);
+                    }
+                    streamsGENERIC[key].stream.onNext(items)
+                });
+                self.onUpdate(`remove-${key}`, item => {
+                    const items = streamsGENERIC[key].data;
+                    const existing = items.findIndex(i => i.id === item.id);
+                    if (~existing) {
+                        items.splice(existing, 1);
+                    }
+                    streamsGENERIC[key].stream.onNext(items)
+                });
+            }
+            return streamsGENERIC[key].stream;
         },
 
         getListStream (message) {
@@ -115,6 +161,9 @@ define('services/server', function () {
             } else {
                 return this.request('authenticate-token', {
                     token
+                }).then(result => {
+                    playerId = result.player;
+                    return result;
                 });
             }
         },
@@ -127,6 +176,7 @@ define('services/server', function () {
                 }).then((result) => {
                     if (result) {
                         localStorage.setItem('authToken', result.token);
+                        playerId = result.player;
                         resolve();
                     } else {
                         reject('Invalid user or password');

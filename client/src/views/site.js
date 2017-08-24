@@ -27,7 +27,7 @@ define('views/site', [
             <button @click="useIntel();">Use intel ({{site.intelCost}})</button>            
         </div>
         <tabs>
-            <tab header="Staff" v-if="site.owner === player.id">
+            <tab header="Staff" v-if="staff !== null">
                 <div v-if="mode !== 'recruit'">
                     <button @click="mode = 'recruit'">Recruit</button>
                     <div v-for="person in staff">
