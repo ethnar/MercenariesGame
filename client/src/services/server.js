@@ -39,9 +39,12 @@ define('services/server', function () {
     };
 
     const streams = {};
-    const streamsGENERIC = {};
 
     return self = {
+        getPlayerId() {
+            return playerId;
+        },
+
         request (name, params) {
             return openPromise.then(() => {
                 return new Promise(resolve => {
@@ -56,29 +59,16 @@ define('services/server', function () {
             });
         },
 
-        getStream (message) {
-            if (!streams[message]) {
-                streams[message] = new Rx.ReplaySubject(1);
-                self.request(message).then(result => {
-                    streams[message].onNext(result);
-                });
-                self.onUpdate(message, update => {
-                    streams[message].onNext(update)
-                });
-            }
-            return streams[message];
-        },
-
-        getStreamGENERIC (entityType, id) {
+        getStream (entityType, id) {
             return this
-                .getListStreamGENERIC(entityType, {id: id})
+                .getListStream(entityType, {id: id})
                 .map(array => (array || [])[0]);
         },
 
-        getListStreamGENERIC (entityType, filter = {}) {
+        getListStream (entityType, filter = {}) {
             const key = entityType + '__' + JSON.stringify(filter);
-            if (!streamsGENERIC[key]) {
-                streamsGENERIC[key] = {
+            if (!streams[key]) {
+                streams[key] = {
                     data: [],
                     stream: new Rx.ReplaySubject()
                 };
@@ -87,64 +77,29 @@ define('services/server', function () {
                     filter: filter,
                     key: key,
                 }).then(items => {
-                    streamsGENERIC[key].data = items;
-                    streamsGENERIC[key].stream.onNext(items);
+                    streams[key].data = items;
+                    streams[key].stream.onNext(items);
                 });
                 self.onUpdate(`update-${key}`, item => {
-                    const items = streamsGENERIC[key].data;
+                    const items = streams[key].data;
                     const existing = items.findIndex(i => i.id === item.id);
                     if (~existing) {
                         items[existing] = item;
                     } else {
                         items.push(item);
                     }
-                    streamsGENERIC[key].stream.onNext(items)
+                    streams[key].stream.onNext(items)
                 });
                 self.onUpdate(`remove-${key}`, item => {
-                    const items = streamsGENERIC[key].data;
+                    const items = streams[key].data;
                     const existing = items.findIndex(i => i.id === item.id);
                     if (~existing) {
                         items.splice(existing, 1);
                     }
-                    streamsGENERIC[key].stream.onNext(items)
+                    streams[key].stream.onNext(items)
                 });
             }
-            return streamsGENERIC[key].stream;
-        },
-
-        getListStream (message) {
-            if (!streams[message]) {
-                streams[message] = {
-                    data: [],
-                    stream: new Rx.ReplaySubject()
-                };
-                self.request(message).then(items => {
-                    streams[message].data = items;
-                    streams[message].stream.onNext(items);
-                });
-                self.onUpdate(message, item => {
-                    const items = streams[message].data;
-                    if (item.id)
-                    {
-                        const existing = items.findIndex(i => i.id === item.id);
-                        if (item.delete) {
-                            if (~existing) {
-                                items.splice(existing, 1);
-                            }
-                        } else {
-                            if (~existing) {
-                                items[existing] = item;
-                            } else {
-                                items.push(item);
-                            }
-                        }
-                    } else {
-                        items.push(item);
-                    }
-                    streams[message].stream.onNext(items)
-                });
-            }
-            return streams[message].stream;
+            return streams[key].stream;
         },
 
         onUpdate (name, handler) {

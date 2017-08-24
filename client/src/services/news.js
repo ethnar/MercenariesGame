@@ -3,7 +3,7 @@ define('services/news', ['services/server'], function (ServerService) {
     return {
         getNewsStream () {
             return ServerService
-                .getListStream('news')
+                .getListStream('Fact')
                 .map(news => news.slice().reverse());
         },
 

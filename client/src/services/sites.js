@@ -2,7 +2,7 @@ define('services/sites', ['services/server', 'services/player'], function (Serve
 
     return {
         getSitesStream () {
-            return ServerService.getListStream('sites');
+            return ServerService.getListStream('Site');
         },
 
         getSiteStream (siteId) {

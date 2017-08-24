@@ -2,7 +2,7 @@ define('services/missions', ['services/server'], function (ServerService) {
 
     return {
         getCurrentMissionsStream () {
-            return ServerService.getListStream('current-missions');
+            return ServerService.getListStream('Mission', { 'assignee': ServerService.getPlayerId()});
         },
 
         startMission (missionId, siteId, staffIds) {

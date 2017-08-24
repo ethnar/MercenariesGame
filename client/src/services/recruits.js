@@ -1,8 +1,8 @@
 define('services/recruits', ['services/server'], function (ServerService) {
 
     return {
-        getRecruitsStream (regionId) {
-            return ServerService.getListStream('recruits');
+        getRecruitsStream (siteId) { // TODO: that'll make for an inconvenient recruitment UI, needs to be region-based
+            return ServerService.getListStream('Staff', { site: siteId });
         },
 
         recruit (recruitId, siteId) {

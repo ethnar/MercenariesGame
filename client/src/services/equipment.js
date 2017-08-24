@@ -3,7 +3,7 @@ define('services/equipment', ['services/server'], function (ServerService) {
     return {
         getAvailableEquipmentStream (regionId) {
             return ServerService
-                .getListStream('available-equipment')
+                .getListStream('Equipment')
                 .map(equipmentList => {
                     console.log(equipmentList);
                     return equipmentList.filter(eq => eq.region === regionId)
@@ -12,7 +12,7 @@ define('services/equipment', ['services/server'], function (ServerService) {
 
         getEquipmentStream (siteId) {
             return ServerService
-                .getListStream('equipment')
+                .getListStream('Equipment')
                 .map(equipmentList => equipmentList.filter(eq => eq.site === siteId));
         },
 

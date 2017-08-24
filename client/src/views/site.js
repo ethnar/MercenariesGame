@@ -104,7 +104,7 @@ define('views/site', [
                             return RecruitsService.getRecruitsStream(site.region);
                         });
                 }),
-                player: PlayerService.getStream(),
+                player: PlayerService.getCurrentPlayerStream(),
             }
         },
 

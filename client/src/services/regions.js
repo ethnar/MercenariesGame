@@ -1,7 +1,7 @@
 define('services/regions', ['services/server'], function (ServerService) {
     return {
         getRegionsStream () {
-            return ServerService.getListStreamGENERIC('Region');
+            return ServerService.getListStream('Region');
         },
 
         getRegionStream (regionId) {

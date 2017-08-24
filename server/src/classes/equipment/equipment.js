@@ -54,7 +54,7 @@ class Equipment extends Entity {
         return this.site;
     }
 
-    getPayload () {
+    getPayload (player) {
         return {
             id: this.getId(),
             name: this.name,
