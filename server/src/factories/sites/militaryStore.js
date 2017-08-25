@@ -3,7 +3,8 @@ const misc = require('../../singletons/misc');
 
 module.exports = (args) => {
     return new Site(Object.assign({
-        name: 'House',
-        size: misc.random(10) + 4
+        name: 'Military Store',
+        size: misc.random(4, 14),
+        visibility: misc.random(2, 30),
     }, args));
 };

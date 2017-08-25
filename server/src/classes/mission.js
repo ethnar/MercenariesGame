@@ -1,4 +1,5 @@
 let service = require('../singletons/service');
+const world = require('../singletons/world');
 const Entity = require('./entity');
 const Site = require('./site');
 const Staff = require('./staff');
@@ -17,10 +18,11 @@ class Mission extends Entity {
         this.region = args.region;
         this.withdrawn = false;
         this.duration = args.duration || 15000;
-        this.contractedPlayer = null;
+        this.assignee = null;
         this.contractedStaff = [];
         this.finished = false;
         this.payout = args.payout || 500;
+        this.reserved = false;
 
         if (this.region) {
             this.region.addMission(this);
@@ -33,6 +35,26 @@ class Mission extends Entity {
         }
     }
 
+    isReservedBy (player) {
+        return this.assignee === player && this.reserved === true;
+    }
+
+    getAssignee () {
+        return this.assignee;
+    }
+
+    reserve (player) {
+        this.assignee = player;
+        this.reserved = true;
+        this.updated();
+    }
+
+    freeReservation () {
+        this.assignee = null;
+        this.reserved = false;
+        this.updated();
+    }
+
     setWithdrawn () {
         this.withdrawn = true;
     }
@@ -43,7 +65,7 @@ class Mission extends Entity {
 
     start (player, site, staffList) {
         this.getOwner().withdrawMission(this);
-        this.contractedPlayer = player;
+        this.assignee = player;
         player.startedMission(this);
         staffList.forEach(staff => staff.goOnMission(this));
         this.contractedStaff = staffList;
@@ -52,8 +74,8 @@ class Mission extends Entity {
 
     finish () {
         this.finished = true;
-        this.contractedPlayer.finishedMission(this);
-        this.contractedPlayer.addFunds(this.payout);
+        this.assignee.finishedMission(this);
+        this.assignee.addFunds(this.payout);
         this.contractedStaff.forEach(staff => staff.returnFromMission());
     }
 
@@ -79,12 +101,37 @@ class Mission extends Entity {
             description: this.getDescription(),
             region: this.getRegion().getId(),
             deadline: this.getDeadline(),
-            owner: this.getOwner().getId()
+            owner: this.getOwner().getId(),
+            assignee: this.getAssignee() ? this.getAssignee().getId() : null,
         }
     }
 }
 
-service.registerHandler('startMission', (params, player) => {
+service.registerHandler('reserve-mission', (params, player) => {
+    const mission = Mission.getById(params.mission);
+    if (!player || !mission) {
+        return errorResponse('Invalid request');
+    }
+
+    const lastReservation = world
+        .getEntitiesArray('Mission')
+        .find(mission => (mission.isReservedBy(player)));
+    if (lastReservation) {
+        lastReservation.freeReservation();
+    }
+
+    const currentAssignee = mission.getAssignee();
+
+    if (currentAssignee && currentAssignee !== player) {
+        return errorResponse('Trying to reserve mission owned by someone else');
+    }
+
+    mission.reserve(player);
+
+    return { result: true };
+});
+
+service.registerHandler('start-mission', (params, player) => {
     const site = Site.getById(params.site);
     const mission = Mission.getById(params.mission);
     const staffList = params.staffList.map(staffId => Staff.getById(staffId));
@@ -97,9 +144,6 @@ service.registerHandler('startMission', (params, player) => {
     }
     if (staffList.find(staff => staff.getMission())) {
         return errorResponse('Sending staff that\'s currently on mission');
-    }
-    if (!player.isMissionKnown(mission)) {
-        return errorResponse('Sending staff to an unknown mission');
     }
     if (staffList.find(staff => staff.getSite() !== site)) {
         return errorResponse('Sending staff from wrong site');

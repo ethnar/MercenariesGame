@@ -55,7 +55,7 @@ class Player extends Entity {
     }
 
     gatherIntelligence () {
-        this.addIntel(this.getIntelDelta());
+        this.addIntel(this.getIntelDelta() * 100);
     }
 
     getFunds () {

@@ -16,7 +16,7 @@ class Site extends Entity {
         this.size = args.size || 5;
         this.space = this.size;
         this.destroyed = false;
-        this.visibility = Math.ceil(Math.random() * 100);
+        this.visibility = args.visibility || Math.ceil(Math.random() * 100);
         this.staff = [];
         this.equipment = [];
     }
@@ -136,7 +136,9 @@ class Site extends Entity {
                 info.staffCount = this.getStaff().length;
                 // fall-through
             case familiarity >= 3:
-                info.price = this.getPrice();
+                if (this.purchasable) {
+                    info.price = this.getPrice();
+                }
                 // fall-through
             case familiarity >= 2:
                 info.occupied = !!this.getOwner();

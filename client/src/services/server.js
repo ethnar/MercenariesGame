@@ -90,9 +90,9 @@ define('services/server', function () {
                     }
                     streams[key].stream.onNext(items)
                 });
-                self.onUpdate(`remove-${key}`, item => {
+                self.onUpdate(`remove-${key}`, itemId => {
                     const items = streams[key].data;
-                    const existing = items.findIndex(i => i.id === item.id);
+                    const existing = items.findIndex(i => i.id === itemId);
                     if (~existing) {
                         items.splice(existing, 1);
                     }

@@ -29,7 +29,7 @@ define('views/site', [
         <tabs>
             <tab header="Staff" v-if="staff !== null">
                 <div v-if="mode !== 'recruit'">
-                    <button @click="mode = 'recruit'">Recruit</button>
+                    <button v-if="ownSite" @click="mode = 'recruit'">Recruit</button>
                     <div v-for="person in staff">
                         <staff :person="person"></staff>
                     </div>
@@ -42,9 +42,9 @@ define('views/site', [
                     </div>
                 </div>
             </tab>
-            <tab header="Equipment" v-if="site.owner === player.id">
+            <tab header="Equipment" v-if="ownSite">
                 <div v-if="mode !== 'buy-eq'">
-                    <button @click="mode = 'buy-eq'">Purchase new equipment</button>
+                    <button v-if="ownSite" @click="mode = 'buy-eq'">Purchase new equipment</button>
                     <div v-for="eq in equipment">
                         {{eq}}
                     </div>
@@ -57,7 +57,7 @@ define('views/site', [
                     </div>
                 </div>
             </tab>
-            <tab header="Inventory" v-if="site.owner === player.id">
+            <tab header="Inventory" v-if="ownSite">
                 Inventory list
             </tab>
         </tabs>
@@ -71,7 +71,11 @@ define('views/site', [
         computed: {
             siteId () {
                 return +this.$route.params.siteId; // TODO: raise Vue-router ticket
-            }
+            },
+
+            ownSite() {
+                return this.site.owner === this.player.id;
+            },
         },
 
         subscriptions () {

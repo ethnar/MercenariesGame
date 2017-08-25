@@ -91,7 +91,7 @@ hq.setOwner(test);
 let secondary = new Site({ name: 'FOB', region: quebec });
 secondary.setOwner(test);
 
-test.addFunds(10000);
+test.addFunds(1000000);
 
 hq.addStaff(new Staff({region: toronto}));
 hq.addStaff(new Staff({region: toronto}));
@@ -102,11 +102,20 @@ secondary.addStaff(new Staff({region: toronto}));
 secondary.addStaff(new Staff({region: toronto}));
 
 regions.forEach(region => {
-    const count = Math.ceil(Math.random() * 5 + 30);
-    for (let i = 0; i < count; i++) {
-        const type = misc.randomEntity(Object.keys(SiteFactory));
-        const site = SiteFactory[type]({region: region});
-    }
+    const counts = {
+        office: misc.random(10, 20),
+        airfield: misc.random(0, 2),
+        militaryStore: misc.random(1, 3),
+        generalStore: misc.random(2, 5),
+        recruitmentCentre: misc.random(2, 4),
+        mine: misc.random(0, 1),
+    };
+    Object.keys(counts).forEach(type => {
+        const count = counts[type];
+        for (let i = 0; i < count; i++) {
+            const site = SiteFactory[type]({region: region});
+        }
+    });
 });
 
 /****** STARTUP *******/
