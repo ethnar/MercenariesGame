@@ -35,6 +35,14 @@ class Mission extends Entity {
         }
     }
 
+    isFinished () {
+        return this.finished;
+    }
+
+    isInProgress () {
+        return !!this.startTime && !this.isFinished();
+    }
+
     isReservedBy (player) {
         return this.assignee === player && this.reserved === true;
     }
@@ -66,10 +74,12 @@ class Mission extends Entity {
     start (player, site, staffList) {
         this.getOwner().withdrawMission(this);
         this.assignee = player;
+        this.reserved = false;
         player.startedMission(this);
         staffList.forEach(staff => staff.goOnMission(this));
         this.contractedStaff = staffList;
         this.startTime = new Date().getTime();
+        this.updated();
     }
 
     finish () {
@@ -77,6 +87,7 @@ class Mission extends Entity {
         this.assignee.finishedMission(this);
         this.assignee.addFunds(this.payout);
         this.contractedStaff.forEach(staff => staff.returnFromMission());
+        this.updated();
     }
 
     getDescription(){
@@ -102,6 +113,8 @@ class Mission extends Entity {
             region: this.getRegion().getId(),
             deadline: this.getDeadline(),
             owner: this.getOwner().getId(),
+            inProgress: this.isInProgress(),
+            finished: this.isFinished(),
             assignee: this.getAssignee() ? this.getAssignee().getId() : null,
         }
     }
@@ -124,6 +137,14 @@ service.registerHandler('reserve-mission', (params, player) => {
 
     if (currentAssignee && currentAssignee !== player) {
         return errorResponse('Trying to reserve mission owned by someone else');
+    }
+
+    if (mission.isFinished()) {
+        return errorResponse('Trying to reserve a finished mission');
+    }
+
+    if (mission.isInProgress()) {
+        return errorResponse('Trying to reserve a mission that is in progress');
     }
 
     mission.reserve(player);

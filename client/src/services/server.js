@@ -84,7 +84,7 @@ define('services/server', function () {
                     const items = streams[key].data;
                     const existing = items.findIndex(i => i.id === item.id);
                     if (~existing) {
-                        items[existing] = item;
+                        items[existing] = Object.assign(items[existing], item); // TODO: why do I have to do that?
                     } else {
                         items.push(item);
                     }

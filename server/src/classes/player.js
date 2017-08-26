@@ -22,7 +22,6 @@ class Player extends Entity {
         this.npc = !!npc;
         this.worldview = new Worldview(50);
 
-        this.currentMissions = {};
         this.knownFacts = {};
         this.funds = 0;
         this.fundsDelta = 0;
@@ -207,18 +206,10 @@ class Player extends Entity {
         return this.knownFacts;
     }
 
-    getCurrentMissions () {
-        return this.currentMissions;
-    }
-
     startedMission (mission) {
-        this.currentMissions[mission.id] = mission;
-        mission.updated(this);
     }
 
     finishedMission (mission) {
-        delete this.currentMissions[mission.id];
-        service.sendDeletion('current-missions', this, mission.getId());
     }
 
     verifyUsernameAndPassword (name, password) {

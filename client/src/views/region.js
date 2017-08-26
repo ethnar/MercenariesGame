@@ -78,7 +78,9 @@ define('views/region', [
             },
 
             takeMission(mission) {
-                MissionsService.reserveMission(mission.id);
+                MissionsService.reserveMission(mission.id).then(() => {
+                    window.location.hash = `/mission/${mission.id}`;
+                })
             },
         }
     };

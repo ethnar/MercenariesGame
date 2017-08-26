@@ -2,11 +2,19 @@ define('services/missions', ['services/server'], function (ServerService) {
 
     return {
         getRegionMissionsStream (regionId) {
-            return ServerService.getListStream('Mission', { 'assignee': null, 'region': regionId });
+            return ServerService.getListStream('Mission', { 'assignee': [null, ServerService.getPlayerId()], 'region': regionId });
+        },
+
+        getMissionStream (missionId) {
+            return ServerService.getStream('Mission', missionId);
         },
 
         getCurrentMissionsStream () {
-            return ServerService.getListStream('Mission', { 'assignee': ServerService.getPlayerId()});
+            return ServerService.getListStream('Mission', { 'assignee': ServerService.getPlayerId(), finished: false });
+        },
+
+        getFinishedMissionsStream () {
+            return ServerService.getListStream('Mission', { 'assignee': ServerService.getPlayerId(), finished: true });
         },
 
         reserveMission(missionId) {

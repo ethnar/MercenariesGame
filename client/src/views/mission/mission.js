@@ -6,13 +6,13 @@ define('views/mission/mission', ['components/navbar/navbar', 'components/site/si
             site,
             staff
         },
-
+// TODO LOADER
         template: `
-<div>
+<div v-if="mission"> 
     <navbar></navbar>
     <div v-if="state === 'review'">
-        <div>{{missionData}}</div>
-        <button @click="state = 'selectSite'">Accept Mission</button>
+        <div>{{mission}}</div>
+        <button v-if="!mission.inProgress" @click="state = 'selectSite'">Accept Mission</button>
     </div>
     <div v-if="state === 'selectSite'">
         <div v-for="site in sites" class="site" @click="state = 'selectStaff'; selectedSite = site;">
@@ -54,7 +54,7 @@ define('views/mission/mission', ['components/navbar/navbar', 'components/site/si
                 staff: this.stream('selectedSite').flatMapLatest(site => StaffService.getStaffStream().map(staff => {
                     return staff.filter(person => site && person.site === site.id);
                 })),
-                missionData: this.stream('missionId').flatMapLatest(missionId => MissionsService.getMissionStream(missionId))
+                mission: this.stream('missionId').flatMapLatest(missionId => MissionsService.getMissionStream(missionId))
             };
         },
 

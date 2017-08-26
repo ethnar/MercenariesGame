@@ -79,11 +79,15 @@ class Entity {
         return (entity) => {
             let matching = true;
             Object.keys(filterObject).forEach(key => {
+                let expectedValues = filterObject[key];
+                if (!Array.isArray(expectedValues)) {
+                    expectedValues = [expectedValues];
+                }
                 let value = entity[key];
                 if (value && value.className) {
                     value = value.getId();
                 }
-                matching = matching && (value === filterObject[key]);
+                matching = matching && (expectedValues.indexOf(value) !== -1);
             });
             return matching;
         };
