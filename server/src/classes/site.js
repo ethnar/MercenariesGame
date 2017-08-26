@@ -13,16 +13,28 @@ class Site extends Entity {
             this.region.addSite(this);
         }
         this.owner = null;
+        this.organisable = args.organisable || false;
+        this.organisation = null;
         this.size = args.size || 5;
         this.space = this.size;
         this.destroyed = false;
         this.visibility = args.visibility || Math.ceil(Math.random() * 100);
         this.staff = [];
         this.equipment = [];
+        this.relatedMission = null;
     }
 
     getVisibility() {
         return this.visibility;
+    }
+
+    setOrganisation(organisation) {
+        this.organisation = organisation;
+        this.updated();
+    }
+
+    getOrganisation() {
+        return this.organisation;
     }
 
     cycle () {
@@ -41,12 +53,12 @@ class Site extends Entity {
         return true;
     }
 
-    getLabel () {
+    getName () {
         return this.name;
     }
 
     isOccupied () {
-        return !!this.owner;
+        return !!this.owner || !!this.organisation;
     }
 
     setSize (value) {
@@ -99,6 +111,14 @@ class Site extends Entity {
         return this.destroyed;
     }
 
+    setRelatedMission (mission) {
+        this.relatedMission = mission;
+    }
+
+    getRelatedMission () {
+        return this.relatedMission;
+    }
+
     getPayload (player) {
         const familiarity = player.getSiteFamiliarity(this);
         if (!familiarity) {
@@ -116,6 +136,7 @@ class Site extends Entity {
                 // fall-through
             case familiarity >= 9:
                 info.owner = this.getOwner() ? this.getOwner().getId() : null;
+                info.organisation = this.getOrganisation() ? this.getOrganisation().getId() : null;
                 // fall-through
             case familiarity >= 8:
                 // fall-through
@@ -141,7 +162,7 @@ class Site extends Entity {
                 }
                 // fall-through
             case familiarity >= 2:
-                info.occupied = !!this.getOwner();
+                info.occupied = this.isOccupied();
                 // fall-through
             case familiarity >= 1:
                 info.size = this.size;

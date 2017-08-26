@@ -22,15 +22,31 @@ class Politician extends Human {
     }
 
     generateMission () {
-        let region = misc.randomEntity(this.country.regions);
-        let description = misc.chances(50) ? 'Save the world!' : 'Destroy everything!';
-        let newMission = new Mission({
-            owner: this,
-            description: description,
-            region: region,
-            deadline: Date.now() + Math.floor(Math.random() * 1000 * 60 * 60 * 24), //within 24h
-        });
-        this.missions.push(newMission);
+        const region = misc.randomEntity(this.country.regions);
+        const eligibleSites = region
+            .getSites()
+            .filter(site => {
+                const organisation = site.getOrganisation();
+                return organisation && organisation.getWorldview().getAlignScore(this.getWorldview()) !== 0;
+            })
+            .filter(site => !site.getRelatedMission());
+
+        if (eligibleSites.length) {
+            const site = misc.randomEntity(eligibleSites);
+
+            const organisation = site.getOrganisation();
+            const alignmentScore = organisation.getWorldview().getAlignScore(this.getWorldview());
+
+            const description = (alignmentScore > 0) ? 'Provide protection for ' + site.getName() : 'Assault ' + site.getName();
+            const newMission = new Mission({
+                owner: this,
+                description: description,
+                region: region,
+                site: site,
+                deadline: Date.now() + Math.floor(Math.random() * 1000 * 60 * 60 * 24), //within 24h
+            });
+            this.missions.push(newMission);
+        }
     }
 
     withdrawMission (mission) {

@@ -26,8 +26,8 @@ class Player extends Entity {
         this.funds = 0;
         this.fundsDelta = 0;
         this.intel = 0;
-        this.intelDelta = 10;
-        this.intelCap = 1000;
+        this.intelDelta = 100;
+        this.intelCap = 100000;
         this.siteKnowledge = {};
         this.regionKnowledge = {};
         //this.politiciansKnowledge = {};
@@ -146,6 +146,9 @@ class Player extends Entity {
             site
         };
         site.updated(this);
+        if (site.getRelatedMission()) {
+            site.getRelatedMission().updated();
+        }
     }
 
     addFunds (funds) {

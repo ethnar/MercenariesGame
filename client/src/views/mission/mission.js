@@ -12,7 +12,7 @@ define('views/mission/mission', ['components/navbar/navbar', 'components/site/si
     <navbar></navbar>
     <div v-if="state === 'review'">
         <div>{{mission}}</div>
-        <button v-if="!mission.inProgress" @click="state = 'selectSite'">Accept Mission</button>
+        <button v-if="!mission.inProgress && !mission.finished" @click="state = 'selectSite'">Accept Mission</button>
     </div>
     <div v-if="state === 'selectSite'">
         <div v-for="site in sites" class="site" @click="state = 'selectStaff'; selectedSite = site;">

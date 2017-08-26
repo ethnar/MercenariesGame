@@ -25,7 +25,7 @@ class Region extends Entity {
         this.sites = [];
         this.missions = [];
         this.population = 10000;
-        this.worldview = new Worldview(); // median worldview
+        this.worldview = new Worldview(this.country.getWorldview());
         this.recruits = [];
         this.equipment = [];
     }

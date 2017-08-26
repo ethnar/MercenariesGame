@@ -23,9 +23,14 @@ class Mission extends Entity {
         this.finished = false;
         this.payout = args.payout || 500;
         this.reserved = false;
+        this.site = args.site;
 
         if (this.region) {
             this.region.addMission(this);
+        }
+
+        if (this.site) {
+            this.site.setRelatedMission(this);
         }
     }
 
@@ -88,6 +93,7 @@ class Mission extends Entity {
         this.assignee.addFunds(this.payout);
         this.contractedStaff.forEach(staff => staff.returnFromMission());
         this.updated();
+        this.site.setRelatedMission(null);
     }
 
     getDescription(){
@@ -107,16 +113,20 @@ class Mission extends Entity {
     }
 
     getPayload (player) {
-        return {
-            id: this.getId(),
-            description: this.getDescription(),
-            region: this.getRegion().getId(),
-            deadline: this.getDeadline(),
-            owner: this.getOwner().getId(),
-            inProgress: this.isInProgress(),
-            finished: this.isFinished(),
-            assignee: this.getAssignee() ? this.getAssignee().getId() : null,
+        const siteFamiliarity = player.getSiteFamiliarity(this.site);
+        if (siteFamiliarity > 0) {
+            return {
+                id: this.getId(),
+                description: this.getDescription(),
+                region: this.getRegion().getId(),
+                deadline: this.getDeadline(),
+                owner: this.getOwner().getId(),
+                inProgress: this.isInProgress(),
+                finished: this.isFinished(),
+                assignee: this.getAssignee() ? this.getAssignee().getId() : null,
+            }
         }
+        return null;
     }
 }
 

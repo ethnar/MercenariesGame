@@ -36,7 +36,7 @@ Object.keys(Worldview.TYPE).forEach(dimension => {
     organisations['-' + dimension] = new Organisation({
         name: 'Oppressors of ' + dimension,
         worldview: {
-            [dimension]: 1
+            [dimension]: -1
         }
     });
 });
@@ -109,6 +109,7 @@ regions.forEach(region => {
         generalStore: misc.random(2, 5),
         recruitmentCentre: misc.random(2, 4),
         mine: misc.random(0, 1),
+        radioStation: misc.random(3, 5),
     };
     Object.keys(counts).forEach(type => {
         const count = counts[type];

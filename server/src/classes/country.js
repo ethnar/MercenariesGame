@@ -1,6 +1,7 @@
 const Entity = require('./entity');
 const Fact = require('./fact');
 const Politician = require('./politician');
+const Worldview = require('./worldview');
 const world = require('../singletons/world');
 const misc = require('../singletons/misc');
 
@@ -16,10 +17,16 @@ class Country extends Entity {
         this.regions = [];
 
         this.elections = false;
+
+        this.worldview = Worldview.generateRandom();
     }
 
     getLabel () {
         return this.name;
+    }
+
+    getWorldview () {
+        return this.worldview;
     }
 
     getPayload (player) {
@@ -77,7 +84,7 @@ class Country extends Entity {
                     new Fact(95, '%s has chosen %s as their seat of power.', this, selected);
                 }
                 break;
-            case cycles.regular && misc.chances(100 - this.politicians.length * 5):
+            case cycles.regular && misc.chances(20 - this.politicians.length * 3):
                 this.newPolitician();
                 break;
         }

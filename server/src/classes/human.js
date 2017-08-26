@@ -17,6 +17,10 @@ class Human extends Entity {
         }
     }
 
+    getWorldview() {
+        return this.worldview;
+    }
+
     getLabel () {
         return this.name;
     }
