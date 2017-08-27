@@ -2,7 +2,11 @@ define('views/organisation', [
     'services/organisations',
     'components/navbar/navbar',
 ], (OrganisationsService) => ({
-    data: () => ({}),
+    computed: {
+        organisationId () {
+            return +this.$route.params.organisationId;
+        }
+    },
 
     subscriptions() {
         return {

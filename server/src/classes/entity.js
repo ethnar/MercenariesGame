@@ -54,10 +54,10 @@ class Entity {
         subscriptions.forEach((subs, connection) => {
             const entitySubscriptions = subs[this.className] || [];
             entitySubscriptions.forEach(subscription => {
-                if (subscription.filter(this)) {
-                    const player = service.getPlayer(connection);
+                const player = service.getPlayer(connection);
+                const payload = this.getPayload(player);
+                if (subscription.filter(payload)) {
                     if (!targetPlayer || targetPlayer === player) {
-                        const payload = this.getPayload(player);
                         if (payload) {
                             service.sendUpdate(`update-${subscription.key}`, connection, payload);
                             subscription.ids[this.getId()] = true;
@@ -84,8 +84,7 @@ class Entity {
                 if (!Array.isArray(expectedValues)) {
                     expectedValues = [expectedValues];
                 }
-                const fnName = `get${misc.ucfirst(key)}`; // TODO: that's hackable, needs to use payload information only
-                let value = entity[fnName] ? entity[fnName]() : entity[key];
+                let value = entity[key];
                 if (value && value.className) {
                     value = value.getId();
                 }
@@ -117,7 +116,11 @@ service.registerHandler('subscribe', (params, player, conn) => {
     const filterFunction = Entity.buildFilteringFunction(params.filter);
 
     const entities = world
-        .getEntitiesArray(params.entity)
+        .getEntitiesArray(params.entity);
+
+    const filteredPayloads = entities
+        .map(entity => entity.getPayload(player))
+        .filter(entity => !!entity)
         .filter(filterFunction);
 
     const connectionSubscriptions = getSubscriptionsStorage(conn);
@@ -125,14 +128,12 @@ service.registerHandler('subscribe', (params, player, conn) => {
     connectionSubscriptions[params.entity].push({
         filter: filterFunction,
         key: params.key,
-        ids: entities
-            .map(entity => entity.getId())
-            .reduce((acc, item) => Object.assign(acc, {[item]: true}), {}),
+        ids: filteredPayloads
+            .map(payload => payload.id)
+            .reduce((acc, id) => Object.assign(acc, {[id]: true}), {}),
     });
 
-    return entities
-        .map(entity => entity.getPayload(player))
-        .filter(entity => !!entity);
+    return filteredPayloads;
 });
 
 let classRegistry = {};

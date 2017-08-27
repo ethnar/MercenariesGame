@@ -60,6 +60,9 @@ define('services/server', function () {
         },
 
         getStream (entityType, id) {
+            if (!id) {
+                throw new Error(`Get stream of ${entityType}, but no ID provided: ${id}`);
+            }
             return this
                 .getListStream(entityType, {id: id})
                 .map(array => (array || [])[0]);

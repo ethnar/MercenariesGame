@@ -21,7 +21,11 @@ define('services/player', ['services/server'], function (ServerService) {
         },
 
         getCurrentPlayerStream () {
-            return ServerService.getStream('Player', ServerService.getPlayerId());
+            const playerId = ServerService.getPlayerId();
+            if (playerId) {
+                return ServerService.getStream('Player', playerId);
+            }
+            window.location = '?token=' + Math.random() + '#/login';
         }
     };
 

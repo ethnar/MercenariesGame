@@ -2,7 +2,7 @@ define('components/organisation/organisation', [
     'services/organisations'
 ], (OrganisationsService) => Vue.component('organisation', {
     props: [
-        'organisationId'
+        'organisationId',
     ],
 
     subscriptions () {

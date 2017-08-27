@@ -40,7 +40,6 @@ class Organisation extends Entity {
     }
 
     getPayload() {
-        console.log('Getting ' + this.getId())
         return {
             id: this.getId(),
             name: this.getName(),
