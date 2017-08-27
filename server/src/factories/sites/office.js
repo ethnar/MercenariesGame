@@ -7,5 +7,6 @@ module.exports = (args) => {
         size: misc.random(10, 14),
         visibility: misc.random(40, 100),
         purchasable: true,
+        organisable: true,
     }, args));
 };

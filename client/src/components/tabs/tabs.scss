@@ -4,9 +4,13 @@
         flex-wrap: wrap;
         cursor: pointer;
 
-        > * {
+        > div {
             padding: 5px;
             border: 1px solid #aaddff;
+
+            &.active {
+                background: lightsteelblue;
+            }
         }
     }
 }

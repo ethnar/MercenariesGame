@@ -136,10 +136,6 @@ class Player extends Entity {
         return false;
     }
 
-    investigatePolitician(politician) {
-
-    }
-
     revealSite(site, familiarity = 10) {
         this.siteKnowledge[site.getId()] = {
             familiarity,

@@ -110,6 +110,7 @@ regions.forEach(region => {
         recruitmentCentre: misc.random(2, 4),
         mine: misc.random(0, 1),
         radioStation: misc.random(3, 5),
+        house: misc.random(6, 10),
     };
     Object.keys(counts).forEach(type => {
         const count = counts[type];

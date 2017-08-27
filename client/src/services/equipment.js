@@ -5,7 +5,6 @@ define('services/equipment', ['services/server'], function (ServerService) {
             return ServerService
                 .getListStream('Equipment')
                 .map(equipmentList => {
-                    console.log(equipmentList);
                     return equipmentList.filter(eq => eq.region === regionId)
                 });
         },

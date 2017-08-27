@@ -56,6 +56,10 @@ class Mission extends Entity {
         return this.assignee;
     }
 
+    getSite () {
+        return this.site;
+    }
+
     reserve (player) {
         this.assignee = player;
         this.reserved = true;
@@ -121,6 +125,7 @@ class Mission extends Entity {
                 region: this.getRegion().getId(),
                 deadline: this.getDeadline(),
                 owner: this.getOwner().getId(),
+                site: this.getSite().getId(),
                 inProgress: this.isInProgress(),
                 finished: this.isFinished(),
                 assignee: this.getAssignee() ? this.getAssignee().getId() : null,

@@ -34,7 +34,7 @@ define('components/tabs/tabs', [], function () {
         template: `
             <div class="tabs">
                 <div class="tab-headers">
-                    <div v-for="tab in tabs" @click="setVisible(tab);">{{tab.header}}</div>
+                    <div v-for="tab in tabs" :class="{ active: tab === lastTab}" @click="setActive(tab);">{{tab.header}}</div>
                 </div>
                 <div class="tab-contents">
                     <slot></slot>
@@ -43,14 +43,22 @@ define('components/tabs/tabs', [], function () {
         `,
 
         data: () => ({
-            tabs: []
+            tabs: [],
+            lastTab: null,
         }),
 
+        mounted () {
+            const startingTab = this.$router.currentRoute.query.tab;
+            if (startingTab) {
+                this.setActive(this.tabs.find(tab => tab.header === startingTab));
+            }
+        },
+
         methods: {
-            registerTab (idx, header, setVisibleCallback) {
+            registerTab (idx, header, setActiveCallback) {
                 this.tabs.splice(idx, 0, {
                     header: header,
-                    callback: setVisibleCallback
+                    callback: setActiveCallback
                 });
                 if (!this.lastTab)
                 {
@@ -59,10 +67,11 @@ define('components/tabs/tabs', [], function () {
                 }
             },
 
-            setVisible (tab) {
+            setActive (tab) {
                 this.lastTab.callback(false);
                 tab.callback(true);
                 this.lastTab = tab;
+                this.$router.push({ query: {  tab: tab.header }});
             }
         }
     };
