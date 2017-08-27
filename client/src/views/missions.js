@@ -1,10 +1,19 @@
-define('views/missions', ['components/navbar/navbar', 'services/missions'], function (navbar, MissionsService) {
-    return {
-        components: {
-            navbar
-        },
+define('views/missions', [
+    'services/missions',
+    'components/navbar/navbar',
+], (MissionsService) => ({
+    data: () => ({
+    }),
 
-        template: `
+    subscriptions: () => ({
+        currentMissions: MissionsService.getCurrentMissionsStream(),
+        finishedMissions: MissionsService.getFinishedMissionsStream(),
+    }),
+
+    created () {
+    },
+
+    template: `
 <div>
     <navbar></navbar>
     <header>Current missions:</header>
@@ -21,15 +30,4 @@ define('views/missions', ['components/navbar/navbar', 'services/missions'], func
     </div>
 </div>
 `,
-        data: () => ({
-        }),
-
-        subscriptions: () => ({
-            currentMissions: MissionsService.getCurrentMissionsStream(),
-            finishedMissions: MissionsService.getFinishedMissionsStream(),
-        }),
-
-        created () {
-        }
-    };
-});
+}));

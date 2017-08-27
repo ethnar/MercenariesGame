@@ -1,11 +1,5 @@
-define('components/tabs/tabs', [], function () {
+define('components/tabs/tabs', [], () => {
     Vue.component('tab', {
-        template: `
-            <div class="tab" v-if="visible">
-                <slot></slot>
-            </div>
-        `,
-
         props: [
             'header'
         ],
@@ -26,28 +20,22 @@ define('components/tabs/tabs', [], function () {
             setVisibility (visible) {
                 this.visible = visible;
             }
-        }
+        },
+
+        template: `
+<div class="tab" v-if="visible">
+    <slot></slot>
+</div>
+        `,
     });
 
-    return {
-        name: 'tabs',
-        template: `
-            <div class="tabs">
-                <div class="tab-headers">
-                    <div v-for="tab in tabs" :class="{ active: tab === lastTab}" @click="setActive(tab);">{{tab.header}}</div>
-                </div>
-                <div class="tab-contents">
-                    <slot></slot>
-                </div>
-            </div>
-        `,
-
+    return Vue.component('tabs', {
         data: () => ({
             tabs: [],
             lastTab: null,
         }),
 
-        mounted () {
+        mounted() {
             const startingTab = this.$router.currentRoute.query.tab;
             if (startingTab) {
                 this.setActive(this.tabs.find(tab => tab.header === startingTab));
@@ -55,24 +43,34 @@ define('components/tabs/tabs', [], function () {
         },
 
         methods: {
-            registerTab (idx, header, setActiveCallback) {
+            registerTab(idx, header, setActiveCallback) {
                 this.tabs.splice(idx, 0, {
                     header: header,
                     callback: setActiveCallback
                 });
-                if (!this.lastTab)
-                {
+                if (!this.lastTab) {
                     this.lastTab = this.tabs[0];
                     this.lastTab.callback(true);
                 }
             },
 
-            setActive (tab) {
+            setActive(tab) {
                 this.lastTab.callback(false);
                 tab.callback(true);
                 this.lastTab = tab;
-                this.$router.push({ query: {  tab: tab.header }});
+                this.$router.push({query: {tab: tab.header}});
             }
-        }
-    };
+        },
+
+        template: `
+<div class="tabs">
+    <div class="tab-headers">
+        <div v-for="tab in tabs" :class="{ active: tab === lastTab}" @click="setActive(tab);">{{tab.header}}</div>
+    </div>
+    <div class="tab-contents">
+        <slot></slot>
+    </div>
+</div>
+        `,
+    });
 });

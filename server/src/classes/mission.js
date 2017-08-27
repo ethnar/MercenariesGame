@@ -15,7 +15,6 @@ class Mission extends Entity {
         this.deadline = args.deadline;
         this.payment = args.payment;
         this.description = args.description;
-        this.region = args.region;
         this.withdrawn = false;
         this.duration = args.duration || 15000;
         this.assignee = null;
@@ -25,12 +24,9 @@ class Mission extends Entity {
         this.reserved = false;
         this.site = args.site;
 
-        if (this.region) {
-            this.region.addMission(this);
-        }
-
         if (this.site) {
             this.site.setRelatedMission(this);
+            this.getRegion().addMission(this);
         }
     }
 
@@ -105,7 +101,7 @@ class Mission extends Entity {
     }
 
     getRegion(){
-        return this.region;
+        return this.getSite().getRegion();
     }
 
     getDeadline(){

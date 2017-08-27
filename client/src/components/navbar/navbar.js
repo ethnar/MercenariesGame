@@ -1,7 +1,24 @@
-define('components/navbar/navbar', ['services/player'], function (PlayerService) {
-    return {
-        name: 'navbar',
-        template: `
+define('components/navbar/navbar', ['services/player'], (PlayerService) => Vue.component('navbar', {
+    subscriptions: () => ({
+        funds: PlayerService.getFundsStream(),
+        intel: PlayerService.getIntelStream()
+    }),
+
+    methods: {
+        formatDelta(number) {
+            return (number >= 0 ? '+' : '-') + this.formatNumber(number);
+        },
+        formatNumber: number => {
+            number = String(number);
+            const ticks = Math.floor((number.length - 1) / 3);
+            for (let i = 0; i < ticks; i++) {
+                number = number.replace(/([0-9]{3}($|'))/, '\'$1');
+            }
+            return number;
+        }
+    },
+
+    template: `
 <div class="navbar">
     <div class="nav">
         <a href="#/map">Map</a>
@@ -26,23 +43,4 @@ define('components/navbar/navbar', ['services/player'], function (PlayerService)
     </div>
 </div>
 `,
-        subscriptions: () => ({
-            funds: PlayerService.getFundsStream(),
-            intel: PlayerService.getIntelStream()
-        }),
-
-        methods: {
-            formatDelta(number) {
-                return (number >= 0 ? '+' : '-') + this.formatNumber(number);
-            },
-            formatNumber: number => {
-                number = String(number);
-                const ticks = Math.floor((number.length - 1) / 3);
-                for (let i = 0; i < ticks; i++) {
-                    number = number.replace(/([0-9]{3}($|'))/, '\'$1');
-                }
-                return number;
-            }
-        }
-    };
-});
+}));

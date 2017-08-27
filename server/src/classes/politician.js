@@ -41,7 +41,6 @@ class Politician extends Human {
             const newMission = new Mission({
                 owner: this,
                 description: description,
-                region: region,
                 site: site,
                 deadline: Date.now() + Math.floor(Math.random() * 1000 * 60 * 60 * 24), //within 24h
             });
@@ -54,8 +53,9 @@ class Politician extends Human {
         mission.setWithdrawn(true);
     }
 
-    getPayload() {
-
+    getPayload(player) {
+        const data = super.getPayload(player);
+        return data;
     }
 }
 

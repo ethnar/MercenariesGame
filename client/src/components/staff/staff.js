@@ -1,24 +1,22 @@
-define('components/staff/staff', [], function () {
-    return {
-        components: {
-        },
+define('components/staff/staff', [
+], () => Vue.component('staff', {
+    props: [
+        'person'
+    ],
 
-        template: `
-            <div>
-                {{person}}
-            </div>
-        `,
-        props: [
-            'person'
-        ],
+    data: () => ({
+    }),
 
-        data: () => ({
-        }),
+    subscriptions () {
+    },
 
-        subscriptions () {
-        },
+    created () {
+    },
 
-        created () {
-        }
-    };
-});
+    template: `
+<div>
+    {{person}}
+</div>
+    `,
+
+}));

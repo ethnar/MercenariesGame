@@ -1,5 +1,5 @@
-require(['views/login', 'views/map', 'views/missions', 'views/mission/mission', 'views/sites', 'views/site', 'views/region', 'services/server'],
-    function (LoginView, MapView, MissionsView, MissionView, SitesView, SiteView, RegionView, ServerService) {
+require(['views/login', 'views/map', 'views/missions', 'views/mission/mission', 'views/sites', 'views/site', 'views/region', 'views/organisation'],
+    function (LoginView, MapView, MissionsView, MissionView, SitesView, SiteView, RegionView, OrganisationView) {
     Vue.use(VueRx, Rx);
 
     Vue.prototype.stream = function (prop) {
@@ -28,6 +28,9 @@ require(['views/login', 'views/map', 'views/missions', 'views/mission/mission', 
         }, {
             path: '/region/:regionId',
             component: RegionView
+        }, {
+            path: '/organisation/:organisationId',
+            component: OrganisationView
         }, {
             path: '*',
             redirect: '/map'

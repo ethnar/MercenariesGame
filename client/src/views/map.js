@@ -1,10 +1,18 @@
-define('views/map', ['services/regions', 'components/navbar/navbar'], function (RegionService, navbar) {
-    return {
-        components: {
-            navbar
-        },
+define('views/map', [
+    'services/regions',
+    'components/navbar/navbar',
+], (RegionService) => ({
+    data: () => ({
+    }),
 
-        template: `
+    subscriptions: () => ({
+        regions: RegionService.getRegionsStream()
+    }),
+
+    created () {
+    },
+
+    template: `
 <div>
     <navbar></navbar>
     <div v-for="region in regions">
@@ -12,14 +20,4 @@ define('views/map', ['services/regions', 'components/navbar/navbar'], function (
     </div>
 </div>
 `,
-        data: () => ({
-        }),
-
-        subscriptions: () => ({
-            regions: RegionService.getRegionsStream()
-        }),
-
-        created () {
-        }
-    };
-});
+}));

@@ -1,31 +1,29 @@
-define('views/sites', ['components/region', 'components/site/site', 'components/navbar/navbar', 'services/sites'], function (region, site, navbar, SitesService) {
-    return {
-        components: {
-            site,
-            navbar,
-            region
-        },
+define('views/sites', [
+    'services/sites',
+    'components/region',
+    'components/site/site',
+    'components/navbar/navbar',
+], (SitesService) => ({
+    data: () => ({
+    }),
 
-        template: `
+    subscriptions: () => ({
+        sites: SitesService.getOwnSitesStream()
+    }),
+
+    created () {
+    },
+
+    destroyed () {
+    },
+
+    template: `
 <div>
     <navbar></navbar>
     <header>Sites:</header>
     <div v-for="site in sites">
-        <site :site="site"/>
+        <site :site-id="site.id"/>
     </div>
 </div>
 `,
-        data: () => ({
-        }),
-
-        subscriptions: () => ({
-            sites: SitesService.getOwnSitesStream()
-        }),
-
-        created () {
-        },
-
-        destroyed () {
-        }
-    };
-});
+}));

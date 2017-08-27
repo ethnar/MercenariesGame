@@ -1,13 +1,61 @@
-define('views/mission/mission', ['components/navbar/navbar', 'components/site/site', 'components/staff/staff', 'services/missions', 'services/sites', 'services/staff'],
-    function (navbar, site, staff, MissionsService, SitesService, StaffService) {
-    return {
-        components: {
-            navbar,
-            site,
-            staff
+define('views/mission/mission', [
+    'services/missions',
+    'services/sites',
+    'services/staff',
+    'components/navbar/navbar',
+    'components/site/site',
+    'components/staff/staff',
+], (MissionsService, SitesService, StaffService) => ({
+    computed: {
+        missionId () {
+            return +this.$route.params.missionId;
         },
-// TODO LOADER
-        template: `
+
+        emptySelection () {
+            return Object.keys(this.selectedStaff).find(staffId => this.selectedStaff[staffId]);
+        }
+    },
+
+    data: () => ({
+        state: 'review',
+        selectedSite: null,
+        selectedStaff: {}
+    }),
+
+    subscriptions: function () {
+        return {
+            sites: SitesService.getOwnSitesStream(),
+            staff: this.stream('selectedSite').flatMapLatest(site => StaffService.getStaffStream().map(staff => {
+                return staff.filter(person => site && person.site === site.id);
+            })),
+            mission: this.stream('missionId').flatMapLatest(missionId => MissionsService.getMissionStream(missionId))
+        };
+    },
+
+    methods: {
+        selectStaff (staff) {
+            Vue.set(this.selectedStaff, staff.id, true);
+        },
+
+        deselectStaff (staff) {
+            Vue.set(this.selectedStaff, staff.id, false);
+        },
+
+        startMission () {
+            const staffIds = Object.keys(this.selectedStaff)
+                .filter(staffId => this.selectedStaff[staffId])
+                .map(staffId => +staffId);
+            MissionsService.startMission(this.missionId, this.selectedSite.id, staffIds).then(response => {
+                if (response.result) {
+                    window.router.push('/missions');
+                } else {
+                    alert(response.message);
+                }
+            });
+        }
+    },
+
+    template: `
 <div v-if="mission"> 
     <navbar></navbar>
     <div v-if="state === 'review'">
@@ -16,7 +64,7 @@ define('views/mission/mission', ['components/navbar/navbar', 'components/site/si
     </div>
     <div v-if="state === 'selectSite'">
         <div v-for="site in sites" class="site" @click="state = 'selectStaff'; selectedSite = site;">
-            <site :site="site"/>
+            <site :site-id="site.id"/>
         </div>
     </div>
     <div v-if="state === 'selectStaff'">
@@ -32,53 +80,4 @@ define('views/mission/mission', ['components/navbar/navbar', 'components/site/si
     </div>
 </div>
 `,
-        computed: {
-            missionId () {
-                return +this.$route.params.missionId;
-            },
-
-            emptySelection () {
-                return Object.keys(this.selectedStaff).find(staffId => this.selectedStaff[staffId]);
-            }
-        },
-
-        data: () => ({
-            state: 'review',
-            selectedSite: null,
-            selectedStaff: {}
-        }),
-
-        subscriptions: function () {
-            return {
-                sites: SitesService.getOwnSitesStream(),
-                staff: this.stream('selectedSite').flatMapLatest(site => StaffService.getStaffStream().map(staff => {
-                    return staff.filter(person => site && person.site === site.id);
-                })),
-                mission: this.stream('missionId').flatMapLatest(missionId => MissionsService.getMissionStream(missionId))
-            };
-        },
-
-        methods: {
-            selectStaff (staff) {
-                Vue.set(this.selectedStaff, staff.id, true);
-            },
-
-            deselectStaff (staff) {
-                Vue.set(this.selectedStaff, staff.id, false);
-            },
-
-            startMission () {
-                const staffIds = Object.keys(this.selectedStaff)
-                    .filter(staffId => this.selectedStaff[staffId])
-                    .map(staffId => +staffId);
-                MissionsService.startMission(this.missionId, this.selectedSite.id, staffIds).then(response => {
-                    if (response.result) {
-                        window.router.push('/missions');
-                    } else {
-                        alert(response.message);
-                    }
-                });
-            }
-        }
-    };
-});
+}));

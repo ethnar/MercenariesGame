@@ -1,25 +1,23 @@
-define('views/news', ['services/news', 'components/navbar/navbar', 'components/info/info'], function (NewsService, navbar, info) {
-    return {
-        components: {
-            navbar,
-            info
-        },
+define('views/news', [
+    'services/news',
+    'components/navbar/navbar',
+    'components/info/info'
+], (NewsService) => ({
+    data: () => ({
+    }),
 
-        template: `
+    subscriptions: () => ({
+        news: NewsService.getNewsStream()
+    }),
+
+    created () {
+    },
+
+    template: `
 <div>
     <navbar></navbar>
     <header>Recent news:</header>
     <info v-for="item in news" :message="item">{{item}}</info>
 </div>
 `,
-        data: () => ({
-        }),
-
-        subscriptions: () => ({
-            news: NewsService.getNewsStream()
-        }),
-
-        created () {
-        }
-    };
-});
+}));

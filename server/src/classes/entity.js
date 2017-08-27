@@ -1,5 +1,6 @@
 const world = require('../singletons/world');
 const service = require('../singletons/service');
+const misc = require('../singletons/misc');
 
 let ids = {};
 
@@ -83,7 +84,8 @@ class Entity {
                 if (!Array.isArray(expectedValues)) {
                     expectedValues = [expectedValues];
                 }
-                let value = entity[key];
+                const fnName = `get${misc.ucfirst(key)}`; // TODO: that's hackable, needs to use payload information only
+                let value = entity[fnName] ? entity[fnName]() : entity[key];
                 if (value && value.className) {
                     value = value.getId();
                 }

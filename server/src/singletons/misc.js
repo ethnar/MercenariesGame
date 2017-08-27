@@ -57,5 +57,9 @@ module.exports = {
                 break;
         }
         return Math.ceil(Math.pow(base, current + 1) * multiplier);
+    },
+
+    ucfirst (string) {
+        return string[0].toUpperCase() + string.substr(1);
     }
 };

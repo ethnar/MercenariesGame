@@ -41,6 +41,10 @@ class Worldview {
     isAligning(worldview) {
         return this.getAlignScore(worldview) > 0;
     }
+
+    getPayload () {
+        return this;
+    }
 }
 
 Worldview.TYPE = {

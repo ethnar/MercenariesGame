@@ -13,6 +13,10 @@ class Organisation extends Entity {
         this.worldview = new Worldview(args.worldview);
     }
 
+    getName() {
+        return this.name;
+    }
+
     getWorldview() {
         return this.worldview;
     }
@@ -33,6 +37,15 @@ class Organisation extends Entity {
         if (cycles.rare) {
             this.attemptToCaptureSite();
         }
+    }
+
+    getPayload() {
+        console.log('Getting ' + this.getId())
+        return {
+            id: this.getId(),
+            name: this.getName(),
+            worldview: this.getWorldview().getPayload(),
+        };
     }
 }
 
