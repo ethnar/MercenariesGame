@@ -1,7 +1,8 @@
 define('components/mission/mission', [
     'services/missions',
     'components/region',
-    'components/site/site'
+    'components/site/site',
+    'components/politician/politician',
 ], (MissionsService) => Vue.component('mission', {
     props: [
         'missionId'
@@ -23,9 +24,8 @@ define('components/mission/mission', [
     template: `
 <div class="component-mission" v-if="mission">
     <div class="description">{{mission.description}}</div>
-    <region :region-id="mission.region"></region>
-    <site :site-id="mission.site"></site>
-    <human :human-id="mission.owner"></human>
+    Target: <site :site-id="mission.site"></site>
+    Contact: <politician :politician-id="mission.owner"></politician>
 </div>
 `,
 }));

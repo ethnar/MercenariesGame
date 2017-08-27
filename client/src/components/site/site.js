@@ -21,11 +21,11 @@ define('components/site/site', [
 
     template: `
 <div class="component-site" v-if="site">
-    <div class="name">{{site.name}}</div>
-    <region :region-id="site.region"></region>
-    <a :href="'#/site/' + site.id">
+    <a :href="'#/site/' + site.id" class="link">
         View
     </a>
+    <div class="name">{{site.name}}</div>
+    <region :region-id="site.region"></region>
 </div>
 `,
 }));

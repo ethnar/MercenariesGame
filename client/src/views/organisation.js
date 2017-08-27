@@ -1,6 +1,7 @@
 define('views/organisation', [
     'services/organisations',
     'components/navbar/navbar',
+    'components/worldview/worldview',
 ], (OrganisationsService) => ({
     computed: {
         organisationId () {
