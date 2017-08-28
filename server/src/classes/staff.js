@@ -9,11 +9,29 @@ class Staff extends Human {
         super(args);
         this.strength = 5;
         this.currentMission = null;
+        this.pay = 200;
+    }
+
+    getPay() {
+        return this.pay;
     }
 
     setSite (site) {
+        if (this.site) {
+            this.site.updateMaintenance(-this.getPay());
+        }
         this.site = site;
+        if (this.site) {
+            this.site.updateMaintenance(this.getPay());
+        }
         this.updated();
+    }
+
+    die() {
+        const site = this.getSite();
+        if (site) {
+            site.updateMaintenance(-this.getPay());
+        }
     }
 
     getSite () {

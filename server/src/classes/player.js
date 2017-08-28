@@ -25,9 +25,9 @@ class Player extends Entity {
         this.knownFacts = {};
         this.funds = 0;
         this.fundsDelta = 0;
-        this.intel = 0;
-        this.intelDelta = 100;
-        this.intelCap = 100000;
+        this.intel = 50;
+        this.intelDelta = 5;
+        this.intelCap = 1000;
         this.siteKnowledge = {};
         this.regionKnowledge = {};
         //this.politiciansKnowledge = {};
@@ -48,13 +48,18 @@ class Player extends Entity {
     }
 
     cycle (cycles) {
-        if (cycles.regular) {
+        if (cycles.daily) {
             this.gatherIntelligence();
+            this.payMaintenance();
         }
     }
 
+    payMaintenance () {
+        this.pay(-this.getFundsDelta(), true);
+    }
+
     gatherIntelligence () {
-        this.addIntel(this.getIntelDelta() * 100);
+        this.addIntel(this.getIntelDelta());
     }
 
     getFunds () {
@@ -71,6 +76,10 @@ class Player extends Entity {
 
     getIntelDelta () {
         return this.intelDelta;
+    }
+
+    changeMaintenance (change) {
+        this.fundsDelta = this.fundsDelta - change;
     }
 
     addIntel (intel) {
@@ -152,8 +161,8 @@ class Player extends Entity {
         this.updated(this);
     }
 
-    pay (funds) {
-        if (this.funds >= funds) {
+    pay (funds, force = false) {
+        if (this.funds >= funds || force) {
             this.funds -= funds;
             this.updated(this);
             return true;

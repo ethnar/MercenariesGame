@@ -13,6 +13,7 @@ class Site extends Entity {
             this.region.addSite(this);
         }
         this.owner = null;
+        this.purchasable = args.purchasable;
         this.organisable = args.organisable || false;
         this.organisation = null;
         this.size = args.size || 5;
@@ -22,10 +23,24 @@ class Site extends Entity {
         this.staff = [];
         this.equipment = [];
         this.relatedMission = null;
+
+        this.maintenance = this.size * 50;
     }
 
     getVisibility() {
         return this.visibility;
+    }
+
+    getMaintenance() {
+        return this.maintenance;
+    }
+
+    updateMaintenance(change) {
+        const owner = this.getOwner();
+        if (owner) {
+            owner.changeMaintenance(change);
+        }
+        this.maintenance = this.maintenance + change;
     }
 
     setOrganisation(organisation) {
@@ -66,7 +81,13 @@ class Site extends Entity {
     }
 
     setOwner (owner) {
+        if (this.owner) {
+            this.owner.changeMaintenance(-this.getMaintenance());
+        }
         this.owner = owner;
+        if (this.owner) {
+            this.owner.changeMaintenance(this.getMaintenance());
+        }
         owner.addSite(this);
         this.countryProperty = null;
     }

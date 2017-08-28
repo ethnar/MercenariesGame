@@ -1,12 +1,16 @@
-define('components/navbar/navbar', ['services/player'], (PlayerService) => Vue.component('navbar', {
+define('components/navbar/navbar', [
+    'services/player',
+    'services/date',
+], (PlayerService, DateService) => Vue.component('navbar', {
     subscriptions: () => ({
         funds: PlayerService.getFundsStream(),
-        intel: PlayerService.getIntelStream()
+        intel: PlayerService.getIntelStream(),
+        date: DateService.getDateStream(),
     }),
 
     methods: {
         formatDelta(number) {
-            return (number >= 0 ? '+' : '-') + this.formatNumber(number);
+            return (number >= 0 ? '+' : '-') + this.formatNumber(Math.abs(number));
         },
         formatNumber: number => {
             number = String(number);
@@ -24,6 +28,7 @@ define('components/navbar/navbar', ['services/player'], (PlayerService) => Vue.c
         <a href="#/map">Map</a>
         <a href="#/missions">Missions</a>
         <a href="#/sites">Sites</a>
+        {{date}}
     </div>
     <div class="currency funds" v-if="funds">
         <span class="current">{{formatNumber(funds.value)}} $</span>
