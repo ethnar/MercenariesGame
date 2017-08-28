@@ -84,7 +84,7 @@ class Country extends Entity {
                     new Fact(95, '%s has chosen %s as their seat of power.', this, selected);
                 }
                 break;
-            case cycles.regular && misc.chances(20 - this.politicians.length * 3):
+            case cycles.daily && misc.chances(20 - this.politicians.length * 3):
                 this.newPolitician();
                 break;
         }

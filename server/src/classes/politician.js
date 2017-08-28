@@ -16,7 +16,7 @@ class Politician extends Human {
     }
 
     cycle (cycles) {
-        if (cycles.regular && misc.chances(100 - 25 * this.missions.length)) { //4 missions cap per politician
+        if (cycles.daily && misc.chances(100 - 25 * this.missions.length)) { //4 missions cap per politician
             this.generateMission();
         }
     }

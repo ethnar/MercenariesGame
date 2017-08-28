@@ -85,21 +85,13 @@ let ukSenate = new Site({ name: 'Senate', region: london });
 ukSenate.setSize(50);
 
 
-let hq = new Site({ name: 'HQ', region: toronto });
+let hq = new Site({ name: 'Office', region: toronto });
 hq.setOwner(test);
 
-let secondary = new Site({ name: 'FOB', region: quebec });
-secondary.setOwner(test);
-
-test.addFunds(1000000);
+test.addFunds(10000);
 
 hq.addStaff(new Staff({region: toronto}));
 hq.addStaff(new Staff({region: toronto}));
-hq.addStaff(new Staff({region: toronto}));
-hq.addStaff(new Staff({region: toronto}));
-secondary.addStaff(new Staff({region: toronto}));
-secondary.addStaff(new Staff({region: toronto}));
-secondary.addStaff(new Staff({region: toronto}));
 
 regions.forEach(region => {
     const counts = {

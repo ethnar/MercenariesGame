@@ -67,6 +67,12 @@ class Service {
         }));
     }
 
+    sendUpdateToAll (topic, data) {
+        this.connections.forEach(connection => {
+            this.sendUpdate(topic, connection, data);
+        });
+    }
+
     setPlayer (conn, player) {
         console.log(player.name + ' authenticated');
         this.playerMap.set(conn, player);

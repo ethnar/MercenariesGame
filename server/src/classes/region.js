@@ -102,11 +102,11 @@ class Region extends Entity {
     }
 
     cycle (cycles) {
-        if (cycles.regular) {
+        if (cycles.daily) {
             this.cycleRecruits();
             this.cycleSites();
         }
-        if (cycles.rare) {
+        if (cycles.weekly) {
             this.cycleStores();
         }
     }

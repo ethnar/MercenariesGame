@@ -34,7 +34,7 @@ class Organisation extends Entity {
     }
 
     cycle (cycles) {
-        if (cycles.rare) {
+        if (cycles.weekly) {
             this.attemptToCaptureSite();
         }
     }
