@@ -1,6 +1,7 @@
 define('components/navbar/navbar', [
     'services/player',
     'services/date',
+    'components/common/radial-progress',
 ], (PlayerService, DateService) => Vue.component('navbar', {
     subscriptions: () => ({
         funds: PlayerService.getFundsStream(),
@@ -28,7 +29,10 @@ define('components/navbar/navbar', [
         <a href="#/map">Map</a>
         <a href="#/missions">Missions</a>
         <a href="#/sites">Sites</a>
-        {{date}}
+    </div>
+    <div class="date" v-if="date">
+        <radial-progress class="time-progress" size="20" :percentage="date.tillNextWeek"></radial-progress>
+        {{date.text}}
     </div>
     <div class="currency funds" v-if="funds">
         <span class="current">{{formatNumber(funds.value)}} $</span>

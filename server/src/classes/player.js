@@ -50,6 +50,8 @@ class Player extends Entity {
     cycle (cycles) {
         if (cycles.daily) {
             this.gatherIntelligence();
+        }
+        if (cycles.monthly) {
             this.payMaintenance();
         }
     }

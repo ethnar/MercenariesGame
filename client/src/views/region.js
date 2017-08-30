@@ -4,7 +4,7 @@ define('views/region', [
     'services/missions',
     'components/navbar/navbar',
     'components/region',
-    'components/tabs/tabs',
+    'components/common/tabs',
     'components/site/site',
     'components/info/info',
     'components/mission/mission',

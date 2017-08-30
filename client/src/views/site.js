@@ -6,7 +6,7 @@ define('views/site', [
     'services/equipment',
     'components/navbar/navbar',
     'components/region',
-    'components/tabs/tabs',
+    'components/common/tabs',
     'components/staff/staff',
     'components/organisation/organisation',
 ], (SitesService, StaffService, RecruitsService, PlayerService, EquipmentService) => ({

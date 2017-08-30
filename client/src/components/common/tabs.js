@@ -1,4 +1,4 @@
-define('components/tabs/tabs', [], () => {
+define('components/common/tabs', [], () => {
     Vue.component('tab', {
         props: [
             'header'

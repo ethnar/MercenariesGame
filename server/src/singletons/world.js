@@ -1,6 +1,23 @@
 let service = require('./service');
 let fs = require('fs');
 
+let hoursPerDay;
+let daysPerWeek;
+const months = {
+    1: 'Jan',
+    2: 'Feb',
+    3: 'Mar',
+    4: 'Apr',
+    5: 'May',
+    6: 'Jun',
+    7: 'Jul',
+    8: 'Aug',
+    9: 'Sep',
+    10: 'Oct',
+    11: 'Nov',
+    12: 'Dec',
+};
+
 class World {
     constructor () {
         this.entities = {};
@@ -19,29 +36,39 @@ class World {
         // 1 hour = 150 secs
         // 1 minute = 2.5 secs
 
+        const perMinute = 2.5;
+        const perHour   = 150;
+        const perDay    = 60 * 60;
+        const perWeek   = 6 * 60 * 60;
+        const perMonth  = 24 * 60 * 60;
         this.cycles = [{
             name: 'minutes',
-            timer: 2.5,
+            timer: perMinute,
         }, {
             name: 'hourly',
-            timer: 150,
+            timer: perHour,
         }, {
             name: 'daily',
-            timer: 60 * 60,
+            timer: perDay,
         }, {
             name: 'weekly',
-            timer: 6 * 60 * 60,
+            timer: perWeek,
         }, {
             name: 'monthly',
-            timer: 24 * 60 * 60,
+            timer: perMonth,
         }];
+
+        daysPerWeek = perWeek / perDay;
+        hoursPerDay = perDay / perHour;
+
         this.timeout = this.cycles[0].timer * 1000;
         this.currentGameTime = {
             year: 1945,
             month: 1,
             day: 1,
+            hours: 0,
         };
-        this.gameSpeed = 10;
+        this.gameSpeed = 200;
     }
 
     getEntitiesArray (type) {
@@ -49,7 +76,7 @@ class World {
     }
 
     run () {
-        this.secondsCount = this.timeout;
+        this.secondsCount = 0;
         this.loop();
     }
 
@@ -60,6 +87,7 @@ class World {
 
     cycle () {
         // initial values included for static code analysis only
+        const gameTime = this.currentGameTime;
         const cycles = {
             minutes: false,
             hourly: false,
@@ -71,7 +99,7 @@ class World {
             cycles[cycle.name] = (this.secondsCount % cycle.timer === 0);
         });
         this.secondsCount += this.timeout / 1000;
-//        console.log('---------------------------------------- new cycle ----------------------------------------');
+
         this.cycleEntities('Country', cycles);
         this.cycleEntities('Site', cycles);
         this.cycleEntities('Politician', cycles);
@@ -79,14 +107,18 @@ class World {
         this.cycleEntities('Mission', cycles);
         this.cycleEntities('Player', cycles);
         this.cycleEntities('Organisation', cycles);
-        if (cycles.daily) {
-            this.currentGameTime.day += 1;
-            if (this.currentGameTime.day > 7 * 4) {
-                this.currentGameTime.day -= 7 * 4;
-                this.currentGameTime.month += 1;
-                if (this.currentGameTime.month > 12) {
-                    this.currentGameTime.month -= 12;
-                    this.currentGameTime.year += 1;
+        if (cycles.hourly) {
+            gameTime.hours += 1;
+            if (cycles.daily) {
+                gameTime.hours = 0;
+                gameTime.day += 1;
+                if (cycles.monthly) {
+                    gameTime.day = 0;
+                    gameTime.month += 1;
+                    if (gameTime.month > 12) {
+                        gameTime.month -= 12;
+                        gameTime.year += 1;
+                    }
                 }
             }
             service.sendUpdateToAll('date', this.getCurrentDate());
@@ -101,22 +133,14 @@ class World {
     }
 
     getCurrentDate() {
-        const date = this.currentGameTime;
-        const months = {
-            1: 'Jan',
-            2: 'Feb',
-            3: 'Mar',
-            4: 'Apr',
-            5: 'May',
-            6: 'Jun',
-            7: 'Jul',
-            8: 'Aug',
-            9: 'Sep',
-            10: 'Oct',
-            11: 'Nov',
-            12: 'Dec',
+        const gameTime = this.currentGameTime;
+        const hoursPerWeek = hoursPerDay * daysPerWeek;
+        return {
+            text: `Week ${Math.floor(gameTime.day / daysPerWeek) + 1}, ${months[gameTime.month]} ${gameTime.year}`,
+//            hours: gameTime.hours + gameTime.day * hoursPerDay,
+//            hoursThisWeek: (gameTime.hours + gameTime.day * hoursPerDay) % hoursPerWeek,
+            tillNextWeek: Math.round(100 * 100 * ((gameTime.hours + gameTime.day * hoursPerDay) % hoursPerWeek) / hoursPerWeek) / 100,
         };
-        return `Week ${Math.floor((date.day - 1) / 7) + 1}, ${months[date.month]} ${date.year}`;
     }
 
     load (file) {

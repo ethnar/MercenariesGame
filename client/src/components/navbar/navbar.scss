@@ -5,6 +5,14 @@
     flex-grow: 1;
   }
 
+  .date {
+    display: flex;
+
+    .time-progress {
+      margin: 3px;
+    }
+  }
+
   .currency {
     margin: 0 10px;
     font-size: 150%;
