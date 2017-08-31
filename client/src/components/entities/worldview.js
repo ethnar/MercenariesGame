@@ -1,5 +1,4 @@
-define('components/worldview/worldview', [
-], () => Vue.component('worldview', {
+export default Vue.component('worldview', {
     props: [
         'data',
     ],
@@ -20,4 +19,4 @@ define('components/worldview/worldview', [
     </div>
 </div>
 `,
-}));
+});

@@ -1,35 +1,33 @@
-define('services/missions', ['services/server'], function (ServerService) {
+import {ServerService} from '../services/server.js'
 
-    return {
-        getRegionMissionsStream (regionId) {
-            return ServerService.getListStream('Mission', { 'assignee': [null, ServerService.getPlayerId()], 'region': regionId });
-        },
+export const MissionsService = {
+    getRegionMissionsStream (regionId) {
+        return ServerService.getListStream('Mission', { 'assignee': [null, ServerService.getPlayerId()], 'region': regionId });
+    },
 
-        getMissionStream (missionId) {
-            return ServerService.getStream('Mission', missionId);
-        },
+    getMissionStream (missionId) {
+        return ServerService.getStream('Mission', missionId);
+    },
 
-        getCurrentMissionsStream () {
-            return ServerService.getListStream('Mission', { 'assignee': ServerService.getPlayerId(), finished: false });
-        },
+    getCurrentMissionsStream () {
+        return ServerService.getListStream('Mission', { 'assignee': ServerService.getPlayerId(), finished: false });
+    },
 
-        getFinishedMissionsStream () {
-            return ServerService.getListStream('Mission', { 'assignee': ServerService.getPlayerId(), finished: true });
-        },
+    getFinishedMissionsStream () {
+        return ServerService.getListStream('Mission', { 'assignee': ServerService.getPlayerId(), finished: true });
+    },
 
-        reserveMission(missionId) {
-            return ServerService.request('reserve-mission', {
-                mission: missionId,
-            });
-        },
+    reserveMission(missionId) {
+        return ServerService.request('reserve-mission', {
+            mission: missionId,
+        });
+    },
 
-        startMission (missionId, siteId, staffIds) {
-            return ServerService.request('start-mission', {
-                mission: missionId,
-                site: siteId,
-                staffList: staffIds
-            });
-        }
-    };
-
-});
+    startMission (missionId, siteId, staffIds) {
+        return ServerService.request('start-mission', {
+            mission: missionId,
+            site: siteId,
+            staffList: staffIds
+        });
+    }
+};

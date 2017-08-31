@@ -1,5 +1,4 @@
-define('components/staff/staff', [
-], () => Vue.component('staff', {
+export default Vue.component('staff', {
     props: [
         'person'
     ],
@@ -19,4 +18,4 @@ define('components/staff/staff', [
 </div>
     `,
 
-}));
+});

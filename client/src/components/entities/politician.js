@@ -1,6 +1,6 @@
-define('components/politician/politician', [
-    'services/politicians',
-], (PoliticianService) => Vue.component('politician', {
+import {PoliticiansService} from '../../services/politicians.js'
+
+export default Vue.component('politician', {
     props: [
         'politicianId',
     ],
@@ -9,7 +9,7 @@ define('components/politician/politician', [
         return {
             politician: this
                 .stream('politicianId')
-                .flatMapLatest(politicianId => PoliticianService.getPoliticianStream(politicianId)),
+                .flatMapLatest(politicianId => PoliticiansService.getPoliticianStream(politicianId)),
         }
     },
 
@@ -18,4 +18,4 @@ define('components/politician/politician', [
     {{politician.name}}
 </span>
 `,
-}));
+});

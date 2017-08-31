@@ -1,4 +1,4 @@
-define('components/common/radial-progress', [], () => Vue.component('radial-progress', {
+export default Vue.component('radial-progress', {
     props: [
         'percentage',
         'size',
@@ -15,7 +15,7 @@ define('components/common/radial-progress', [], () => Vue.component('radial-prog
     },
 
     template: `
-<div class="radial-progress" :style="{width: size, height: size}">
+<div class="radial-progress" :style="{width: size + 'px', height: size + 'px'}">
     <div class="radial-progress-wrapper" :style="'transform: scale(' + (size / 100) + ')'">
         <div class="half first" :style="'transform: rotate(' + firstRotation + 'deg)'"></div>
         <div class="half second" :style="'transform: rotate(' + secondRotation + 'deg)'" v-if="percentage > 50"></div>
@@ -25,4 +25,4 @@ define('components/common/radial-progress', [], () => Vue.component('radial-prog
     </div>
 </div>
 `,
-}));
+})

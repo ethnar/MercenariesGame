@@ -83,7 +83,7 @@ class Region extends Entity {
             country: this.getCountry().getId(),
             population: this.getPopulation(),
             intelCost: misc.getIntelCost('region', familiarity),
-            //involvement: this.getInvolvement
+            familiarity: familiarity,
         }
     }
 

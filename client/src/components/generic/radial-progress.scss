@@ -2,12 +2,13 @@
   position: relative;
 
   .radial-progress-wrapper {
-    $main-color: black;
+    $full-main-color: black;
+    $empty-color: #ddd;
     $bg-color: white;
     $size: 100px;
-    $width: 6px;
+    $width: 15px;
 
-    background: $bg-color;
+    background: $empty-color;
     position: absolute;
     top: 0;
     left: 0;
@@ -23,16 +24,16 @@
       height: 100%;
 
       &.first {
-        border-top: $size / 2 solid $main-color;
+        border-top: $size / 2 solid $full-main-color;
         z-index: 1;
       }
       &.second-overlay {
-        border-top: $size / 2 solid $bg-color;
+        border-top: $size / 2 solid $empty-color;
         z-index: 2;
         transform: rotate(-90deg);
       }
       &.second {
-        border-top: $size / 2 solid $main-color;
+        border-top: $size / 2 solid $full-main-color;
         z-index: 3;
       }
     }

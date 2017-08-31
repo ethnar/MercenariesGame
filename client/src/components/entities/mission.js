@@ -1,9 +1,9 @@
-define('components/mission/mission', [
-    'services/missions',
-    'components/region',
-    'components/site/site',
-    'components/politician/politician',
-], (MissionsService) => Vue.component('mission', {
+import {MissionsService} from '../../services/missions.js'
+import './region.js'
+import './site.js'
+import './politician.js'
+
+export default Vue.component('mission', {
     props: [
         'missionId'
     ],
@@ -28,4 +28,4 @@ define('components/mission/mission', [
     Contact: <politician :politician-id="mission.owner"></politician>
 </div>
 `,
-}));
+});

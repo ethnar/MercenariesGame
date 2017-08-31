@@ -1,7 +1,7 @@
-define('services/politicians', ['services/server'], function (ServerService) {
-    return {
-        getPoliticianStream (politicianId) {
-            return ServerService.getStream('Politician', politicianId);
-        },
-    };
-});
+import {ServerService} from '../services/server.js'
+
+export const PoliticiansService = {
+    getPoliticianStream (politicianId) {
+        return ServerService.getStream('Politician', politicianId);
+    },
+};

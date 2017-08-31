@@ -1,15 +1,15 @@
-define('views/site', [
-    'services/sites',
-    'services/staff',
-    'services/recruits',
-    'services/player',
-    'services/equipment',
-    'components/navbar/navbar',
-    'components/region',
-    'components/common/tabs',
-    'components/staff/staff',
-    'components/organisation/organisation',
-], (SitesService, StaffService, RecruitsService, PlayerService, EquipmentService) => ({
+import {SitesService} from '../services/sites.js'
+import {StaffService} from '../services/staff.js'
+import {RecruitsService} from '../services/recruits.js'
+import {PlayerService} from '../services/player.js'
+import {EquipmentService} from '../services/equipment.js'
+import '../components/common/navbar.js'
+import '../components/generic/tabs.js'
+import '../components/entities/organisation.js'
+import '../components/entities/staff.js'
+import '../components/entities/region.js'
+
+export const SiteView = {
     data: () => ({
         mode: 'list'
     }),
@@ -157,4 +157,4 @@ define('views/site', [
     </div>
 </div>
 `,
-}));
+};

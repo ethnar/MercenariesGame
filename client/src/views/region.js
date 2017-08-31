@@ -1,14 +1,13 @@
-define('views/region', [
-    'services/regions',
-    'services/sites',
-    'services/missions',
-    'components/navbar/navbar',
-    'components/region',
-    'components/common/tabs',
-    'components/site/site',
-    'components/info/info',
-    'components/mission/mission',
-], (RegionsService, SitesService, MissionsService) => ({
+import {RegionsService} from '../services/regions.js'
+import {SitesService} from '../services/sites.js'
+import {MissionsService} from '../services/missions.js'
+import '../components/common/navbar.js'
+import '../components/generic/tabs.js'
+import '../components/entities/region.js'
+import '../components/entities/site.js'
+import '../components/entities/mission.js'
+
+export const RegionView = {
     data: () => ({
     }),
 
@@ -81,4 +80,4 @@ define('views/region', [
     </div>
 </div>
 `,
-}));
+};

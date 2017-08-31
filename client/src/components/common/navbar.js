@@ -1,8 +1,8 @@
-define('components/navbar/navbar', [
-    'services/player',
-    'services/date',
-    'components/common/radial-progress',
-], (PlayerService, DateService) => Vue.component('navbar', {
+import {PlayerService} from '../../services/player.js'
+import {DateService} from '../../services/date.js'
+import '../generic/radial-progress.js'
+
+export default Vue.component('navbar', {
     subscriptions: () => ({
         funds: PlayerService.getFundsStream(),
         intel: PlayerService.getIntelStream(),
@@ -52,4 +52,4 @@ define('components/navbar/navbar', [
     </div>
 </div>
 `,
-}));
+});

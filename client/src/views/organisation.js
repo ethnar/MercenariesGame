@@ -1,8 +1,8 @@
-define('views/organisation', [
-    'services/organisations',
-    'components/navbar/navbar',
-    'components/worldview/worldview',
-], (OrganisationsService) => ({
+import {OrganisationsService} from '../services/organisations.js'
+import '../components/common/navbar.js'
+import '../components/entities/worldview.js'
+
+export const OrganisationView = {
     computed: {
         organisationId () {
             return +this.$route.params.organisationId;
@@ -30,5 +30,4 @@ define('views/organisation', [
     </div>
 </div>
 `,
-
-}));
+};

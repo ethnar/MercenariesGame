@@ -1,12 +1,11 @@
-define('services/organisations', ['services/server'], function (ServerService) {
-    return {
-        getOrganisationsStream () {
-            return ServerService.getListStream('Organisation');
-        },
+import {ServerService} from '../services/server.js'
 
-        getOrganisationStream (organisationId) {
-            return ServerService.getStream('Organisation', organisationId);
-        },
-    };
+export const OrganisationsService = {
+    getOrganisationsStream () {
+        return ServerService.getListStream('Organisation');
+    },
 
-});
+    getOrganisationStream (organisationId) {
+        return ServerService.getStream('Organisation', organisationId);
+    },
+};

@@ -1,20 +1,19 @@
-define('services/regions', ['services/server'], function (ServerService) {
-    return {
-        getRegionsStream () {
-            return ServerService.getListStream('Region');
-        },
+import {ServerService} from '../services/server.js'
 
-        getRegionStream (regionId) {
-            return this
-                .getRegionsStream()
-                .map(regions => regions.find(region => region.id === regionId))
-        },
+export const RegionsService = {
+    getRegionsStream () {
+        return ServerService.getListStream('Region');
+    },
 
-        investigate(region) {
-            return ServerService.request('investigate-region', {
-                region: region.id
-            });
-        }
-    };
+    getRegionStream (regionId) {
+        return this
+            .getRegionsStream()
+            .map(regions => regions.find(region => region.id === regionId))
+    },
 
-});
+    investigate(region) {
+        return ServerService.request('investigate-region', {
+            region: region.id
+        });
+    }
+};

@@ -1,12 +1,12 @@
-define('views/map', [
-    'services/regions',
-    'components/navbar/navbar',
-], (RegionService) => ({
+import {RegionsService} from '../services/regions.js'
+import '../components/common/navbar.js'
+
+export const MapView = {
     data: () => ({
     }),
 
     subscriptions: () => ({
-        regions: RegionService.getRegionsStream()
+        regions: RegionsService.getRegionsStream()
     }),
 
     created () {
@@ -20,4 +20,4 @@ define('views/map', [
     </div>
 </div>
 `,
-}));
+};

@@ -1,9 +1,9 @@
-define('views/sites', [
-    'services/sites',
-    'components/region',
-    'components/site/site',
-    'components/navbar/navbar',
-], (SitesService) => ({
+import {SitesService} from '../services/sites.js'
+import '../components/common/navbar.js'
+import '../components/entities/site.js'
+import '../components/entities/region.js'
+
+export const SitesView = {
     data: () => ({
     }),
 
@@ -26,4 +26,4 @@ define('views/sites', [
     </div>
 </div>
 `,
-}));
+};

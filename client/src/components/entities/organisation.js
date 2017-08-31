@@ -1,6 +1,6 @@
-define('components/organisation/organisation', [
-    'services/organisations'
-], (OrganisationsService) => Vue.component('organisation', {
+import {OrganisationsService} from '../../services/organisations.js'
+
+export default Vue.component('organisation', {
     props: [
         'organisationId',
     ],
@@ -21,4 +21,4 @@ define('components/organisation/organisation', [
     {{organisation.name}}
 </a>
 `,
-}));
+});

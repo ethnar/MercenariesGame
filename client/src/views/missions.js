@@ -1,7 +1,7 @@
-define('views/missions', [
-    'services/missions',
-    'components/navbar/navbar',
-], (MissionsService) => ({
+import {MissionsService} from '../services/missions.js'
+import '../components/common/navbar.js'
+
+export const MissionsView = {
     data: () => ({
     }),
 
@@ -30,4 +30,4 @@ define('views/missions', [
     </div>
 </div>
 `,
-}));
+};

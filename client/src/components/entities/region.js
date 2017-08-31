@@ -1,6 +1,6 @@
-define('components/region', [
-    'services/regions'
-], (RegionsService) => Vue.component('region', {
+import {RegionsService} from '../../services/regions.js'
+
+export default Vue.component('region', {
     props: [
         'regionId'
     ],
@@ -22,4 +22,4 @@ define('components/region', [
     {{name}}
 </a>
 `,
-}));
+});

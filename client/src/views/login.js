@@ -1,6 +1,6 @@
-define('views/login', [
-    'services/server'
-], (ServerService) => ({
+import {ServerService} from '../services/server.js'
+
+export const LoginView = {
     data: () => ({
         user: '',
         password: '',
@@ -44,4 +44,4 @@ define('views/login', [
     <div>{{error}}</div>
 </div>
 `,
-}));
+};

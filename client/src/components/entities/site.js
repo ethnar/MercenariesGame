@@ -1,7 +1,7 @@
-define('components/site/site', [
-    'services/sites',
-    'components/region',
-], (SitesService) => Vue.component('site', {
+import {SitesService} from '../../services/sites.js'
+import './region.js'
+
+export default Vue.component('site', {
     props: [
         'siteId'
     ],
@@ -28,4 +28,4 @@ define('components/site/site', [
     <region :region-id="site.region"></region>
 </div>
 `,
-}));
+});

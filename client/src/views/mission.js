@@ -1,11 +1,11 @@
-define('views/mission/mission', [
-    'services/missions',
-    'services/sites',
-    'services/staff',
-    'components/navbar/navbar',
-    'components/site/site',
-    'components/staff/staff',
-], (MissionsService, SitesService, StaffService) => ({
+import {MissionsService} from '../services/missions.js'
+import {SitesService} from '../services/sites.js'
+import {StaffService} from '../services/staff.js'
+import '../components/common/navbar.js'
+import '../components/entities/site.js'
+import '../components/entities/staff.js'
+
+export const MissionView = {
     computed: {
         missionId () {
             return +this.$route.params.missionId;
@@ -80,4 +80,4 @@ define('views/mission/mission', [
     </div>
 </div>
 `,
-}));
+};
