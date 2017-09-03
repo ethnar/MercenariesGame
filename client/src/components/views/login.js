@@ -1,4 +1,4 @@
-import {ServerService} from '../services/server.js'
+import {ServerService} from '../../services/server.js'
 
 export const LoginView = {
     data: () => ({

@@ -1,4 +1,5 @@
 import {SitesService} from '../../services/sites.js'
+import './player.js'
 import './region.js'
 
 export default Vue.component('site-holder', {
@@ -9,8 +10,7 @@ export default Vue.component('site-holder', {
     subscriptions () {
         return {
             site: this.stream('siteId')
-                .flatMapLatest(siteId => SitesService.getSiteStream(siteId))
-                .do(x => console.log(x)),
+                .switchMap(siteId => SitesService.getSiteStream(siteId)),
         }
     },
 

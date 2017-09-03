@@ -1,5 +1,5 @@
-import {MissionsService} from '../services/missions.js'
-import '../components/common/navbar.js'
+import {MissionsService} from '../../services/missions.js'
+import '../common/navbar.js'
 
 export const MissionsView = {
     data: () => ({

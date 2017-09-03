@@ -11,7 +11,7 @@ export default Vue.component('mission', {
     subscriptions () {
         return {
             mission: this.stream('missionId')
-                .flatMapLatest(missionId => MissionsService.getMissionStream(missionId)),
+                .switchMap(missionId => MissionsService.getMissionStream(missionId)),
         }
     },
 

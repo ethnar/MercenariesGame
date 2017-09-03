@@ -10,7 +10,7 @@ export default Vue.component('site', {
     subscriptions () {
         return {
             site: this.stream('siteId')
-                .flatMapLatest(siteId => SitesService.getSiteStream(siteId)),
+                .switchMap(siteId => SitesService.getSiteStream(siteId)),
         }
     },
 

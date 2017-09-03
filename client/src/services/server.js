@@ -80,17 +80,17 @@ export const ServerService = {
                 key: key,
             }).then(items => {
                 streams[key].data = items;
-                streams[key].stream.onNext(items);
+                streams[key].stream.next(items);
             });
             ServerService.onUpdate(`update-${key}`, item => {
                 const items = streams[key].data;
                 const existing = items.findIndex(i => i.id === item.id);
                 if (~existing) {
-                    items[existing] = Object.assign(items[existing], item); // TODO: why do I have to do that?
+                    items[existing] = item;
                 } else {
                     items.push(item);
                 }
-                streams[key].stream.onNext(items)
+                streams[key].stream.next(items)
             });
             ServerService.onUpdate(`remove-${key}`, itemId => {
                 const items = streams[key].data;
@@ -98,7 +98,7 @@ export const ServerService = {
                 if (~existing) {
                     items.splice(existing, 1);
                 }
-                streams[key].stream.onNext(items)
+                streams[key].stream.next(items)
             });
         }
         return streams[key].stream;

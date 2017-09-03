@@ -9,7 +9,7 @@ export default Vue.component('politician', {
         return {
             politician: this
                 .stream('politicianId')
-                .flatMapLatest(politicianId => PoliticiansService.getPoliticianStream(politicianId)),
+                .switchMap(politicianId => PoliticiansService.getPoliticianStream(politicianId)),
         }
     },
 

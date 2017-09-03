@@ -9,7 +9,7 @@ export default Vue.component('organisation', {
         return {
             organisation: this
                 .stream('organisationId')
-                .flatMapLatest(organisationId => OrganisationsService.getOrganisationStream(organisationId))
+                .switchMap(organisationId => OrganisationsService.getOrganisationStream(organisationId))
         }
     },
 

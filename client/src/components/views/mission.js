@@ -1,9 +1,9 @@
-import {MissionsService} from '../services/missions.js'
-import {SitesService} from '../services/sites.js'
-import {StaffService} from '../services/staff.js'
-import '../components/common/navbar.js'
-import '../components/entities/site.js'
-import '../components/entities/staff.js'
+import {MissionsService} from '../../services/missions.js'
+import {SitesService} from '../../services/sites.js'
+import {StaffService} from '../../services/staff.js'
+import '../common/navbar.js'
+import '../entities/site.js'
+import '../entities/staff.js'
 
 export const MissionView = {
     computed: {
@@ -25,10 +25,10 @@ export const MissionView = {
     subscriptions: function () {
         return {
             sites: SitesService.getOwnSitesStream(),
-            staff: this.stream('selectedSite').flatMapLatest(site => StaffService.getStaffStream().map(staff => {
+            staff: this.stream('selectedSite').switchMap(site => StaffService.getStaffStream().map(staff => {
                 return staff.filter(person => site && person.site === site.id);
             })),
-            mission: this.stream('missionId').flatMapLatest(missionId => MissionsService.getMissionStream(missionId))
+            mission: this.stream('missionId').switchMap(missionId => MissionsService.getMissionStream(missionId))
         };
     },
 

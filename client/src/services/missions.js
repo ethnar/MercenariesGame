@@ -2,7 +2,7 @@ import {ServerService} from '../services/server.js'
 
 export const MissionsService = {
     getRegionMissionsStream (regionId) {
-        return ServerService.getListStream('Mission', { 'assignee': [null, ServerService.getPlayerId()], 'region': regionId });
+        return ServerService.getListStream('Mission', { 'assignee': [null, ServerService.getPlayerId()], 'region': regionId, finished: false, inProgress: false });
     },
 
     getMissionStream (missionId) {

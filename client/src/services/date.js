@@ -7,10 +7,10 @@ export const DateService = {
         if (!dateStream) {
             dateStream = new Rx.ReplaySubject(1);
             ServerService.onUpdate('date', (data) => {
-                dateStream.onNext(data);
+                dateStream.next(data);
             });
             ServerService.request('date').then((data) => {
-                dateStream.onNext(data);
+                dateStream.next(data);
             });
         }
         return dateStream;

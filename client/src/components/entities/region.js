@@ -9,7 +9,7 @@ export default Vue.component('region', {
         return {
             name: this
                 .stream('regionId')
-                .flatMapLatest(regionId => RegionsService.getRegionStream(regionId))
+                .switchMap(regionId => RegionsService.getRegionStream(regionId))
                 .map(region => region && region.name)
         }
     },

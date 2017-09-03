@@ -1,5 +1,5 @@
-import {RegionsService} from '../services/regions.js'
-import '../components/common/navbar.js'
+import {RegionsService} from '../../services/regions.js'
+import '../common/navbar.js'
 
 export const MapView = {
     data: () => ({

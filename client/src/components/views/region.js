@@ -1,11 +1,11 @@
-import {RegionsService} from '../services/regions.js'
-import {SitesService} from '../services/sites.js'
-import {MissionsService} from '../services/missions.js'
-import '../components/common/navbar.js'
-import '../components/generic/tabs.js'
-import '../components/entities/region.js'
-import '../components/entities/site.js'
-import '../components/entities/mission.js'
+import {RegionsService} from '../../services/regions.js'
+import {SitesService} from '../../services/sites.js'
+import {MissionsService} from '../../services/missions.js'
+import '../common/navbar.js'
+import '../generic/tabs.js'
+import '../entities/region.js'
+import '../entities/site.js'
+import '../entities/mission.js'
 
 export const RegionView = {
     data: () => ({
@@ -21,19 +21,19 @@ export const RegionView = {
         return {
             region:
                 this.stream('regionId')
-                    .flatMapLatest(regionId =>
+                    .switchMap(regionId =>
                         RegionsService.getRegionStream(regionId)
                     ),
             sites:
                 this.stream('regionId')
-                    .flatMapLatest(regionId =>
+                    .switchMap(regionId =>
                         SitesService
                             .getSitesStream()
                             .map(sites => sites.filter(site => site.region === regionId))
                     ),
             missions:
                 this.stream('regionId')
-                    .flatMapLatest(regionId =>
+                    .switchMap(regionId =>
                         MissionsService.getRegionMissionsStream(regionId)
                     ),
         }

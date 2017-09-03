@@ -20,10 +20,14 @@ export const PlayerService = {
         }));
     },
 
+    getPlayerStream (playerId) {
+        return ServerService.getStream('Player', playerId);
+    },
+
     getCurrentPlayerStream () {
         const playerId = ServerService.getPlayerId();
         if (playerId) {
-            return ServerService.getStream('Player', playerId);
+            return this.getPlayerStream(playerId);
         }
         window.location = '?token=' + Math.random() + '#/login';
     }

@@ -1,6 +1,6 @@
-import {OrganisationsService} from '../services/organisations.js'
-import '../components/common/navbar.js'
-import '../components/entities/worldview.js'
+import {OrganisationsService} from '../../services/organisations.js'
+import '../common/navbar.js'
+import '../entities/worldview.js'
 
 export const OrganisationView = {
     computed: {
@@ -13,7 +13,7 @@ export const OrganisationView = {
         return {
             organisation: this
                 .stream('organisationId')
-                .flatMapLatest(organisationId => OrganisationsService.getOrganisationStream(organisationId)),
+                .switchMap(organisationId => OrganisationsService.getOrganisationStream(organisationId)),
         };
     },
 

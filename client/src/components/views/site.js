@@ -1,14 +1,14 @@
-import {SitesService} from '../services/sites.js'
-import {StaffService} from '../services/staff.js'
-import {RecruitsService} from '../services/recruits.js'
-import {PlayerService} from '../services/player.js'
-import {EquipmentService} from '../services/equipment.js'
-import '../components/common/navbar.js'
-import '../components/generic/tabs.js'
-import '../components/entities/organisation.js'
-import '../components/entities/staff.js'
-import '../components/entities/region.js'
-import '../components/entities/site-holder.js'
+import {SitesService} from '../../services/sites.js'
+import {StaffService} from '../../services/staff.js'
+import {RecruitsService} from '../../services/recruits.js'
+import {PlayerService} from '../../services/player.js'
+import {EquipmentService} from '../../services/equipment.js'
+import '../common/navbar.js'
+import '../generic/tabs.js'
+import '../entities/organisation.js'
+import '../entities/staff.js'
+import '../entities/region.js'
+import '../entities/site-holder.js'
 
 export const SiteView = {
     data: () => ({
@@ -27,31 +27,31 @@ export const SiteView = {
 
     subscriptions () {
         return {
-            staff: this.stream('siteId').flatMapLatest(siteId => {
+            staff: this.stream('siteId').switchMap(siteId => {
                 return StaffService.getStaffStream().map(staff => {
                     return staff.filter(person => person.site === siteId);
                 });
             }),
-            site: this.stream('siteId').flatMapLatest(siteId => {
+            site: this.stream('siteId').switchMap(siteId => {
                 return SitesService
                     .getSiteStream(siteId);
             }),
-            equipment: this.stream('siteId').flatMapLatest(siteId => {
+            equipment: this.stream('siteId').switchMap(siteId => {
                 return EquipmentService.getEquipmentStream(siteId);
             }),
-            availableEquipment: this.stream('siteId').flatMapLatest(siteId => {
+            availableEquipment: this.stream('siteId').switchMap(siteId => {
                 return SitesService
                     .getSiteStream(siteId)
                     .map(site => site.region)
                     .distinctUntilChanged()
-                    .flatMapLatest(region => {
+                    .switchMap(region => {
                         return EquipmentService.getAvailableEquipmentStream(region);
                     });
             }),
-            recruits: this.stream('siteId').flatMapLatest(siteId => {
+            recruits: this.stream('siteId').switchMap(siteId => {
                 return SitesService
                     .getSiteStream(siteId)
-                    .flatMapLatest(site => {
+                    .switchMap(site => {
                         return RecruitsService.getRecruitsStream(site.region);
                     });
             }),

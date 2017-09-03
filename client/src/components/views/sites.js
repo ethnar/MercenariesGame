@@ -1,7 +1,7 @@
-import {SitesService} from '../services/sites.js'
-import '../components/common/navbar.js'
-import '../components/entities/site.js'
-import '../components/entities/region.js'
+import {SitesService} from '../../services/sites.js'
+import '../common/navbar.js'
+import '../entities/site.js'
+import '../entities/region.js'
 
 export const SitesView = {
     data: () => ({

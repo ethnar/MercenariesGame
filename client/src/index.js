@@ -1,11 +1,11 @@
-import {LoginView} from './views/login.js'
-import {MapView} from './views/map.js'
-import {MissionsView} from './views/missions.js'
-import {MissionView} from './views/mission.js'
-import {SitesView} from './views/sites.js'
-import {SiteView} from './views/site.js'
-import {RegionView} from './views/region.js'
-import {OrganisationView} from './views/organisation.js'
+import {LoginView} from './components/views/login.js'
+import {MapView} from './components/views/map.js'
+import {MissionsView} from './components/views/missions.js'
+import {MissionView} from './components/views/mission.js'
+import {SitesView} from './components/views/sites.js'
+import {SiteView} from './components/views/site.js'
+import {RegionView} from './components/views/region.js'
+import {OrganisationView} from './components/views/organisation.js'
 
 Vue.use(VueRx, Rx);
 
