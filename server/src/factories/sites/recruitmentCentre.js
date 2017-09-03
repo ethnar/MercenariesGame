@@ -6,5 +6,6 @@ module.exports = (args) => {
         name: 'Recruitment Centre',
         size: misc.random(4, 6),
         visibility: misc.random(50, 95),
+        wareTypes: [Site.OFFERS.PERSONNEL],
     }, args));
 };

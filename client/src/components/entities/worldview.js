@@ -1,3 +1,5 @@
+const TYPES = STATICS.WORLDVIEW.TYPES;
+
 export default Vue.component('worldview', {
     props: [
         'data',
@@ -5,10 +7,10 @@ export default Vue.component('worldview', {
 
     data: () => ({
         labels: {
-            SLAVERY: 'Slavery',
-            ENVIRONMENTALISM: 'Environmentalism',
-            DRUG_USE: 'Drug use',
-            CHILD_ABUSE: 'Child abuse'
+            [TYPES.SLAVERY]: 'Slavery',
+            [TYPES.ENVIRONMENTALISM]: 'Environmentalism',
+            [TYPES.DRUG_USE]: 'Drug use',
+            [TYPES.CHILD_PROTECTION]: 'Child protection',
         },
     }),
 

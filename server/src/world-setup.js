@@ -10,8 +10,11 @@ let Mission = require('./classes/mission');
 let Equipment = require('./classes/equipment/equipment');
 let Worldview = require('./classes/worldview');
 let Organisation = require('./classes/organisation');
-let SiteFactory = require('./factories/sites');
+let SiteFactory = require('./factories/sites/.index');
 let misc = require('./singletons/misc');
+
+global.STATICS = {};
+require('./statics');
 
 let canada = new Country('Canada');
 canada.setNameGenerator('canada');
@@ -26,17 +29,17 @@ uk.setNameGenerator('canada');
 
 let organisations = {};
 
-Object.keys(Worldview.TYPE).forEach(dimension => {
+Object.keys(STATICS.WORLDVIEW.TYPES).forEach(dimension => {
     organisations['+' + dimension] = new Organisation({
         name: 'Defenders of ' + dimension,
         worldview: {
-            [dimension]: 1
+            [STATICS.WORLDVIEW.TYPES[dimension]]: 1
         }
     });
     organisations['-' + dimension] = new Organisation({
         name: 'Oppressors of ' + dimension,
         worldview: {
-            [dimension]: -1
+            [STATICS.WORLDVIEW.TYPES[dimension]]: -1
         }
     });
 });

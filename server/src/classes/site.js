@@ -1,4 +1,5 @@
 const Entity = require('./entity');
+const Item = require('./item');
 const service = require('../singletons/service');
 const misc = require('../singletons/misc');
 const world = require('../singletons/world');
@@ -23,6 +24,7 @@ class Site extends Entity {
         this.staff = [];
         this.equipment = [];
         this.relatedMission = null;
+        this.wares = [];
 
         this.maintenance = this.size * 50;
     }
@@ -52,7 +54,26 @@ class Site extends Entity {
         return this.organisation;
     }
 
-    cycle () {
+    cycle (cycle) {
+        if (cycle.weekly) {
+            this.cycleProducts();
+        }
+    }
+
+    cycleProducts () {
+        if (this.wareTypes) {
+            this.wareTypes.forEach((wareType) => {
+                switch (wareType) {
+                    case Site.OFFERS.WEAPONS:
+                        while (this.wares.length < 20) {
+                            this.wares.push(new Item({
+                                slot: STATICS.ITEMS.SLOTS.WEAPON,
+                            }))
+                        }
+                        break;
+                }
+            });
+        }
     }
 
     useSpace (space) {
@@ -175,6 +196,12 @@ class Site extends Entity {
         return info;
     }
 }
+
+Site.OFFERS = {
+    GENERAL: 1,
+    PERSONNEL: 2,
+    WEAPONS: 3,
+};
 
 service.registerHandler('purchase', (params, player) => {
     const site = Site.getById(params.site);

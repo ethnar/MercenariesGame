@@ -97,7 +97,6 @@ export const SiteView = {
 <div>
     <navbar></navbar>
     <header>Site:</header>
-    {{site}}
     <div v-if="site">
         <div class="name">{{site.name}}</div>
         <site-holder :siteId="site.id"></site-holder>
@@ -110,7 +109,7 @@ export const SiteView = {
             <button @click="useIntel();">Use intel ({{site.intelCost}})</button>            
         </div>
         <tabs>
-            <tab header="Staff" v-if="staff !== null">
+            <tab header="Staff" v-if="site.staff">
                 <div v-if="mode !== 'recruit'">
                     <button v-if="ownSite" @click="mode = 'recruit'">Recruit</button>
                     <div v-for="person in staff">
@@ -125,7 +124,7 @@ export const SiteView = {
                     </div>
                 </div>
             </tab>
-            <tab header="Equipment" v-if="equipment">
+            <tab header="Equipment" v-if="site.equipment">
                 <div v-if="mode !== 'buy-eq'">
                     <button v-if="ownSite" @click="mode = 'buy-eq'">Purchase new equipment</button>
                     <div v-for="eq in equipment">
