@@ -1,4 +1,5 @@
 import {SitesService} from '../../services/sites.js'
+import './site-holder.js'
 import './region.js'
 
 export default Vue.component('site', {
@@ -25,6 +26,7 @@ export default Vue.component('site', {
         View
     </a>
     <div class="name">{{site.name}}</div>
+    <site-holder :siteId="site.id"></site-holder>
     <region :region-id="site.region"></region>
 </div>
 `,

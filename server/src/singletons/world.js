@@ -83,6 +83,7 @@ class World {
     loop () {
         setTimeout(this.loop.bind(this), Math.floor(this.timeout / this.gameSpeed));
         this.cycle();
+        this.save('./rolling-save.json');
     }
 
     cycle () {
@@ -123,7 +124,6 @@ class World {
             }
             service.sendUpdateToAll('date', this.getCurrentDate());
         }
-        this.save('./rolling-save.json');
     }
 
     cycleEntities (type, cycles) {

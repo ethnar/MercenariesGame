@@ -1,8 +1,8 @@
 const Entity = require('./entity');
 const Worldview = require('./worldview');
 const Staff = require('./staff');
-const Fact = require('./fact');
 const Site = require('./site');
+const Mission = require('./mission.js');
 const service = require('../singletons/service');
 const world = require('../singletons/world');
 const misc = require('../singletons/misc');
@@ -28,6 +28,7 @@ class Region extends Entity {
         this.worldview = new Worldview(this.country.getWorldview());
         this.recruits = [];
         this.equipment = [];
+        this.missions = [];
     }
 
     getLabel () {
@@ -105,6 +106,9 @@ class Region extends Entity {
         if (cycles.daily) {
             this.cycleRecruits();
             this.cycleSites();
+            if (misc.chances(100 - 10 * this.missions.length)) { // 10 missions cap per region
+                this.generateMission();
+            }
         }
         if (cycles.weekly) {
             this.cycleStores();
@@ -122,6 +126,43 @@ class Region extends Entity {
                 this.withdrawRecruit(recruit);
                 break;
         }
+    }
+
+    generateMission () {
+        const politician = misc.randomEntity(this.getCountry().getPoliticians());
+        if (politician) {
+            const eligibleSites = this
+                .getSites()
+                .filter(site => {
+                    const organisation = site.getOrganisation();
+                    return organisation && organisation.getWorldview().getAlignScore(politician.getWorldview()) !== 0;
+                })
+                .filter(site => !site.getRelatedMission());
+
+            if (eligibleSites.length) {
+                const site = misc.randomEntity(eligibleSites);
+
+                const organisation = site.getOrganisation();
+                const alignmentScore = organisation.getWorldview().getAlignScore(politician.getWorldview());
+
+                const description = (alignmentScore > 0) ? 'Provide protection for ' + site.getName() : 'Assault ' + site.getName();
+                const newMission = new Mission({
+                    owner: politician,
+                    description: description,
+                    site: site,
+                    deadline: Date.now() + Math.floor(Math.random() * 1000 * 60 * 60 * 24), //within 24h
+                });
+                this.missions.push(newMission);
+            }
+        }
+    }
+
+    withdrawMission (mission) {
+        const idx = this.missions.findIndex(m => m === mission);
+        if (idx === -1) {
+            throw new Error('Attempting to withdraw invalid mission.', mission, this)
+        }
+        this.missions.slice(idx, 1);
     }
 
     cycleSites () {

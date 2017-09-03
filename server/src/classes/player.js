@@ -136,7 +136,7 @@ class Player extends Entity {
             site
         };
         this.siteKnowledge[site.id] = knowledge;
-        if (knowledge.familiarity < 10) {
+        if (knowledge.familiarity < 3) {
             const intelNeeded = misc.getIntelCost('site', knowledge.familiarity);
             if (this.useIntel(intelNeeded)) {
                 knowledge.familiarity = knowledge.familiarity + 1;

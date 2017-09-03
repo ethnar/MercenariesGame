@@ -21,6 +21,10 @@ class Country extends Entity {
         this.worldview = Worldview.generateRandom();
     }
 
+    getPoliticians () {
+        return this.politicians;
+    }
+
     getLabel () {
         return this.name;
     }

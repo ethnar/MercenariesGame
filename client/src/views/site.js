@@ -8,6 +8,7 @@ import '../components/generic/tabs.js'
 import '../components/entities/organisation.js'
 import '../components/entities/staff.js'
 import '../components/entities/region.js'
+import '../components/entities/site-holder.js'
 
 export const SiteView = {
     data: () => ({
@@ -99,18 +100,7 @@ export const SiteView = {
     {{site}}
     <div v-if="site">
         <div class="name">{{site.name}}</div>
-        <div class="occupied" v-if="site.occupied !== undefined">
-            Owner:
-            <span v-if="site.organisation">
-                <organisation :organisation-id="site.organisation"></organisation>
-            </span>
-            <span v-if="site.owner">
-                <player :player-id="site.owner"></player>
-            </span>         
-            <span v-if="!site.owner && !site.organisation">
-                {{site.occupied ? 'Unknown' : 'None' }}
-            </span>
-        </div>
+        <site-holder :siteId="site.id"></site-holder>
         <region :regionId="site.region"></region>
         <div v-if="site.occupied === false && site.price">
             Price: {{site.price}}

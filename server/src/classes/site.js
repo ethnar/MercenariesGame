@@ -152,41 +152,23 @@ class Site extends Entity {
             intelCost: misc.getIntelCost('site', familiarity)
         };
         switch (true) {
-            case familiarity >= 10:
+            case familiarity >= 3:
                 info.equipment = this.getEquipment().map(item => item.getId());
-                // fall-through
-            case familiarity >= 9:
-                info.owner = this.getOwner() ? this.getOwner().getId() : null;
-                info.organisation = this.getOrganisation() ? this.getOrganisation().getId() : null;
-                // fall-through
-            case familiarity >= 8:
-                // fall-through
-            case familiarity >= 7:
-                info.equipment = this
-                    .getEquipment()
-                    .filter(item => item.defenses)
-                    .map(item => item.getId());
-                // fall-through
-            case familiarity >= 6:
-                // fall-through
-            case familiarity >= 5:
                 info.staff = this
                     .getStaff()
                     .map(staff => staff.getId());
                 // fall-through
-            case familiarity >= 4:
+            case familiarity >= 2:
+                info.owner = this.getOwner() ? this.getOwner().getId() : null;
+                info.organisation = this.getOrganisation() ? this.getOrganisation().getId() : null;
                 info.staffCount = this.getStaff().length;
                 // fall-through
-            case familiarity >= 3:
+            case familiarity >= 1:
                 if (this.purchasable) {
                     info.price = this.getPrice();
                 }
-                // fall-through
-            case familiarity >= 2:
-                info.occupied = this.isOccupied();
-                // fall-through
-            case familiarity >= 1:
                 info.size = this.size;
+                info.occupied = this.isOccupied();
                 // fall-through
 
         }

@@ -41,8 +41,6 @@ Object.keys(Worldview.TYPE).forEach(dimension => {
     });
 });
 
-let test = new Player('test', 'test');
-
 let regions = [];
 
 let toronto = new Region('Toronto', canada);
@@ -84,15 +82,6 @@ regions = [...regions, london, cardiff];
 let ukSenate = new Site({ name: 'Senate', region: london });
 ukSenate.setSize(50);
 
-
-let hq = new Site({ name: 'Office', region: toronto });
-hq.setOwner(test);
-
-test.addFunds(10000);
-
-hq.addStaff(new Staff({region: toronto}));
-hq.addStaff(new Staff({region: toronto}));
-
 regions.forEach(region => {
     const counts = {
         office: misc.random(10, 20),
@@ -119,6 +108,22 @@ world.save('./template-save.json');
 
 service.init();
 world.run();
+
+for (let i = 0; i < 100000; i++) {
+    world.cycle();
+}
+
+// set up test player
+let test = new Player('test', 'test');
+
+let hq = new Site({ name: 'Office', region: toronto });
+hq.setOwner(test);
+
+test.addFunds(10000);
+
+hq.addStaff(new Staff({region: toronto}));
+hq.addStaff(new Staff({region: toronto}));
+
 
 process.on('uncaughtException', function (exception) {
     console.log(exception.stack);

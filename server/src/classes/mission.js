@@ -77,7 +77,7 @@ class Mission extends Entity {
     }
 
     start (player, site, staffList) {
-        this.getOwner().withdrawMission(this);
+        this.getSite().getRegion().withdrawMission(this);
         this.assignee = player;
         this.reserved = false;
         player.startedMission(this);
