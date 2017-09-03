@@ -37,17 +37,20 @@ module.exports = {
     },
 
     getIntelCost(type, current) {
-        if (current === 10) {
-            return null;
-        }
         let base;
         let multiplier;
         switch (type) {
             case 'region':
+                if (current === 10) {
+                    return null;
+                }
                 base = 2;
                 multiplier = 10;
                 break;
             case 'site':
+                if (current === 3) {
+                    return null;
+                }
                 base = 1.5;
                 multiplier = 5;
                 break;

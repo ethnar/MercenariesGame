@@ -1,5 +1,4 @@
 const Entity = require('./entity');
-const Fact = require('./fact');
 const Politician = require('./politician');
 const Worldview = require('./worldview');
 const world = require('../singletons/world');
@@ -63,12 +62,10 @@ class Country extends Entity {
     generateEvents (cycles) {
         switch (true) {
             case !this.elections && !this.ruler:
-                new Fact(95, '%s is preparing elections', this);
                 this.elections = true;
                 break;
             case this.elections && this.politicians.length > 3 && misc.chances(10):
                 this.ruler = this.politicians.pop();
-                new Fact(98, '%s was elected leader of %s', this.ruler, this);
                 this.elections = false;
                 break;
             case this.ruler && !this.seatOfPower && misc.chances(80):
@@ -85,7 +82,6 @@ class Country extends Entity {
                 });
                 if (selected) {
                     this.seatOfPower = selected;
-                    new Fact(95, '%s has chosen %s as their seat of power.', this, selected);
                 }
                 break;
             case cycles.daily && misc.chances(20 - this.politicians.length * 3):
@@ -98,7 +94,6 @@ class Country extends Entity {
         const region = misc.randomEntity(this.regions);
         const newGuy = new Politician({region: region, country: this});
         this.politicians.push(newGuy);
-        new Fact(30, '%s joins the political scene of %s', newGuy, this);
     }
 }
 

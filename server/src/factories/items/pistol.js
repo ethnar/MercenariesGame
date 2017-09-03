@@ -3,12 +3,12 @@ const misc = require('../../singletons/misc');
 
 module.exports = (args) => {
     return new Item(Object.assign({
-        name: 'Knife',
-        price: 50,
+        name: 'Pistol',
+        price: 300,
         slot: STATICS.ITEMS.SLOTS.WEAPON,
         weapon: {
-            type: STATICS.ITEMS.WEAPON_TYPES.MELEE,
-            power: 3,
-        },
+            type: STATICS.ITEMS.WEAPON_TYPES.PISTOL,
+            power: 4,
+        }
     }, args));
 };

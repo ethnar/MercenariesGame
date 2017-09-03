@@ -6,6 +6,9 @@ STATICS = {
         },
         WEAPON_TYPES: {
             MELEE: 1,
+            PISTOL: 2,
+            RIFLE: 3,
+            SNIPER_RIFLE: 4,
         },
     },
     WORLDVIEW: {
@@ -16,4 +19,12 @@ STATICS = {
             CHILD_PROTECTION: 3
         }
     },
+    SITES: {
+        OFFERS: {
+            GENERAL: 1,
+            PERSONNEL: 2,
+            WEAPONS: 3,
+        },
+    }
 };
+

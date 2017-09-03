@@ -6,6 +6,6 @@ module.exports = (args) => {
         name: 'General Store',
         size: misc.random(4, 12),
         visibility: misc.random(70, 95),
-        wareTypes: [Site.OFFERS.GENERAL],
+        wareTypes: [STATICS.SITES.OFFERS.GENERAL],
     }, args));
 };

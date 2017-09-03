@@ -1,33 +1,33 @@
-const world = require('./singletons/world');
-let service = require('./singletons/service');
-let Player = require('./classes/player');
-let Country = require('./classes/country');
-let Region = require('./classes/region');
-let Staff = require('./classes/staff');
-let Fact = require('./classes/fact');
-let Site = require('./classes/site');
-let Mission = require('./classes/mission');
-let Equipment = require('./classes/equipment/equipment');
-let Worldview = require('./classes/worldview');
-let Organisation = require('./classes/organisation');
-let SiteFactory = require('./factories/sites/.index');
-let misc = require('./singletons/misc');
-
 global.STATICS = {};
 require('./statics');
 
-let canada = new Country('Canada');
+const world = require('./singletons/world');
+const service = require('./singletons/service');
+const Player = require('./classes/player');
+const Country = require('./classes/country');
+const Region = require('./classes/region');
+const Staff = require('./classes/staff');
+const Site = require('./classes/site');
+//const Mission = require('./classes/mission');
+//const Equipment = require('./classes/equipment/equipment');
+//const Worldview = require('./classes/worldview');
+const Organisation = require('./classes/organisation');
+const SiteFactory = require('./factories/sites/.index');
+const misc = require('./singletons/misc');
+
+
+const canada = new Country('Canada');
 canada.setNameGenerator('canada');
-let india = new Country('India');
+const india = new Country('India');
 india.setNameGenerator('canada');
-let poland = new Country('Poland');
+const poland = new Country('Poland');
 poland.setNameGenerator('canada');
-let russia = new Country('Russia');
+const russia = new Country('Russia');
 russia.setNameGenerator('canada');
-let uk = new Country('United Kingdom');
+const uk = new Country('United Kingdom');
 uk.setNameGenerator('canada');
 
-let organisations = {};
+const organisations = {};
 
 Object.keys(STATICS.WORLDVIEW.TYPES).forEach(dimension => {
     organisations['+' + dimension] = new Organisation({
@@ -46,43 +46,43 @@ Object.keys(STATICS.WORLDVIEW.TYPES).forEach(dimension => {
 
 let regions = [];
 
-let toronto = new Region('Toronto', canada);
-let quebec = new Region('Quebec City', canada);
+const toronto = new Region('Toronto', canada);
+const quebec = new Region('Quebec City', canada);
 regions = [...regions, toronto, quebec];
 
-let canadianSenate = new Site({ name: 'Senate', region: quebec });
+const canadianSenate = new Site({ name: 'Senate', region: quebec });
 canadianSenate.setSize(50);
 
 
-let dheli = new Region('Dheli', india);
-let kolkata = new Region('Kolkata', india);
+const dheli = new Region('Dheli', india);
+const kolkata = new Region('Kolkata', india);
 regions = [...regions, dheli, kolkata];
 
-let indianSenate = new Site({ name: 'Senate', region: dheli });
+const indianSenate = new Site({ name: 'Senate', region: dheli });
 indianSenate.setSize(50);
 
 
-let warsaw = new Region('Warsaw', poland);
-let krakow = new Region('Krakow', poland);
+const warsaw = new Region('Warsaw', poland);
+const krakow = new Region('Krakow', poland);
 regions = [...regions, warsaw, krakow];
 
-let polishSenate = new Site({ name: 'Senate', region: warsaw });
+const polishSenate = new Site({ name: 'Senate', region: warsaw });
 polishSenate.setSize(50);
 
 
-let moscow = new Region('Moscow', russia);
-let stpetersburg = new Region('Saint Petersburg', russia);
+const moscow = new Region('Moscow', russia);
+const stpetersburg = new Region('Saint Petersburg', russia);
 regions = [...regions, stpetersburg, moscow];
 
-let russianSenate = new Site({ name: 'Senate', region: moscow });
+const russianSenate = new Site({ name: 'Senate', region: moscow });
 russianSenate.setSize(50);
 
 
-let london = new Region('London', uk);
-let cardiff = new Region('Cardiff', uk);
+const london = new Region('London', uk);
+const cardiff = new Region('Cardiff', uk);
 regions = [...regions, london, cardiff];
 
-let ukSenate = new Site({ name: 'Senate', region: london });
+const ukSenate = new Site({ name: 'Senate', region: london });
 ukSenate.setSize(50);
 
 regions.forEach(region => {
@@ -117,9 +117,9 @@ for (let i = 0; i < 100000; i++) {
 }
 
 // set up test player
-let test = new Player('test', 'test');
+const test = new Player('test', 'test');
 
-let hq = new Site({ name: 'Office', region: toronto });
+const hq = new Site({ name: 'Office', region: toronto });
 hq.setOwner(test);
 
 test.addFunds(10000);

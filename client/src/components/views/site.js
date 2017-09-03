@@ -12,7 +12,8 @@ import '../entities/site-holder.js'
 
 export const SiteView = {
     data: () => ({
-        mode: 'list'
+        mode: 'list',
+        TYPES: STATICS.SITES.OFFERS,
     }),
 
     computed: {
@@ -26,35 +27,27 @@ export const SiteView = {
     },
 
     subscriptions () {
+        const siteStream = this.stream('siteId').switchMap(siteId => SitesService.getSiteStream(siteId));
         return {
             staff: this.stream('siteId').switchMap(siteId => {
                 return StaffService.getStaffStream().map(staff => {
                     return staff.filter(person => person.site === siteId);
                 });
             }),
-            site: this.stream('siteId').switchMap(siteId => {
-                return SitesService
-                    .getSiteStream(siteId);
-            }),
+            site: siteStream,
             equipment: this.stream('siteId').switchMap(siteId => {
                 return EquipmentService.getEquipmentStream(siteId);
             }),
-            availableEquipment: this.stream('siteId').switchMap(siteId => {
-                return SitesService
-                    .getSiteStream(siteId)
-                    .map(site => site.region)
-                    .distinctUntilChanged()
-                    .switchMap(region => {
-                        return EquipmentService.getAvailableEquipmentStream(region);
-                    });
-            }),
-            recruits: this.stream('siteId').switchMap(siteId => {
-                return SitesService
-                    .getSiteStream(siteId)
-                    .switchMap(site => {
-                        return RecruitsService.getRecruitsStream(site.region);
-                    });
-            }),
+            availableEquipment: siteStream
+                .map(site => site.region)
+                .distinctUntilChanged()
+                .switchMap(region => {
+                    return EquipmentService.getAvailableEquipmentStream(region);
+                }),
+            recruits: siteStream
+                .switchMap(site => {
+                    return RecruitsService.getRecruitsStream(site.region);
+                }),
             player: PlayerService.getCurrentPlayerStream(),
         }
     },
@@ -109,6 +102,15 @@ export const SiteView = {
             <button @click="useIntel();">Use intel ({{site.intelCost}})</button>            
         </div>
         <tabs>
+            <tab header="Offers" v-if="site.wares">
+                <div v-for="(wares, type) in site.wares">
+                    <div v-for="ware in wares">
+                        <div v-if="type == TYPES.WEAPONS">Weapon: {{ware}}</div>
+                        <div v-if="type == TYPES.PERSONNEL">Staff: {{ware}}</div>
+                        <div v-if="type == TYPES.GENERAL">Equipment: {{ware}}</div>
+                    </div>
+                </div>
+            </tab>
             <tab header="Staff" v-if="site.staff">
                 <div v-if="mode !== 'recruit'">
                     <button v-if="ownSite" @click="mode = 'recruit'">Recruit</button>

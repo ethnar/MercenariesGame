@@ -25,9 +25,9 @@ class Player extends Entity {
         this.knownFacts = {};
         this.funds = 0;
         this.fundsDelta = 0;
-        this.intel = 50;
+        this.intel = 500000; // TODO: 50
         this.intelDelta = 5;
-        this.intelCap = 1000;
+        this.intelCap = 100000000;
         this.siteKnowledge = {};
         this.regionKnowledge = {};
         //this.politiciansKnowledge = {};

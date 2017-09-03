@@ -6,6 +6,6 @@ module.exports = (args) => {
         name: 'Military Store',
         size: misc.random(4, 14),
         visibility: misc.random(2, 30),
-        wareTypes: [Site.OFFERS.WEAPONS],
+        wareTypes: [STATICS.SITES.OFFERS.WEAPONS],
     }, args));
 };

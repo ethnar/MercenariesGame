@@ -2,7 +2,6 @@ const Entity = require('./entity');
 const Human = require('./human');
 const misc = require('../singletons/misc');
 const world = require('../singletons/world');
-const Fact = require('./fact');
 
 class Politician extends Human {
     constructor (args) {
@@ -18,6 +17,7 @@ class Politician extends Human {
 
     getPayload(player) {
         const data = super.getPayload(player);
+        data.familiarity = 0;
         return data;
     }
 }

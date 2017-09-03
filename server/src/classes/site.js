@@ -1,5 +1,6 @@
 const Entity = require('./entity');
 const Item = require('./item');
+const ItemsFactory = require('../factories/items/.index.js');
 const service = require('../singletons/service');
 const misc = require('../singletons/misc');
 const world = require('../singletons/world');
@@ -18,19 +19,24 @@ class Site extends Entity {
         this.organisable = args.organisable || false;
         this.organisation = null;
         this.size = args.size || 5;
-        this.space = this.size;
+        this.space = this.getSize();
         this.destroyed = false;
         this.visibility = args.visibility || Math.ceil(Math.random() * 100);
         this.staff = [];
         this.equipment = [];
         this.relatedMission = null;
-        this.wares = [];
+        this.wares = {};
+        this.wareTypes = args.wareTypes;
 
-        this.maintenance = this.size * 50;
+        this.maintenance = this.getSize() * 50;
     }
 
     getVisibility() {
         return this.visibility;
+    }
+
+    getSize() {
+        return this.size;
     }
 
     getMaintenance() {
@@ -64,11 +70,10 @@ class Site extends Entity {
         if (this.wareTypes) {
             this.wareTypes.forEach((wareType) => {
                 switch (wareType) {
-                    case Site.OFFERS.WEAPONS:
-                        while (this.wares.length < 20) {
-                            this.wares.push(new Item({
-                                slot: STATICS.ITEMS.SLOTS.WEAPON,
-                            }))
+                    case STATICS.SITES.OFFERS.WEAPONS:
+                        this.wares[wareType] = this.wares[wareType] || [];
+                        while (this.wares[wareType].length < 10 + this.getSize() * 5) {
+                            this.addWare(wareType, ItemsFactory.knife());
                         }
                         break;
                 }
@@ -119,12 +124,31 @@ class Site extends Entity {
         this.updated();
     }
 
+    addWare (type, item) {
+        this.wares[type] = this.wares[type] || [];
+        this.wares[type].push(item);
+        this.updated();
+    }
+
     getPrice () {
-        return 100000 + this.size * 40000;
+        return 100000 + this.getSize() * 40000;
     }
 
     getRegion () {
         return this.region;
+    }
+
+    getWares () {
+        return this.wares;
+    }
+
+    getWaresPayload (player) {
+        const wares = this.getWares();
+        const result = {};
+        Object.keys(wares).forEach((type) => {
+            result[type] = wares[type].map(item => item.getPayload(player));
+        });
+        return result;
     }
 
     getOwner(){
@@ -183,12 +207,13 @@ class Site extends Entity {
                 info.owner = this.getOwner() ? this.getOwner().getId() : null;
                 info.organisation = this.getOrganisation() ? this.getOrganisation().getId() : null;
                 info.staffCount = this.getStaff().length;
+                info.wares = this.getWaresPayload(player);
                 // fall-through
             case familiarity >= 1:
                 if (this.purchasable) {
                     info.price = this.getPrice();
                 }
-                info.size = this.size;
+                info.size = this.getSize();
                 info.occupied = this.isOccupied();
                 // fall-through
 
@@ -196,12 +221,6 @@ class Site extends Entity {
         return info;
     }
 }
-
-Site.OFFERS = {
-    GENERAL: 1,
-    PERSONNEL: 2,
-    WEAPONS: 3,
-};
 
 service.registerHandler('purchase', (params, player) => {
     const site = Site.getById(params.site);
@@ -235,7 +254,7 @@ service.registerHandler('investigate-site', (params, player) => {
     }
 
     if (!player.investigateSite(site)) {
-        return errorResponse('Unable to investigate region');
+        return errorResponse('Unable to investigate site');
     }
 
     site.updated(player);
